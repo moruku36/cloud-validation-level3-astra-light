@@ -5,10 +5,10 @@
 ## 完了工程・版・GitHub
 A-1要件整理完了。Q01〜Q08に正式な実験業務回答を反映、重大業務不足なし。設計・環境の要件適合は未判定。A-2未着手。
 PUBLIC保存先：https://github.com/moruku36/cloud-validation-level3-astra-light 。公開範囲確認済み。
-ブランチ：a1/requirements。初回案6731042、回答待ち保存1a0c766。正式回答反映版は本ブランチの今回完了コミット。
+ブランチ：a1/requirements。初回案6731042、回答待ち保存1a0c766。正式回答反映版125cfda（remote一致確認済み）。
 現在のコミット：git rev-parse HEADで取得。本ファイル自体のハッシュを自己埋込しない。
 PR #3：https://github.com/moruku36/cloud-validation-level3-astra-light/pull/3 （OPEN・未マージ、base prep/requirements-intake）。準備PR #1も未マージ。
-回答Issue #2は回答反映をremote確認後に完了クローズ。未解決のA-2評価事項：https://github.com/moruku36/cloud-validation-level3-astra-light/issues/4 。
+回答Issue #2は正式回答反映後にCLOSED（completed）を確認。未解決のA-2評価事項：https://github.com/moruku36/cloud-validation-level3-astra-light/issues/4 。
 
 ## 確定事項・仮定
 AのみAWS、Bは同条件3社比較。正式補足と正式業務回答が取得できない原本部分を補完。原本再提示不要。

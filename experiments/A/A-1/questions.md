@@ -16,4 +16,4 @@
 追加の重要業務質問なし。メール期限・画像サイズ・監査保持等は[仮定と設計詳細](assumptions-risks.md)へ移管。未確定部分を回答済み数値とは扱わない。
 通常要件回答1回として介入台帳へ加算。人間によるサービス選定誘導・設計修正ではない。
 
-[Issue #2](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/2) ↔ [PR #3](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/3)。回答のGitHub反映確認後にIssue #2を完了で閉じる。PRはマージしない。
+[Issue #2](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/2) ↔ [PR #3](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/3)。回答のGitHub反映確認後にIssue #2を完了でクローズ済み。PRはマージしない。
