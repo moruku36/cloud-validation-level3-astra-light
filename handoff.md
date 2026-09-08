@@ -5,7 +5,7 @@
 ## 現在地
 - 保存先作成完了：https://github.com/moruku36/cloud-validation-level3-astra-light 。PUBLIC、ユーザー承認済み。再確認不要。
 - 準備は原本の不足部分により未完了。A-1未着手。A-2以降未着手。
-- 作業ブランチ：prep/requirements-intake。基準コミット：8d5b060。PRは作成後追記。
+- 作業ブランチ：prep/requirements-intake。基準コミット：8d5b060。成果物コミット：2383f6a（本再開情報更新の親）。PR：https://github.com/moruku36/cloud-validation-level3-astra-light/pull/1 （OPEN、未マージ）。
 - 最新コミットは本ファイルを含むブランチ先端（git rev-parse HEADで取得）。自身のハッシュを自身に埋め込まない。
 
 ## 確定事項・仮定
@@ -34,3 +34,5 @@ A-1。前提：不足原本受領→準備文書更新→GitHub反映を確認�
 
 ## CI/CD用ディレクトリ
 .github/workflows/の空ファイルはworkflow権限不足によりGitHub反映対象外。失敗と代替証跡はevaluation/repository-preparation.md。実際のCI/CD作成時に権限を確認する。
+
+GitHub反映：workflow用空ファイルを除外後、成果物push・PR作成成功。

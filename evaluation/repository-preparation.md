@@ -27,3 +27,5 @@
 ## GitHub反映の失敗と修正
 - mainの初期コミットpushは成功。成果物コミットaf92bc4のpushはworkflowスコープ不足により.github/workflows/.gitkeepを拒否。続くPR作成もheadブランチ不存在で失敗。
 - 対応：空の.gitkeepを公開対象から除外し、未公開コミットを修正。権限拡張なし。.github/workflows/はローカルで保持し、実際のCI/CD作成工程で権限を確認する。機能変更はない。
+
+- 修正版2383f6aのpush成功。PR #1作成成功、未マージ。
