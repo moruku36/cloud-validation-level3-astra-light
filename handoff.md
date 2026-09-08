@@ -7,7 +7,7 @@
 A-1初回要件整理は作成済みだが重要回答待ちで未完了。A-2以降未着手。
 公開保存先：https://github.com/moruku36/cloud-validation-level3-astra-light （PUBLIC指定済み、再確認不要）。
 準備PR：https://github.com/moruku36/cloud-validation-level3-astra-light/pull/1 （未マージ）。
-ブランチ：a1/requirements。基点：prep/requirements-intake のfb86c54。A-1 PR・初回コミットは作成後追記。
+ブランチ：a1/requirements。基点：prep/requirements-intake のfb86c54。A-1 PR：https://github.com/moruku36/cloud-validation-level3-astra-light/pull/3 （未マージ）。初回案コミット：6731042。この後は公開リンク・再開情報の更新。
 現在コミットは本ファイルを含むブランチ先端（git rev-parse HEAD）。
 未解決：https://github.com/moruku36/cloud-validation-level3-astra-light/issues/2 。
 

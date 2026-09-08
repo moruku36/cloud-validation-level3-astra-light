@@ -18,3 +18,5 @@
 - RTO：障害発生を起点とし、検知・連絡・判断・復旧・業務再開確認を含める案。「検知後30分」への変更は自動で行わない。
 - RPO：障害時点を基準に、復元された最新の確定データの時点と比較する案。遅延複製・バックアップ間隔だけで達成としない。低書込時は合成マーカーで測定できる計画をCで具体化。
 これらは測定の提案であり、サービス・構成の設計誘導ではない。回答で変更されたら台帳と版を更新する。
+
+公開管理：[Issue #2](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/2) ↔ [PR #3](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/3)。

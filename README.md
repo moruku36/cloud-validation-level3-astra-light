@@ -27,3 +27,5 @@
 - [回答待ちIssue #2](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/2)
 
 初回案はA-1ブランチの最初の成果物コミットで識別。レビュー後版はまだない。準備PR #1は未マージのため、A-1 PRはそのブランチを基点にする。
+
+A-1：[PR #3](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/3)、[初回案6731042](https://github.com/moruku36/cloud-validation-level3-astra-light/commit/6731042)。いずれも回答待ち、レビュー後版なし。
