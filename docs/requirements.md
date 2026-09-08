@@ -32,8 +32,12 @@
 明示的な数値要件の矛盾は確認していない。可用性・DR・予算・運用の両立は対象範囲が未確定で、成立を断定しない。
 
 ## 実行範囲・文書分担
-実行共通指示は[execution-policy.md](execution-policy.md)、正式追加条件・評価は[補足](sources/supplement-2026-09-08.md)。A-1作業は統合コミットのGitHub反映確認後に開始する。後続工程の設計・評価は先取りしない。
+実行共通指示は[execution-policy.md](execution-policy.md)、正式追加条件・評価は[補足](sources/supplement-2026-09-08.md)。A-1は統合コミットのGitHub反映確認後に開始済み。後続工程の設計・評価は先取りしない。
 
 ## A-1成果物
 
-[要件整理表](../experiments/A/A-1/requirements.md)、[質問](../experiments/A/A-1/questions.md)、[リスク](../experiments/A/A-1/assumptions-risks.md)、[追跡性](../experiments/A/A-1/traceability.md)。重要回答待ち。[Issue #2](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/2)。
+[要件整理表](../experiments/A/A-1/requirements.md)、[質問](../experiments/A/A-1/questions.md)、[リスク](../experiments/A/A-1/assumptions-risks.md)、[追跡性](../experiments/A/A-1/traceability.md)。正式回答で重大不足解消、A-1要件整理完了。[Issue #2](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/2)。
+
+## 正式業務回答（今回優先）
+
+[業務回答](sources/business-answers-2026-09-08.md)を正式な共通検証条件として統合。実在サービスの確定情報ではない。旧未回答・仮定を更新。単一AZまで30分/5分、論理破損は4時間暫定、地域停止は別枠、税込本番＋最小非本番10万円を明確化。これはユーザー承認の具体化でありAIによる緩和ではない。
