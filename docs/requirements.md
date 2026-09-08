@@ -33,3 +33,7 @@
 
 ## 実行範囲・文書分担
 実行共通指示は[execution-policy.md](execution-policy.md)、正式追加条件・評価は[補足](sources/supplement-2026-09-08.md)。A-1作業は統合コミットのGitHub反映確認後に開始する。後続工程の設計・評価は先取りしない。
+
+## A-1成果物
+
+[要件整理表](../experiments/A/A-1/requirements.md)、[質問](../experiments/A/A-1/questions.md)、[リスク](../experiments/A/A-1/assumptions-risks.md)、[追跡性](../experiments/A/A-1/traceability.md)。重要回答待ち。[Issue #2](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/2)。
