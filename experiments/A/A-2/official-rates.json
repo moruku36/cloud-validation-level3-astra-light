@@ -1,0 +1,931 @@
+[
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "2YQSFU52J6YDM76V",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "deploymentOption": "Multi-AZ",
+      "group": "RDS-Throughput",
+      "groupDescription": "RDS Provisioned Throughput",
+      "usagetype": "APN1-RDS:Multi-AZ-GP3-Throughput",
+      "operation": "CreateDBInstance:0014",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service"
+    },
+    "rate": {
+      "rateCode": "2YQSFU52J6YDM76V.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.192 per  MiBps-month of provisioned GP3 Storage throughput for Multi-AZ deployments running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "MBPS-Mo",
+      "pricePerUnit": {
+        "USD": "0.1920000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "P244MJQ55RAM96DK",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "instanceType": "db.t4g.medium",
+      "currentGeneration": "Yes",
+      "instanceFamily": "General purpose",
+      "vcpu": "2",
+      "physicalProcessor": "AWS Graviton2",
+      "memory": "4 GiB",
+      "storage": "EBS Only",
+      "networkPerformance": "Up to 5 Gigabit",
+      "processorArchitecture": "64-bit",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "licenseModel": "No license required",
+      "deploymentOption": "Multi-AZ",
+      "usagetype": "APN1-Multi-AZUsage:db.t4g.medium",
+      "operation": "CreateDBInstance:0014",
+      "instanceTypeFamily": "T4G",
+      "normalizationSizeFactor": "4",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service",
+      "unbundledLicensing": "FALSE"
+    },
+    "rate": {
+      "rateCode": "P244MJQ55RAM96DK.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$ 0.202 per RDS db.t4g.medium Multi-AZ instance hour (or partial hour) running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.2020000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "CG87ZQQVA37U79GQ",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "deploymentOption": "Multi-AZ (readable standbys)",
+      "group": "RDS-Throughput",
+      "groupDescription": "RDS Provisioned Throughput",
+      "usagetype": "APN1-RDS:Multi-AZCluster-GP3-Throughput",
+      "operation": "CreateDBInstance:0014",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service"
+    },
+    "rate": {
+      "rateCode": "CG87ZQQVA37U79GQ.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.288 per MBps-month of provisioned GP3 Storage throughput Multi-AZ (readable standbys) deployments running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "MBPS-Mo",
+      "pricePerUnit": {
+        "USD": "0.2880000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "V3SXBAA72P93JFMB",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "storageMedia": "SSD",
+      "volumeType": "General Purpose-GP3",
+      "minVolumeSize": "5 GB",
+      "maxVolumeSize": "16 TB",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "deploymentOption": "Multi-AZ",
+      "usagetype": "APN1-RDS:Multi-AZ-GP3-Storage",
+      "operation": "CreateDBInstance:0014",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service"
+    },
+    "rate": {
+      "rateCode": "V3SXBAA72P93JFMB.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.276 per GB-month of provisioned GP3 storage for Multi-AZ deployments running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "GB-Mo",
+      "pricePerUnit": {
+        "USD": "0.2760000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "9X3CDP6WH95HY3M8",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "deploymentOption": "Single-AZ",
+      "group": "RDS-Throughput",
+      "groupDescription": "RDS Provisioned Throughput",
+      "usagetype": "APN1-RDS:GP3-Throughput",
+      "operation": "CreateDBInstance:0014",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service"
+    },
+    "rate": {
+      "rateCode": "9X3CDP6WH95HY3M8.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.096 per  MiBps-month of provisioned GP3 Storage throughput running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "MBPS-Mo",
+      "pricePerUnit": {
+        "USD": "0.0960000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "8TMKJVFDMDNHFX96",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "instanceType": "db.t4g.medium",
+      "currentGeneration": "Yes",
+      "instanceFamily": "General purpose",
+      "vcpu": "2",
+      "physicalProcessor": "AWS Graviton2",
+      "memory": "4 GiB",
+      "storage": "EBS Only",
+      "networkPerformance": "Up to 5 Gigabit",
+      "processorArchitecture": "64-bit",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "licenseModel": "No license required",
+      "deploymentOption": "Single-AZ",
+      "usagetype": "APN1-InstanceUsage:db.t4g.medium",
+      "operation": "CreateDBInstance:0014",
+      "instanceTypeFamily": "T4G",
+      "normalizationSizeFactor": "2",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service",
+      "unbundledLicensing": "FALSE"
+    },
+    "rate": {
+      "rateCode": "8TMKJVFDMDNHFX96.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$ 0.101 per RDS db.t4g.medium Single-AZ instance hour (or partial hour) running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.1010000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "TQMMBSDA6XS4QB9G",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "deploymentOption": "Multi-AZ (readable standbys)",
+      "group": "RDS-PIOPS",
+      "groupDescription": "RDS Provisioned GP3 IOPS",
+      "usagetype": "APN1-RDS:Multi-AZCluster-GP3-PIOPS",
+      "operation": "CreateDBInstance:0014",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service"
+    },
+    "rate": {
+      "rateCode": "TQMMBSDA6XS4QB9G.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.072 per IOPS-month of provisioned GP3 IOPS Multi-AZ (readable standbys) deployments running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "IOPS-Mo",
+      "pricePerUnit": {
+        "USD": "0.0720000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "5UQA7HSTK9DZMK4Z",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "instanceType": "db.t4g.small",
+      "currentGeneration": "Yes",
+      "instanceFamily": "General purpose",
+      "vcpu": "2",
+      "physicalProcessor": "AWS Graviton2",
+      "memory": "2 GiB",
+      "storage": "EBS Only",
+      "networkPerformance": "Up to 5 Gigabit",
+      "processorArchitecture": "64-bit",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "licenseModel": "No license required",
+      "deploymentOption": "Single-AZ",
+      "usagetype": "APN1-InstanceUsage:db.t4g.small",
+      "operation": "CreateDBInstance:0014",
+      "instanceTypeFamily": "T4G",
+      "normalizationSizeFactor": "1",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service",
+      "unbundledLicensing": "FALSE"
+    },
+    "rate": {
+      "rateCode": "5UQA7HSTK9DZMK4Z.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$ 0.05 per RDS db.t4g.small Single-AZ instance hour (or partial hour) running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.0500000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "A8EUTHB3QX54JDH8",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "deploymentOption": "Single-AZ",
+      "group": "RDS-PIOPS",
+      "groupDescription": "RDS Provisioned GP3 IOPS",
+      "usagetype": "APN1-RDS:GP3-PIOPS",
+      "operation": "CreateDBInstance:0014",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service"
+    },
+    "rate": {
+      "rateCode": "A8EUTHB3QX54JDH8.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.024 per IOPS-month of provisioned GP3 IOPS running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "IOPS-Mo",
+      "pricePerUnit": {
+        "USD": "0.0240000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "YM9AR73XYRPUSCN3",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "storageMedia": "SSD",
+      "volumeType": "General Purpose-GP3",
+      "minVolumeSize": "5 GB",
+      "maxVolumeSize": "16 TB",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "deploymentOption": "Single-AZ",
+      "usagetype": "APN1-RDS:GP3-Storage",
+      "operation": "CreateDBInstance:0014",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service"
+    },
+    "rate": {
+      "rateCode": "YM9AR73XYRPUSCN3.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.138 per GB-month of provisioned GP3 storage running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "GB-Mo",
+      "pricePerUnit": {
+        "USD": "0.1380000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "RR7SKYHT4YHS8CT6",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "deploymentOption": "Multi-AZ",
+      "group": "RDS-PIOPS",
+      "groupDescription": "RDS Provisioned GP3 IOPS",
+      "usagetype": "APN1-RDS:Multi-AZ-GP3-PIOPS",
+      "operation": "CreateDBInstance:0014",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service"
+    },
+    "rate": {
+      "rateCode": "RR7SKYHT4YHS8CT6.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.048 per IOPS-month of provisioned GP3 IOPS for Multi-AZ deployments running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "IOPS-Mo",
+      "pricePerUnit": {
+        "USD": "0.0480000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "EMN587N3SFJYKQ5D",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "storageMedia": "SSD",
+      "volumeType": "General Purpose-GP3",
+      "minVolumeSize": "5 GB",
+      "maxVolumeSize": "16 TB",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "deploymentOption": "Multi-AZ (readable standbys)",
+      "usagetype": "APN1-RDS:Multi-AZCluster-GP3-Storage",
+      "operation": "CreateDBInstance:0014",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service"
+    },
+    "rate": {
+      "rateCode": "EMN587N3SFJYKQ5D.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.414 per GB-month of provisioned GP3 storage Multi-AZ (readable standbys) deployments running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "GB-Mo",
+      "pricePerUnit": {
+        "USD": "0.4140000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "rds",
+    "publicationDate": "2026-09-04T17:27:16Z",
+    "sku": "678G55M53ZPEXTB9",
+    "attributes": {
+      "servicecode": "AmazonRDS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "instanceType": "db.t4g.small",
+      "currentGeneration": "Yes",
+      "instanceFamily": "General purpose",
+      "vcpu": "2",
+      "physicalProcessor": "AWS Graviton2",
+      "memory": "2 GiB",
+      "storage": "EBS Only",
+      "networkPerformance": "Up to 5 Gigabit",
+      "processorArchitecture": "64-bit",
+      "engineCode": "14",
+      "databaseEngine": "PostgreSQL",
+      "licenseModel": "No license required",
+      "deploymentOption": "Multi-AZ",
+      "usagetype": "APN1-Multi-AZUsage:db.t4g.small",
+      "operation": "CreateDBInstance:0014",
+      "instanceTypeFamily": "T4G",
+      "normalizationSizeFactor": "2",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Relational Database Service",
+      "unbundledLicensing": "FALSE"
+    },
+    "rate": {
+      "rateCode": "678G55M53ZPEXTB9.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$ 0.101 per RDS db.t4g.small Multi-AZ instance hour (or partial hour) running PostgreSQL",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.1010000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "ecs",
+    "publicationDate": "2026-08-31T09:21:55Z",
+    "sku": "KBQ3Q6DY9J327G8N",
+    "attributes": {
+      "servicecode": "AmazonECS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "tenancy": "Shared",
+      "usagetype": "APN1-Fargate-vCPU-Hours:perCPU",
+      "operation": "",
+      "cputype": "perCPU",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Elastic Container Service"
+    },
+    "rate": {
+      "rateCode": "KBQ3Q6DY9J327G8N.JRTCKXETXF.6YS6EN2CT7",
+      "description": "AWS Fargate - vCPU  - Asia Pacific (Tokyo)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "hours",
+      "pricePerUnit": {
+        "USD": "0.0505600000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "ecs",
+    "publicationDate": "2026-08-31T09:21:55Z",
+    "sku": "ZNX9M5D8R95VT2QQ",
+    "attributes": {
+      "servicecode": "AmazonECS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "tenancy": "Shared",
+      "usagetype": "APN1-Fargate-ARM-vCPU-Hours:perCPU",
+      "operation": "",
+      "cpuArchitecture": "ARM",
+      "cputype": "perCPU",
+      "regionCode": "ap-northeast-1",
+      "resource": "per vCPU per hour",
+      "servicename": "Amazon Elastic Container Service"
+    },
+    "rate": {
+      "rateCode": "ZNX9M5D8R95VT2QQ.JRTCKXETXF.6YS6EN2CT7",
+      "description": "AWS Fargate - ARM - vCPU - Asia Pacific (Tokyo)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "hours",
+      "pricePerUnit": {
+        "USD": "0.0404500000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "ecs",
+    "publicationDate": "2026-08-31T09:21:55Z",
+    "sku": "7KKPR3R7N63ZMK5F",
+    "attributes": {
+      "servicecode": "AmazonECS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "usagetype": "APN1-Fargate-EphemeralStorage-GB-Hours",
+      "operation": "",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Elastic Container Service",
+      "storagetype": "default"
+    },
+    "rate": {
+      "rateCode": "7KKPR3R7N63ZMK5F.JRTCKXETXF.6YS6EN2CT7",
+      "description": "AWS Fargate - Ephemeral Storage - Asia Pacific (Tokyo)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "GB-Hours",
+      "pricePerUnit": {
+        "USD": "0.0001330000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "ecs",
+    "publicationDate": "2026-08-31T09:21:55Z",
+    "sku": "JQEE6EF5FAF2AESH",
+    "attributes": {
+      "servicecode": "AmazonECS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "tenancy": "Shared",
+      "usagetype": "APN1-Fargate-GB-Hours",
+      "operation": "",
+      "memorytype": "perGB",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Amazon Elastic Container Service"
+    },
+    "rate": {
+      "rateCode": "JQEE6EF5FAF2AESH.JRTCKXETXF.6YS6EN2CT7",
+      "description": "AWS Fargate - Memory  - Asia Pacific (Tokyo)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "hours",
+      "pricePerUnit": {
+        "USD": "0.0055300000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "ecs",
+    "publicationDate": "2026-08-31T09:21:55Z",
+    "sku": "WXXGZM434J9JXCU5",
+    "attributes": {
+      "servicecode": "AmazonECS",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "tenancy": "Shared",
+      "usagetype": "APN1-Fargate-ARM-GB-Hours",
+      "operation": "",
+      "cpuArchitecture": "ARM",
+      "memorytype": "perGB",
+      "regionCode": "ap-northeast-1",
+      "resource": "per GB per hour",
+      "servicename": "Amazon Elastic Container Service"
+    },
+    "rate": {
+      "rateCode": "WXXGZM434J9JXCU5.JRTCKXETXF.6YS6EN2CT7",
+      "description": "AWS Fargate - ARM - Memory - Asia Pacific (Tokyo)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "hours",
+      "pricePerUnit": {
+        "USD": "0.0044200000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "Y5H9SH8WXYD6DG8A",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "ELB:Balancing",
+      "groupDescription": "TS hourly usage by Application Load Balancer",
+      "usagetype": "APN1-TS-LoadBalancerUsage",
+      "operation": "LoadBalancing:Application",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "Y5H9SH8WXYD6DG8A.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.0054 per associated Application load balancer Trust Store unit-hour ",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.0054000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "KMDH3UDPSC7C2KKZ",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Outposts",
+      "group": "ELB:Balancing",
+      "groupDescription": "LoadBalancer hourly usage by Application Load Balancer on Outposts",
+      "usagetype": "APN1-Outposts-LoadBalancerUsage",
+      "operation": "LoadBalancing:Application",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "KMDH3UDPSC7C2KKZ.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.0243 per Hrs for Outposts-LoadBalancerUsage:LoadBalancing:Application in Asia Pacific (Tokyo)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.0243000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "F2UQT6CZGM7BTWS8",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "ELB:Balancing",
+      "groupDescription": "Used Application Load Balancer capacity units-hr",
+      "usagetype": "APN1-LCUUsage",
+      "operation": "LoadBalancing:Application",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "F2UQT6CZGM7BTWS8.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.008 per used Application load balancer capacity unit-hour (or partial hour)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "LCU-Hrs",
+      "pricePerUnit": {
+        "USD": "0.0080000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "CJZKHZV4ACSZKK3F",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "ELB:Balancing",
+      "groupDescription": "Used Network Load Balancer capacity units-hr",
+      "usagetype": "APN1-LCUUsage",
+      "operation": "LoadBalancing:Network",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "CJZKHZV4ACSZKK3F.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.006 per used Network load balancer capacity unit-hour (or partial hour)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "LCU-Hrs",
+      "pricePerUnit": {
+        "USD": "0.0060000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "SMK2NXUTDKDGG7P6",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "ELB:Balancing",
+      "groupDescription": "Reserved Application Load Balancer capacity units-hr",
+      "usagetype": "APN1-ReservedLCUUsage",
+      "operation": "LoadBalancing:Application",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "SMK2NXUTDKDGG7P6.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.008 per reserved Application load balancer capacity unit-hour",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "ReservedLCU-Hr",
+      "pricePerUnit": {
+        "USD": "0.0080000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "98ZU8QNDMR4AS8FJ",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "ELB:Balancing",
+      "groupDescription": "LoadBalancer hourly usage by Application Load Balancer",
+      "usagetype": "APN1-LoadBalancerUsage",
+      "operation": "LoadBalancing:Application",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "98ZU8QNDMR4AS8FJ.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.0243 per Application LoadBalancer-hour (or partial hour)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.0243000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "BF6MUPUUKBKBMZVG",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "ELB:Balancing",
+      "groupDescription": "Reserved Network Load Balancer capacity units-hr",
+      "usagetype": "APN1-ReservedLCUUsage",
+      "operation": "LoadBalancing:Network",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "BF6MUPUUKBKBMZVG.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.006 per reserved Network load balancer capacity unit-hour",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "ReservedLCU-Hr",
+      "pricePerUnit": {
+        "USD": "0.0060000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "VZX6NSRCR9F8MW75",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "ELB:Balancing",
+      "groupDescription": "Used Gateway Load Balancer capacity units-hr",
+      "usagetype": "APN1-LCUUsage",
+      "operation": "LoadBalancing:Gateway",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "VZX6NSRCR9F8MW75.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.0040 per used Gateway load balancer capacity unit-hour (or partial hour) in Asia Pacific (Tokyo)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "LCU-Hrs",
+      "pricePerUnit": {
+        "USD": "0.0040000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "NPVAPU3NDBG3ZV37",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "ELB:Balancing",
+      "groupDescription": "LoadBalancer hourly usage by Classic Load Balancer",
+      "usagetype": "APN1-LoadBalancerUsage",
+      "operation": "LoadBalancing",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "NPVAPU3NDBG3ZV37.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.027 per LoadBalancer-hour (or partial hour)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.0270000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "47QS48SDTEA9RZKY",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "ELB:Balancing",
+      "groupDescription": "Reserved Gateway Load Balancer capacity units-hr",
+      "usagetype": "APN1-ReservedLCUUsage",
+      "operation": "LoadBalancing:Gateway",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "47QS48SDTEA9RZKY.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.004 per ReservedLCU-Hr gateway load balancer capacity unit-hour",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "ReservedLCU-Hr",
+      "pricePerUnit": {
+        "USD": "0.0040000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "F3FRDKGR8M9SKAQS",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "ELB:Balancing",
+      "groupDescription": "LoadBalancer hourly usage by Network Load Balancer",
+      "usagetype": "APN1-LoadBalancerUsage",
+      "operation": "LoadBalancing:Network",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "F3FRDKGR8M9SKAQS.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.0243 per Network LoadBalancer-hour (or partial hour)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.0243000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "HTAZRJHK2MFR3CR9",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Outposts",
+      "group": "ELB:Balancing",
+      "groupDescription": "Used Application Load Balancer capacity On Outposts units-hr",
+      "usagetype": "APN1-Outposts-LCUUsage",
+      "operation": "LoadBalancing:Application",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "HTAZRJHK2MFR3CR9.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.0 per LCU-Hrs for Outposts-LCUUsage:LoadBalancing:Application in Asia Pacific (Tokyo)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "LCU-Hrs",
+      "pricePerUnit": {
+        "USD": "0.0000000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "service": "elb",
+    "publicationDate": "2026-08-31T09:22:55Z",
+    "sku": "JFUCYJPDC27SYVKC",
+    "attributes": {
+      "servicecode": "AWSELB",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "ELB:Balancing",
+      "groupDescription": "LoadBalancer hourly usage by Gateway Load Balancer",
+      "usagetype": "APN1-LoadBalancerUsage",
+      "operation": "LoadBalancing:Gateway",
+      "regionCode": "ap-northeast-1",
+      "servicename": "Elastic Load Balancing"
+    },
+    "rate": {
+      "rateCode": "JFUCYJPDC27SYVKC.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.0135 per Gateway LoadBalancer-hour (or partial hour) in Asia Pacific (Tokyo)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Hrs",
+      "pricePerUnit": {
+        "USD": "0.0135000000"
+      },
+      "appliesTo": []
+    }
+  }
+]
