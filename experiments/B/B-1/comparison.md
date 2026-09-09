@@ -243,7 +243,7 @@ flowchart TD
         Verify --> Cutover["本番トラフィックを復旧DBへ切替<br/>(復旧完了)"]
     end
 
-    classDef stage fill:#f8f9fa,stroke:#495057,stroke-width:1.5px;
+    classDef stage fill:#f8f9fa,stroke:#495057,stroke-width:1.5px,color:#000000,font-weight:bold;
     class Isolation,Rescue,Deletion,Verification stage;
 ```
 

@@ -52,9 +52,9 @@ flowchart TB
   PhaseA -->|人間の承認・指示後| PhaseB
   PhaseB --> PhaseC
 
-  classDef done fill:#d4edda,stroke:#28a745,stroke-width:2px;
-  classDef pending fill:#fff3cd,stroke:#ffc107,stroke-width:2px;
-  classDef future fill:#f8f9fa,stroke:#6c757d,stroke-width:1px,stroke-dasharray: 3 3;
+  classDef done fill:#14532d,stroke:#22c55e,stroke-width:2px,color:#ffffff;
+  classDef pending fill:#713f12,stroke:#eab308,stroke-width:2px,color:#ffffff;
+  classDef future fill:#1e293b,stroke:#64748b,stroke-width:1.5px,stroke-dasharray: 4 4,color:#ffffff;
   class A1,A2 done;
   class A3 pending;
   class B1 done;

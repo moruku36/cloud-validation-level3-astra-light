@@ -129,9 +129,9 @@ flowchart LR
   B2 --> B3
   B3 -.->|C-0予算/承認| C
 
-  classDef done fill:#e8f5e9,stroke:#2e7d32,stroke-width:1.5px;
-  classDef current fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
-  classDef future fill:#f5f5f5,stroke:#9e9e9e,stroke-width:1px,stroke-dasharray: 4 4;
+  classDef done fill:#14532d,stroke:#22c55e,stroke-width:2px,color:#ffffff;
+  classDef current fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#ffffff;
+  classDef future fill:#1e293b,stroke:#64748b,stroke-width:1.5px,stroke-dasharray: 4 4,color:#ffffff;
   class A done;
   class B1 current;
   class B2,B3,C future;
