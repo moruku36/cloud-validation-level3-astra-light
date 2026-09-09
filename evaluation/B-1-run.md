@@ -68,3 +68,11 @@
 - AのS3公式抽出は東京のみのため、大阪DB dump storage行のV表示をE（東京単価代用）へ訂正。金額は変更なし、初回を1812e6dに保持。
 - Azure内部ACA/WAFとGCP regional外部ALB/Run/Armorの接続関係に公式根拠を追加。詳細設定/課金/性能は未確認のまま。
 - READMEのB保留表示をB-1成果物へ更新。Aの構成/金額は履歴として保存し、今回比較に必須化しない。
+
+### GitHub反映完了
+
+比較本文の最終内容commit：b81b2bdca180f3f28e456201f9c17a075185272c。push成功、[PR #10](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/10)を作成。head b1/cloud-comparison / base reports/a-completion (8f427118c7a6522817d1fd7d0842d4aec7f4023c)。PR #8依存を本文に明記。#8/#10は再取得時OPEN/merged=false/mergeable=trueで、今回mergeなし。
+
+指定8主要文書をGitHub fetch_fileで読み戻し、返されたblob SHAをlocal git ls-treeと比較して全一致。特にcriteria 5b385aaa / comparison 51296cf7 / cost bd6a1633 / sources 9f823e7a。Issue #9にPR #10を関連付けるコメント（id 5600618200）を追加、未解決の7項目をOPEN維持。コネクタのコメント引数名差異はschemaエラー後に修正して成功。
+
+この完了記録・README・handoffの追記を最終追跡commitとしてpushし、最終head/SHAと変更文書のremote blobを再照合する。最終SHAは自己参照で書込まずPRのhead/終了報告で解決する。完了工程はB-1のみ、B-2/B-3/C未実施。新しいcloud資源/実費/削除期限なし（台帳/アカウント未確認の区別を維持）。

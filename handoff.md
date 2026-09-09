@@ -1,9 +1,11 @@
 # B-1 再開情報（2026-09-09、以下のA記録より優先）
 
-B-1比較成果物作成済み。GitHub反映確認は後続の完了証跡で確定する。設計合格/最終採用ではなく、B-2/B-3/C未実施。
+B-1完了：比較基準の事前記録、3案/概算/暫定判断/未確認、Issueと引継ぎ、commit/push/PR、リモート本文とhead/base/依存の照合まで実施。設計合格/最終採用ではなく、B-2/B-3/C未実施。
 
 - 起点：PR #8 OPEN、`reports/a-completion` / `8f427118c7a6522817d1fd7d0842d4aec7f4023c`。現在の比較先は同branch、#8依存。mainを起点としていない。
 - 作業branch：`b1/cloud-comparison`。基準事前commit `4f486d2`、初回比較commit `1812e6d`。最終head/PRは完了証跡欄へ追記し、PR headで解決する（自己参照SHAを文書内に生成しない）。
+- 完了証跡：[PR #10](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/10) OPEN/未マージ、head `b1/cloud-comparison`、base `reports/a-completion`、PR #8依存（#8もOPEN）。比較成果物の最終内容commit：`b81b2bdca180f3f28e456201f9c17a075185272c`。この後は完了追跡文書の追記のみ。追記を含む最終コミットは[PR #10の最終head](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/10/commits)を正とし、終了報告にもSHAを記載する。
+- remote検証：b81b2bd時点で指定8主要文書をGitHubから取得し、全blob SHAをlocal treeと照合一致。PR #8/#10のstate/head/base/SHAを再取得、mergeable=true。Issue #9へPR #10をコメントで関連付け、未解決7論点はOPEN。今回の完了追記もpush後にremote本文を再確認する。
 - 成果物：[基準](experiments/B/B-1/comparison-criteria.md)、[3案・24要件](experiments/B/B-1/comparison.md)、[費用](experiments/B/B-1/cost.md)、[出典](experiments/B/B-1/sources.md)、[run記録](evaluation/B-1-run.md)。未解決は[Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9) OPEN、#4から継承。#4 CLOSEDは技術解決ではない。
 - 暫定順位：AWS64/GCP62/Azure59（B-1相対点、B-3正式採点ではない）。全案に重要未確認。AWSを最初の検討候補とするだけで採用しない。税込基本概算AWS76,034/Azure216,493/GCP135,580円＋未精算差額。Azureは確認済み固定費だけで予算超過、AWS/GCP予算適合は未確認。
 - 仮定：通常10RPS終日/日次ピーク、MAU1万人、API2KB、外向き200GB総量、外形2地点毎分/10step、PITR30日。地域DBcopyを全社共通600GB/月へ訂正。為替150/税10%/20%参考。30日PITRは業務必須ではない。

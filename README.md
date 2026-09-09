@@ -16,7 +16,7 @@
   - **Phase C (将来フェーズ)**: IaC実装・実機デプロイ・カオスエンジニアリング（障害試験）
 
 ### 現在のステータス
-- **進捗**: A工程完了、B-1比較成果物作成済み。GitHub反映の完了証跡は[handoff](handoff.md)を参照
+- **進捗**: A工程完了、B-1比較・GitHub反映完了。[PR #10](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/10)は未マージ、PR #8依存。完了証跡は[handoff](handoff.md)
 - **B-1結果**: 暫定順位AWS / GCP / Azure。全案に重要未確認、Azure代表案は予算未達。設計合格・最終採用ではない。[比較](experiments/B/B-1/comparison.md) / [費用](experiments/B/B-1/cost.md) / [追跡Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9)
 - **設計自己評価スコア**: **65点 / 100点**（合格基準80点に未達、**採用承認保留**）
 - **保留の主因**: 外形監視（CloudWatch Synthetics Canary）費用の精緻化に伴う**月額予算（税込10万円）の超過**（修正後: 約11.01万円〜予備費込約13.22万円）
@@ -144,4 +144,4 @@ flowchart TB
 - [事前固定基準](experiments/B/B-1/comparison-criteria.md)（4f486d2） / [3案・24要件・暫定判断](experiments/B/B-1/comparison.md)
 - [共通使用量・費目・感度](experiments/B/B-1/cost.md) / [公式出典・未確認](experiments/B/B-1/sources.md) / [実行記録](evaluation/B-1-run.md)
 - 税込基本概算：AWS76,034円、Azure216,493円、GCP135,580円。未精算差額があり、確定見積ではない。20%参考余裕は費用表の別欄。
-- branch `b1/cloud-comparison`、base `reports/a-completion`、未マージPR #8依存。B-1 PR/最終SHAは[handoff](handoff.md)。未解決事項はIssue #9をOPENで継続。
+- branch `b1/cloud-comparison`、base `reports/a-completion`、[PR #10](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/10)は未マージPR #8依存。最終SHAは[handoff](handoff.md)。未解決事項はIssue #9をOPENで継続。
