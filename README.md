@@ -41,6 +41,7 @@ A-1完了時の次回工程：A-2（現在の次回は下記A-3）。残る設�
 
 - [設計・3案比較](experiments/A/A-2/design.md)
 - [構成図](experiments/A/A-2/diagram.md)
+  - ![実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成)](experiments/A/A-2/architecture.jpg)
 - [復旧・監視・運用・IaC方針](experiments/A/A-2/recovery-operations.md)
 - [月額概算](experiments/A/A-2/cost.md)
 - [公式出典](experiments/A/A-2/sources.md)

@@ -1,5 +1,7 @@
 # A-2 構成図
 
+![実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成)](architecture.jpg)
+
 ```mermaid
 flowchart TB
   U[利用者 / Internet]
