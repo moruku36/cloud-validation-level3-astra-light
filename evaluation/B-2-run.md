@@ -33,3 +33,11 @@
 初回commit `7daa93c`を保持。24要件表の欠落なし、11 Markdownの相対リンク欠損なし、AWS26/GCP25/Azure24費目を再加算し税込/20%参考/差分の一致を確認。結果はAWS83,248/99,898、GCP101,933/122,320、Azure218,588/262,306円（U別）。秘密情報の典型パターンを点検し該当なし。
 
 設計点検でGCPへ逆転した際の配置/ingress/IAM対応を追記。削除台帳だけでなくDB内outbox断片がrestoreで戻る場合の元期限継承を明文化した。root README/handoff/resource-inventoryの現在状態をB-2へ更新し、A/B-1本文・採点・初回案は変更していない。これはB-2文書点検でありB-3正式評価ではない。構成図は編集可能Mermaidソースとして参照・node/edge構造を点検、実機配置や画像renderの検証ではない。
+
+## GitHub反映の完了記録
+
+初回`7daa93c`→点検修正`6b330dc1ac91829f013ecf441bc4468034505e3c`をpush、[PR #12](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/12)を作成。`6b330dc`を指定して14成果物の本文をGitHubから取得し、すべてlocal blob SHAと一致確認。内訳はB-2の8必須文書＋2 JSON、run、root README/handoff/resource-inventory。Issue #9は7論点全体を未チェックで維持し、B-2結果を冒頭へ追記した。
+
+作業中mainに`ce6a1be764c7e46a233598618ef9a1baf9e5d2cd`のB-1図表追加を検出。変更3文書の差分を読み、正式要件・cost-model・採点は変わらないことを確認。`a3a58a457c62973e8548ae1005d415e1e84c1311`で作業branchへ取り込んだ。B-2 PR差分にはA/B-1変更がない。追加図の削除/匿名性に関する表現を新規要件・確認済み根拠にしない。
+
+比較先はmain、未マージ前工程依存なし、PRはOPEN/未マージで停止。完了記録を含む最終headはPR commit一覧と終了報告で解決し、push後に変更した追跡文書本文・head/baseを再取得する。B-2工程完了・最終選定保留、設計合格/人間採用は未承認。次は明示指示後のB-3のみ。

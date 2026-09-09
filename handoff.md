@@ -1,4 +1,4 @@
-# 最新：B-2 選定・設計（2026-09-10）
+# 最新：B-2工程完了・選定保留（2026-09-10）
 
 最終選定保留、AWSは未承認の優先参考設計。設計合格・人間採用承認は別。B-3正式採点/人間採点/C試験なし。
 
@@ -14,7 +14,11 @@
 
 ## B-2完了証跡
 
-GitHub反映後に追記する。反映未確認の段階では工程完了とはしない。
+[PR #12](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/12)、head `b2/cloud-selection-design`、base `main`、OPEN/未マージ。設計内容commit `6b330dc1ac91829f013ecf441bc4468034505e3c`で14成果物のremote本文を取得し、全blob SHAがlocal treeと一致した。初回`7daa93c`を保持。完了記録を含む最終commitは[PR #12の最終head/commit一覧](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/12/commits)と終了報告を正とする（自己参照SHAは文書へ埋め込まない）。
+
+PR作成中にmainへ`ce6a1be764c7e46a233598618ef9a1baf9e5d2cd`のB-1図表追加が到着。差分を確認し、要件/費用JSON/採点の変更なし。`a3a58a457c62973e8548ae1005d415e1e84c1311`でmainを作業branchへ取り込み、B-1の最新本文を保全した。これは本PRのmainへのmergeではない。比較先main・未マージ前工程依存なしを維持。追加図中の「未着手」「匿名識別子」等はB-1当時の表現であり、B-2の現状態・削除判定を上書きしない。
+
+Issue #9をB-2の人間判断/仕様精算/C試験待ちに整理し、未解決7項目をOPEN継続。費用全行/24要件/相対リンク/秘密pattern/diffを点検済み。最終記録のpush後にも更新本文とPR head/baseを再照合する。クラウド試験・B-3採点は実施していない。
 
 ---
 

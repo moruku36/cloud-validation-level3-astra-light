@@ -16,7 +16,7 @@
 - **指定モデル**: GPT-6 Astra Light（実行モデル識別情報は未確認）
 - **検証シナリオ**:
   - **Phase A (工程完了・設計不合格)**: AWS単一クラウドの設計と自己評価
-  - **Phase B (B-2設計まで作成)**: AWS / Azure / Google Cloud比較と条件別設計。B-3正式評価・引継ぎは未実施。GitHub反映の完了証跡はhandoff参照
+  - **Phase B (B-2工程完了・選定保留)**: AWS / Azure / Google Cloud比較と条件別設計。[PR #12](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/12)は未マージ。B-3正式評価・引継ぎは未実施
   - **Phase C (将来フェーズ)**: IaC実装・実機デプロイ・カオスエンジニアリング（障害試験）
 
 ### 現在のステータス
