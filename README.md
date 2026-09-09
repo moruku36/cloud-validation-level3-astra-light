@@ -47,3 +47,5 @@ A-1完了時の次回工程：A-2（現在の次回は下記A-3）。残る設�
 - [実行・訂正記録](evaluation/A-2-run.md)
 
 初回設計81cab82、後続は算術表記と追跡情報の訂正。次回はA-3のみ（まだ実施していない）。
+
+[A-2 PR #5](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/5)はA-1ブランチを比較先とし、PR #3に依存します。未マージ。

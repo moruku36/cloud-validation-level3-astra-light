@@ -19,3 +19,6 @@ BはAWS指定を継承せず3社比較。C-0まで実験上限・権限・期限
 ## 資源・費用・承認
 今回作成資源なし、クラウド利用費0円、削除対象/期限なし。既存アカウント全体未調査。モデル等費用未取得。上記設計額は実費ではない。
 承認された今回範囲A-2設計・公開GitHub保存/PR/Issue更新。マージ・クラウド作成は禁止。次回A-3は別指示。workflow権限不足はC前対応、今回拡張なし。
+
+## 公開結果
+A-2 PR：https://github.com/moruku36/cloud-validation-level3-astra-light/pull/5 、base a1/requirements、未マージ。成果物1019fabをpush済み。Issue #4は判断・根拠・未検証・方法を記載してOPEN維持。次回A-3。
