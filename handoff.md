@@ -12,6 +12,7 @@ Issue #4は根拠付き文書訂正のみ解決、実現性はOPEN維持。
 人間採点空欄。指定モデルGPT-6 Astra Light、実行モデル識別/実残りトークン数は未取得。
 
 ## 次回
+**Aレポートの人間確認後、指示があればB-1。** B-1開始を保留する。最初に[最終レポート](experiments/A/final-report.md)を読む。
 人間の判断を待つ。予算増額か監視/基盤の再設計、削除台帳/メール国内保存範囲、未保証の復旧依存/運用体制を判断。Bの開始は明示指示がある場合だけ。今回はB未実施。
 読む順：本ファイル、resource-inventory.md、A-3/review.md・scores.md・budget.md・validation-handoff.md。必要対象だけ追加読込。公式主要単価の再調査を繰り返さない。
 必要コマンド：git status --short、git rev-parse HEAD、git ls-remote origin a3/aws-review、gh pr view（A-3番号）--json baseRefName,headRefOid,state（base a2/aws-design・OPEN）、gh issue view 4 --json body,state（OPEN）。
@@ -23,3 +24,11 @@ Issue #4は根拠付き文書訂正のみ解決、実現性はOPEN維持。
 
 ## GitHub保存
 A-3 PR：https://github.com/moruku36/cloud-validation-level3-astra-light/pull/6 、base a2/aws-design、PR #5依存、OPEN・未マージ。レビュー成果物8870250をpush済み。Issue #4は文書訂正だけ完了扱い、未実測/予算未達はOPEN維持。
+
+## Aレポート作成（2026-09-09）
+A-3完了68e4607を含むreports/level3-aで作成。比較先a3/aws-review、依存PR #6（未マージ）。main基準ではない。
+成果物：experiments/A/final-report.md。既存の設計・評価・価格を転記/照合し、再設計・再採点・新規調査・試験は未実施。
+今回の承認範囲はレポート・README・handoffの公開保存とPR作成。B開始・採用・マージ・クラウド操作は含まない。
+残存/実クラウド費は既存記録どおりなし/0円、削除対象なし。モデル料金未取得。
+確認コマンド：git status --short、git rev-parse HEAD、git ls-remote origin reports/level3-a、gh pr view --json baseRefName,headRefOid,state。期待：作業ツリーclean、remote同一HEAD、base a3/aws-review、OPEN。
+旧段落のa3/aws-review等はA-3時点の履歴。今回のHEADは上記コマンドで取得する。
