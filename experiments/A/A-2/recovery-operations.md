@@ -13,24 +13,30 @@ RDS同期Multi-AZは別AZの待機系へ自動切替。公式の60〜120秒は�
 ```mermaid
 sequenceDiagram
   autonumber
-  participant Client as 外部クライアント/Canary
-  participant ALB as ALB
-  participant AppA as Fargate (AZ-A)
-  participant AppB as Fargate (AZ-B)
-  participant DB_Pri as RDS Primary (AZ-A)
-  participant DB_Stb as RDS Standby (AZ-B)
 
-  Note over AppA,DB_Pri: AZ-A 障害発生
-  Client->>ALB: リクエスト送信
-  ALB--xAppA: ヘルスチェック失敗 / 切離し
+  box rgb(240, 248, 255) 外部監視・入口
+    participant Client as 外部クライアント / Canary
+    participant ALB as ALB
+  end
+  box rgb(255, 245, 238) AZ-A（被災系）
+    participant AppA as Fargate (AZ-A)
+    participant DB_Pri as RDS Primary (AZ-A)
+  end
+  box rgb(240, 255, 240) AZ-B（健全系・待機系）
+    participant AppB as Fargate (AZ-B)
+    participant DB_Stb as RDS Standby (AZ-B)
+  end
+
+  Note over AppA,DB_Pri: 【障害発生】AZ-A 障害
+  Client->>ALB: 業務リクエスト / 合成監視probe
+  ALB--xAppA: ヘルスチェック失敗（切離し）
   ALB->>AppB: 全トラフィックを健全なAZ-Bへ集中
-  Note over DB_Pri,DB_Stb: RDS自動failover (同期standby昇格)
-  DB_Stb-->>DB_Stb: 新Primaryとして起動 (60-120秒目安)
-  AppB->>DB_Stb: DB再接続 (指数backoff + jitter)
-  Client->>ALB: E2E合成監視 (毎分probe)
-  ALB->>AppB: 通常リクエスト処理
+  Note over DB_Pri,DB_Stb: RDS自動フェイルオーバー検知
+  DB_Stb-->>DB_Stb: 新Primaryとして昇格・書込受付開始 (60〜120秒目安)
+  AppB->>DB_Stb: DB再接続（指数バックオフ + ジッター）
   AppB->>DB_Stb: SQLクエリ実行
-  Note over Client,DB_Stb: 連続300秒(5分)の安定稼働確認 → 復旧判定
+  ALB->>Client: 正常レスポンス復旧
+  Note over Client,DB_Stb: 【安定性検証】連続300秒（5分間）の連続監視probe成功 → 復旧完了判定
 ```
 
 同期commit済みの業務更新はRPO0を期待するが試験必須。毎秒の合成確定マーカーとプロフィール/お気に入りversionで、障害時刻との差≦300秒、欠損/重複/参照整合を確認。リクエスト成功応答とcommitは別々に保存。AZ障害と論理破損を混同しない。全対象障害30/5を保証したとは結論しない。

@@ -1,6 +1,10 @@
 # A-2 構成図
 
-![実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成)](architecture.jpg)
+<p align="center">
+  <img src="architecture.jpg" alt="実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成)" width="100%" style="max-width: 950px; border: 1px solid #e1e4e8; border-radius: 6px;" />
+</p>
+
+## 論理構成図 (Mermaid)
 
 ```mermaid
 flowchart TB

@@ -17,21 +17,25 @@
 工程：A-1→A-2→A-3→B-1→B-2→B-3→C（別途定義）。1回1工程、PRは指示なしにマージしない。
 
 ```mermaid
-flowchart LR
-  subgraph PhaseA [Phase A: AWS単一設計]
-    A1["A-1 要件整理<br/>(完了)"] --> A2["A-2 AWS設計<br/>(完了)"] --> A3["A-3 設計評価<br/>(61→65点: 承認保留)"]
+flowchart TB
+  subgraph PhaseA ["Phase A: AWS単一設計"]
+    direction LR
+    A1["<b>A-1 要件整理</b><br/>(完了)"] --> A2["<b>A-2 AWS設計</b><br/>(完了)"] --> A3["<b>A-3 設計評価</b><br/>(61→65点 / 承認保留)"]
   end
-  subgraph PhaseB [Phase B: 3社マルチクラウド比較]
-    B1["B-1 共通条件比較<br/>(保留)"] --> B2["B-2 詳細設計"] --> B3["B-3 比較評価"]
+  subgraph PhaseB ["Phase B: 3社マルチクラウド比較"]
+    direction LR
+    B1["<b>B-1 共通比較</b><br/>(保留)"] --> B2["<b>B-2 詳細設計</b>"] --> B3["<b>B-3 比較評価</b>"]
   end
-  subgraph PhaseC [Phase C: 検証・変更対応]
-    C1["C 実装・障害試験"]
+  subgraph PhaseC ["Phase C: 検証・変更対応"]
+    C1["<b>C 実装・障害試験</b>"]
   end
-  A3 -.->|人間確認・承認後| B1
-  B3 -.-> C1
-  classDef done fill:#d4edda,stroke:#28a745,stroke-width:1px;
-  classDef pending fill:#fff3cd,stroke:#ffc107,stroke-width:1px;
-  classDef future fill:#e2e3e5,stroke:#6c757d,stroke-width:1px;
+
+  PhaseA -->|人間の確認・指示後| PhaseB
+  PhaseB --> PhaseC
+
+  classDef done fill:#d4edda,stroke:#28a745,stroke-width:2px;
+  classDef pending fill:#fff3cd,stroke:#ffc107,stroke-width:2px;
+  classDef future fill:#f8f9fa,stroke:#6c757d,stroke-width:1px,stroke-dasharray: 3 3;
   class A1,A2 done;
   class A3 pending;
   class B1,B2,B3,C1 future;
@@ -61,8 +65,11 @@ A-1完了時の次回工程：A-2（現在の次回は下記A-3）。残る設�
 ## A-2 AWS設計
 
 - [設計・3案比較](experiments/A/A-2/design.md)
-- [構成図](experiments/A/A-2/diagram.md)
-  - ![実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成)](experiments/A/A-2/architecture.jpg)
+- [構成図ドキュメント](experiments/A/A-2/diagram.md)
+
+<p align="center">
+  <img src="experiments/A/A-2/architecture.jpg" alt="実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成)" width="100%" style="max-width: 900px; border: 1px solid #ddd; border-radius: 6px;" />
+</p>
 - [復旧・監視・運用・IaC方針](experiments/A/A-2/recovery-operations.md)
 - [月額概算](experiments/A/A-2/cost.md)
 - [公式出典](experiments/A/A-2/sources.md)
