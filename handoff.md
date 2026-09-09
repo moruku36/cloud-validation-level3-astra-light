@@ -20,3 +20,6 @@ Issue #4は根拠付き文書訂正のみ解決、実現性はOPEN維持。
 ## 資源・承認
 クラウド操作なし、本実験残存なし、実クラウド費0円、削除期限なし。既存アカウント全体未調査、モデル利用費未取得。
 今回承認はA-3レビュー・限定設計修正・公開成果物/PR/Issue更新。採用承認、merge、資源作成、B開始は承認されていない。workflow権限はC前の課題で今回変更なし。
+
+## GitHub保存
+A-3 PR：https://github.com/moruku36/cloud-validation-level3-astra-light/pull/6 、base a2/aws-design、PR #5依存、OPEN・未マージ。レビュー成果物8870250をpush済み。Issue #4は文書訂正だけ完了扱い、未実測/予算未達はOPEN維持。

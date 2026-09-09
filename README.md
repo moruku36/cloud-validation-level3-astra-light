@@ -63,3 +63,5 @@ A-3レビュー完了。設計自己採点は初回61点・修正後65点、合�
 - [レビュー前保存版](experiments/A/A-3/baseline/README.md)
 
 次回は人間の判断待ち。Bには自動で進まない。
+
+[A-3 PR #6](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/6)（比較先a2/aws-design、PR #5依存、未マージ）。
