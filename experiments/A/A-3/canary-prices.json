@@ -1,0 +1,186 @@
+[
+  {
+    "file": "cw-tokyo",
+    "publicationDate": "2026-08-31T09:21:48Z",
+    "sku": "CCC6XKS9YEDWTEX3",
+    "attributes": {
+      "servicecode": "AmazonCloudWatch",
+      "location": "Any",
+      "locationType": "AWS Region",
+      "group": "CW-MonthlyFree-Canaries",
+      "groupDescription": "Monthly free usage of canaries",
+      "usagetype": "Global-CW:Canary-runs",
+      "operation": "",
+      "regionCode": "",
+      "servicename": "AmazonCloudWatch"
+    },
+    "rate": {
+      "rateCode": "CCC6XKS9YEDWTEX3.A429C66SYZ.ETY2894C67",
+      "description": "Global",
+      "beginRange": "0",
+      "endRange": "100",
+      "unit": "Runs",
+      "pricePerUnit": {
+        "USD": "0.0000000000"
+      },
+      "appliesTo": [
+        "22G82KX7ES5KTUC6",
+        "9HV7DTRQV952TZK8",
+        "RU5PEN6BVTYPBZTN",
+        "3B3A2EQUYBSMT7H4",
+        "TVDGJTPNCD29VTN5",
+        "UHUPV9M647Z88KJX",
+        "NX6YC6GGAT5K2TWW",
+        "BJUNX52MT82XF932",
+        "E8Z9DM82FF3EVYVP",
+        "RDWUZYEP26UCZCRP",
+        "Q3YNA8HDDTT3WPK9",
+        "GFBX78RFZ8TXPJ3N",
+        "TYZQUJHD57EC33HS",
+        "KBU9YZSRMBF685RS",
+        "EF8CNU8AGP7GEPZR",
+        "K5KHG6Y2FP44WE5Z",
+        "EFZ633YAMRCSDU6B",
+        "T9FH4MX9Z6UNMRS3",
+        "HBEFGP5MU68A8ERJ",
+        "5S3W89CNK2E777K3",
+        "KPZECRT3FJ43GW5K",
+        "5UHPES8UN3HUSRZ5",
+        "YUKPH9BFBR8T7AME",
+        "YC9QKJ2EW95V39ZV",
+        "NW5C83HDEXMJZQ96",
+        "XH2RT8B4875BY3E9",
+        "S4TNHGWXFARFG788",
+        "652KTGK3YBHB2PRF",
+        "9SW7Q9ZNJ484JNYT",
+        "UB4T9JHNKC8VTZFR",
+        "MH2K6KE9B9NDBP3S",
+        "JERYYRGP2F8S8J8C",
+        "96EA6YQSXFE9MUK5",
+        "QP8V523SHEB226WZ",
+        "2FRRM8V2JG5K7DNX",
+        "JUV6P6M4HXY9JEFV",
+        "99SHU43RCSXKUKHK"
+      ]
+    }
+  },
+  {
+    "file": "cw-tokyo",
+    "publicationDate": "2026-08-31T09:21:48Z",
+    "sku": "TVDGJTPNCD29VTN5",
+    "attributes": {
+      "servicecode": "AmazonCloudWatch",
+      "location": "Asia Pacific (Tokyo)",
+      "locationType": "AWS Region",
+      "group": "CW-Canaries",
+      "groupDescription": "CloudWatch Synthetics Canaries",
+      "usagetype": "APN1-CW:Canary-runs",
+      "operation": "",
+      "regionCode": "ap-northeast-1",
+      "servicename": "AmazonCloudWatch"
+    },
+    "rate": {
+      "rateCode": "TVDGJTPNCD29VTN5.JRTCKXETXF.6YS6EN2CT7",
+      "description": "$0.0019 per canary run per month - Asia Pacific (Tokyo)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Runs",
+      "pricePerUnit": {
+        "USD": "0.0019000000"
+      },
+      "appliesTo": []
+    }
+  },
+  {
+    "file": "cw-osaka",
+    "publicationDate": "2026-08-31T09:21:48Z",
+    "sku": "CCC6XKS9YEDWTEX3",
+    "attributes": {
+      "servicecode": "AmazonCloudWatch",
+      "location": "Any",
+      "locationType": "AWS Region",
+      "group": "CW-MonthlyFree-Canaries",
+      "groupDescription": "Monthly free usage of canaries",
+      "usagetype": "Global-CW:Canary-runs",
+      "operation": "",
+      "regionCode": "",
+      "servicename": "AmazonCloudWatch"
+    },
+    "rate": {
+      "rateCode": "CCC6XKS9YEDWTEX3.A429C66SYZ.ETY2894C67",
+      "description": "Global",
+      "beginRange": "0",
+      "endRange": "100",
+      "unit": "Runs",
+      "pricePerUnit": {
+        "USD": "0.0000000000"
+      },
+      "appliesTo": [
+        "22G82KX7ES5KTUC6",
+        "9HV7DTRQV952TZK8",
+        "RU5PEN6BVTYPBZTN",
+        "3B3A2EQUYBSMT7H4",
+        "TVDGJTPNCD29VTN5",
+        "UHUPV9M647Z88KJX",
+        "NX6YC6GGAT5K2TWW",
+        "BJUNX52MT82XF932",
+        "E8Z9DM82FF3EVYVP",
+        "RDWUZYEP26UCZCRP",
+        "Q3YNA8HDDTT3WPK9",
+        "GFBX78RFZ8TXPJ3N",
+        "TYZQUJHD57EC33HS",
+        "KBU9YZSRMBF685RS",
+        "EF8CNU8AGP7GEPZR",
+        "K5KHG6Y2FP44WE5Z",
+        "EFZ633YAMRCSDU6B",
+        "T9FH4MX9Z6UNMRS3",
+        "HBEFGP5MU68A8ERJ",
+        "5S3W89CNK2E777K3",
+        "KPZECRT3FJ43GW5K",
+        "5UHPES8UN3HUSRZ5",
+        "YUKPH9BFBR8T7AME",
+        "YC9QKJ2EW95V39ZV",
+        "NW5C83HDEXMJZQ96",
+        "XH2RT8B4875BY3E9",
+        "S4TNHGWXFARFG788",
+        "652KTGK3YBHB2PRF",
+        "9SW7Q9ZNJ484JNYT",
+        "UB4T9JHNKC8VTZFR",
+        "MH2K6KE9B9NDBP3S",
+        "JERYYRGP2F8S8J8C",
+        "96EA6YQSXFE9MUK5",
+        "QP8V523SHEB226WZ",
+        "2FRRM8V2JG5K7DNX",
+        "JUV6P6M4HXY9JEFV",
+        "99SHU43RCSXKUKHK"
+      ]
+    }
+  },
+  {
+    "file": "cw-osaka",
+    "publicationDate": "2026-08-31T09:21:48Z",
+    "sku": "KBU9YZSRMBF685RS",
+    "attributes": {
+      "servicecode": "AmazonCloudWatch",
+      "location": "Asia Pacific (Osaka)",
+      "locationType": "AWS Region",
+      "group": "CW-Canaries",
+      "groupDescription": "CloudWatch Synthetics Canaries",
+      "usagetype": "APN3-CW:Canary-runs",
+      "operation": "",
+      "regionCode": "ap-northeast-3",
+      "servicename": "AmazonCloudWatch"
+    },
+    "rate": {
+      "rateCode": "KBU9YZSRMBF685RS.JRTCKXETXF.6YS6EN2CT7",
+      "description": "USD0.0019 per Runs for CW:Canary-runs in Asia Pacific (Osaka)",
+      "beginRange": "0",
+      "endRange": "Inf",
+      "unit": "Runs",
+      "pricePerUnit": {
+        "USD": "0.0019000000"
+      },
+      "appliesTo": []
+    }
+  }
+]

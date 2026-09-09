@@ -1,24 +1,22 @@
 # 再開情報
 
-更新2026-09-09。A-1完了1745dfe、A-2設計文書作成。全要件適合やA-3合格を意味しない。
-PUBLIC保存先：https://github.com/moruku36/cloud-validation-level3-astra-light 。公開範囲・所有者は指定済み。
-ブランチa2/aws-design、base origin/a1/requirements=1745dfefe71e11a9df077eb247982f0f5f7616d7。PR #3未マージ、mainは要件を含む前提にしない。A-2のPRはa1/requirementsを比較先とする。初回設計81cab82、後続に算術表現訂正・追跡情報更新。最新commitはgit rev-parse HEADで確認。
+更新2026-09-09。A-1/A-2/A-3工程完了（A-3 GitHub反映を最終確認）。A設計は初回61・修正後65点で合格条件未達。採用承認保留、PRマージなし、B未着手。
+保存先PUBLIC：https://github.com/moruku36/cloud-validation-level3-astra-light 。再確認不要。
+ブランチa3/aws-review、base origin/a2/aws-design=b5f5022e4475499661e0c41e2a60eeb91a0364d5。PR #5未マージ、mainを基準にしない。初回81cab82、レビュー前b5f5022を履歴/experiments/A/A-3/baselineへ保存。最新commitはgit rev-parse HEADで確認。
 
-## 確定・仮定・未解決
-ECS/Fargate ARM常時2AZ＋RDS PostgreSQL同期Multi-AZを条件付き採用。ALB/WAF東京、CloudFront不採用（国内保存を優先）。task public IP＋SGで入口制限、DB/S3はprivate。Cognito/SES東京。詳細はdesign.md。
-小計82,682円、20%余裕込み99,218円、為替150円・税10%仮定。価格主要単価取得済み、小費目/通信予算枠・性能増強は未確定、予算余裕782円のみ。
-片AZ1task100RPS、DB credit、全依存の30分上限、メール転送先/受信者保存、PITR4h/地域復旧、測定実装は未検証。Issue #4 OPEN、各論点に判断/根拠/検証方法を保存。回答済み業務条件は再質問しない。
-BはAWS指定を継承せず3社比較。C-0まで実験上限・権限・期限未承認。指定モデルGPT-6 Astra Light、実行モデル識別未確認。実残りトークン数未取得。
+## 現在の判断
+A-2候補の基盤選択/台数は維持、採用承認なし。A-3/revised-design.md・budget.mdが旧仕様/費用の修正優先文書。
+監視費を月166.44USD追加して小計667.54USD＝110,144円、予備20%込132,173円。為替150と税10%は仮定。REQ-12未達、価格/保持量/容量に未確定。
+復旧は影響発生から検知・回復・実時間300秒安定まで。毎分5回だけでは不十分として修正。片AZ性能/全認証DNS経路/DB再接続は未実測。国内保存/受信メール/退会台帳/期限消去に未確認。
+Issue #4は根拠付き文書訂正のみ解決、実現性はOPEN維持。
+人間採点空欄。指定モデルGPT-6 Astra Light、実行モデル識別/実残りトークン数は未取得。
 
-## 次回1工程
-**A-3のみ**。明示実行指示待ち。今回はA-3正式採点・包括レビュー未実施。
-読む順：本ファイル、resource-inventory.md、experiments/A/A-2/design.md・cost.md・issue4.md、必要に応じて24要件/正式配点/出典。初回設計を保持し、根拠・予算/性能/DRをレビュー、要件→設計→検証対応を評価し、自己採点、人間欄空欄、修正前後を保存。Bへ進まない。
-必要コマンド：git status --short、git rev-parse HEAD、git ls-remote origin a2/aws-design（remote一致）、gh pr view（A-2番号）--json baseRefName,headRefOid,state（base a1/requirements・OPEN）、gh issue view 4 --json body,state。
-公式価格の完了調査は再実行せず、通信/小費目と代替案費用の未確定部分だけ必要性を判断する。ADR要件IDと未検証を追跡。詳細IaC実装はまだ不要。
+## 次回
+人間の判断を待つ。予算増額か監視/基盤の再設計、削除台帳/メール国内保存範囲、未保証の復旧依存/運用体制を判断。Bの開始は明示指示がある場合だけ。今回はB未実施。
+読む順：本ファイル、resource-inventory.md、A-3/review.md・scores.md・budget.md・validation-handoff.md。必要対象だけ追加読込。公式主要単価の再調査を繰り返さない。
+必要コマンド：git status --short、git rev-parse HEAD、git ls-remote origin a3/aws-review、gh pr view（A-3番号）--json baseRefName,headRefOid,state（base a2/aws-design・OPEN）、gh issue view 4 --json body,state（OPEN）。
+今後CはC-0の予算/許可/期限が先。試験T01〜11は未実施、法令適合完了ではない。
 
-## 資源・費用・承認
-今回作成資源なし、クラウド利用費0円、削除対象/期限なし。既存アカウント全体未調査。モデル等費用未取得。上記設計額は実費ではない。
-承認された今回範囲A-2設計・公開GitHub保存/PR/Issue更新。マージ・クラウド作成は禁止。次回A-3は別指示。workflow権限不足はC前対応、今回拡張なし。
-
-## 公開結果
-A-2 PR：https://github.com/moruku36/cloud-validation-level3-astra-light/pull/5 、base a1/requirements、未マージ。成果物1019fabをpush済み。Issue #4は判断・根拠・未検証・方法を記載してOPEN維持。次回A-3。
+## 資源・承認
+クラウド操作なし、本実験残存なし、実クラウド費0円、削除期限なし。既存アカウント全体未調査、モデル利用費未取得。
+今回承認はA-3レビュー・限定設計修正・公開成果物/PR/Issue更新。採用承認、merge、資源作成、B開始は承認されていない。workflow権限はC前の課題で今回変更なし。
