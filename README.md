@@ -1,36 +1,41 @@
-# クラウド検証LEVEL3
+# クラウドアーキテクチャ検証 LEVEL3 (AWS構成編)
 
-保存先：moruku36/cloud-validation-level3-astra-light（一般公開）。
-状態：A-1〜A-3完了。設計評価61→65点で合格条件未達、採用承認保留。クラウド作成なし。Aレポートの人間確認後、指示があればB-1。
+本リポジトリは、**曖昧なビジネス要件・制約からAI（自律型エージェント）が実践的かつ合理的なクラウド構成を設計・判断・評価できるかを検証するプロジェクト**（LEVEL3検証）の記録および成果物です。
 
-- [LEVEL3-A 詳細検証結果レポート](experiments/A/final-report.md)（過去成果物の集約、再設計・再採点なし）
+クラウドエンジニアや開発チームが設計意図・検証結果・課題を直感的に把握できるよう整理しています。
 
-- [要件定義・不足部分](docs/requirements.md)
-- [共通指示](docs/execution-policy.md)
-- [原本の取得可能な本文](docs/sources/shared-chat.txt)
-- [再開情報](handoff.md)
-- [リソース・費用](resource-inventory.md)
-- [準備・操作記録](evaluation/repository-preparation.md)
-- [A-1依頼受領記録](evaluation/A-1-intake.md)
-- [初回案](evaluation/snapshots/pre-repository/)
+---
 
-工程：A-1→A-2→A-3→B-1→B-2→B-3→C（別途定義）。1回1工程、PRは指示なしにマージしない。
+## 1. プロジェクト概要
+
+- **目的**: 曖昧なビジネス要件に対し、AIが適切な要件定義、アーキテクチャ選定、コスト見積、耐障害・運用設計を行えるかの検証
+- **検証対象モデル**: GPT-6 Astra Light
+- **検証シナリオ**:
+  - **Phase A (本フェーズ)**: AWS単一クラウドにおける最適構成の設計と自己評価
+  - **Phase B (次フェーズ・保留中)**: AWS / Azure / Google Cloud の3大クラウド比較選定
+  - **Phase C (将来フェーズ)**: IaC実装・実機デプロイ・カオスエンジニアリング（障害試験）
+
+### 現在のステータス
+- **進捗**: Phase A（A-1 要件整理 〜 A-3 設計評価）完了
+- **設計自己評価スコア**: **65点 / 100点**（合格基準80点に未達、**採用承認保留**）
+- **保留の主因**: 外形監視（CloudWatch Synthetics Canary）費用の精緻化に伴う**月額予算（税込10万円）の超過**（修正後: 約11.01万円〜予備費込約13.22万円）
+- **クラウド実リソース**: 未作成（Phase Aはペーパー設計・評価のみ、クラウド利用費0円）
 
 ```mermaid
 flowchart TB
-  subgraph PhaseA ["Phase A: AWS単一設計"]
+  subgraph PhaseA ["Phase A: AWS単一設計（完了・評価保留）"]
     direction LR
-    A1["<b>A-1 要件整理</b><br/>(完了)"] --> A2["<b>A-2 AWS設計</b><br/>(完了)"] --> A3["<b>A-3 設計評価</b><br/>(61→65点 / 承認保留)"]
+    A1["<b>A-1 要件整理</b><br/>曖昧要件から24要件定義"] --> A2["<b>A-2 AWS設計</b><br/>ECS+RDS Multi-AZ設計"] --> A3["<b>A-3 設計自己評価</b><br/>61→65点 (予算超過で保留)"]
   end
-  subgraph PhaseB ["Phase B: 3社マルチクラウド比較"]
+  subgraph PhaseB ["Phase B: 3社マルチクラウド比較（保留中）"]
     direction LR
-    B1["<b>B-1 共通比較</b><br/>(保留)"] --> B2["<b>B-2 詳細設計</b>"] --> B3["<b>B-3 比較評価</b>"]
+    B1["<b>B-1 共通比較基準</b>"] --> B2["<b>B-2 詳細設計</b>"] --> B3["<b>B-3 3社評価選定</b>"]
   end
-  subgraph PhaseC ["Phase C: 検証・変更対応"]
-    C1["<b>C 実装・障害試験</b>"]
+  subgraph PhaseC ["Phase C: 検証・障害試験（将来）"]
+    C1["<b>C 実装・カオス試験</b>"]
   end
 
-  PhaseA -->|人間の確認・指示後| PhaseB
+  PhaseA -->|人間の承認・指示後| PhaseB
   PhaseB --> PhaseC
 
   classDef done fill:#d4edda,stroke:#28a745,stroke-width:2px;
@@ -41,58 +46,86 @@ flowchart TB
   class B1,B2,B3,C1 future;
 ```
 
-## A-1 要件整理
+---
 
-- [要件ID・受入条件](experiments/A/A-1/requirements.md)
-- [重要質問・回答台帳](experiments/A/A-1/questions.md)
-- [仮定・制約・リスク](experiments/A/A-1/assumptions-risks.md)
-- [追跡表](experiments/A/A-1/traceability.md)
-- [正式補足](docs/sources/supplement-2026-09-08.md)
-- [評価表（未採点）](evaluation/rubric.md)
-- [人間の介入](evaluation/human-intervention.md)
-- [A-1操作・検証記録](evaluation/A-1-run.md)
-- [回答対応Issue #2](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/2)
+## 2. 業務・システム要件サマリ
 
-初回案はA-1ブランチの最初の成果物コミットで識別。レビュー後版はまだない。準備PR #1は未マージのため、A-1 PRはそのブランチを基点にする。
+| 項目 | 要件仕様 | 設計上のポイント・制約 |
+|---|---|---|
+| **サービス形態** | 新規国内B2C Webサービス | 会員登録、ログイン、一覧・詳細、お気に入り、管理機能 |
+| **ユーザー規模** | 初期1万人 → 3年で100万人 | 月間100万PV、通常10 RPS、ピーク100 RPS（15分/日）、同時接続500人 |
+| **目標SLA / 可用性** | 暦月 99.9% 以上 | 東京リージョン内 2つのAZ（Availability Zone）によるマルチAZ冗長化 |
+| **目標RTO / RPO** | **RTO ≦ 30分 / RPO ≦ 5分** | 単一AZ障害時は自動フェイルオーバー、復旧後300秒（5分）の連続安定監視 |
+| **データ主権・保存** | **日本国内限定保存** | 東京リージョン保管、大阪リージョンへ日次DRバックアップ（PITR 35日） |
+| **月額予算上限** | **税込 100,000 円 / 月** | 本番＋最小開発検証環境、通信・監視・セキュリティ・バックアップ全込み |
+| **運用体制** | 開発5名・インフラ専任1名 | 平日日中運用、夜間即応なし（**夜間はマネージドサービスによる自動復旧必須**） |
 
-A-1：[PR #3](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/3)、[初回案6731042](https://github.com/moruku36/cloud-validation-level3-astra-light/commit/6731042)。初回案を保持し、正式回答反映版を後続コミットで識別。設計レビュー後版は未作成。
+---
 
-- [正式業務回答](docs/sources/business-answers-2026-09-08.md)
-- [今回の回答反映・完了確認](evaluation/A-1-completion.md)
+## 3. アーキテクチャ概要 (AWS)
 
-A-1完了時の次回工程：A-2（現在の次回は下記A-3）。残る設計評価事項は[Issue #4](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/4)。
+専任1名の運用負荷を抑えつつ、同期整合性（SQL）と夜間の自動復旧を両立するため、**AWS Fargate (ARM) + Amazon RDS PostgreSQL (Multi-AZ)** を採用構成案として選定しました。
 
-## A-2 AWS設計
-
-- [設計・3案比較](experiments/A/A-2/design.md)
-- [構成図ドキュメント](experiments/A/A-2/diagram.md)
+### システム構成図
 
 <p align="center">
   <img src="experiments/A/A-2/architecture.jpg" alt="実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成)" width="100%" style="max-width: 900px; border: 1px solid #ddd; border-radius: 6px;" />
 </p>
-- [復旧・監視・運用・IaC方針](experiments/A/A-2/recovery-operations.md)
-- [月額概算](experiments/A/A-2/cost.md)
-- [公式出典](experiments/A/A-2/sources.md)
-- [判断と要件ID](docs/decisions/ADR-A2-001.md)
-- [Issue #4対応・未検証](experiments/A/A-2/issue4.md)
-- [実行・訂正記録](evaluation/A-2-run.md)
 
-初回設計81cab82、後続は算術表記と追跡情報の訂正。次回はA-3のみ（まだ実施していない）。
+### 主要コンポーネントと選定理由
+- **DNS / ネットワーク**: Route 53 (DNSルーティング) + ALB (HTTPS終端・2AZ負荷分散)
+- **セキュリティ**: AWS WAF (ALB直前でRate Limitおよびマネージドルール適用)
+- **アプリケーション実行基盤**: AWS Fargate (Graviton ARM, 1vCPU / 2GB) × 2AZ常時稼働（最小2〜最大6タスク）
+  - *選定理由*: EC2に比べOSパッチ・AMI運用保守工数を削減。Kubernetes (EKS) は専任1名体制での運用複雑性を考慮し不採用。
+- **データストア**: Amazon RDS for PostgreSQL (`db.t4g.medium`, gp3 50GB, 同期Multi-AZ)
+  - *選定理由*: 会員情報・トランザクションの強い整合性担保、スタンバイ系への自動フェイルオーバー（60〜120秒目安）。
+- **認証基盤**: Amazon Cognito (東京リージョン・Lite構成)
+- **オブジェクト・バックアップ**: Amazon S3 (プライベートバケット・VPCエンドポイント接続)
+- **ディザスタリカバリ (DR)**: 大阪リージョンへの日次DBスナップショット転送・S3クロスリージョン複製（Cold DR構成）
 
-[A-2 PR #5](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/5)はA-1ブランチを比較先とし、PR #3に依存します。未マージ。
+---
 
-## A-3 AWS設計評価
+## 4. 費用評価・ボトルネック（A-3評価結果）
 
-A-3レビュー完了。設計自己採点は初回61点・修正後65点、合格条件未達・採用承認保留。A-2の約8.27万円は監視費不足を含む旧見積。修正版は約11.01万円、予備費20%込約13.22万円。
+初期設計（A-2）では月額約8.27万円（予備費込約9.92万円）と予算枠内に収まっていましたが、A-3の設計レビューにて**外形監視（Canary）費用の計上漏れ**が発覚し、予算超過となりました。
 
-- [レビュー・追加根拠](experiments/A/A-3/review.md)
-- [24要件対応・判定](experiments/A/A-3/traceability.md)
-- [修正仕様](experiments/A/A-3/revised-design.md)
-- [費用監査・感度・削減案](experiments/A/A-3/budget.md)
-- [初回/修正後採点](experiments/A/A-3/scores.md)
-- [人間判断・C試験](experiments/A/A-3/validation-handoff.md)
-- [レビュー前保存版](experiments/A/A-3/baseline/README.md)
+### 月額費用と予算上限の比較
 
-次回は人間の判断待ち。Bには自動で進まない。
+| 評価フェーズ | 月額費用 (税抜USD) | 月額費用 (税込・150円換算) | 予算 (10万円) に対する判定 |
+|---|---:|---:|---|
+| **A-2 初回設計 (予備費なし)** | 501.10 USD | **82,682 円** | 適合（約1.73万円の余裕） |
+| **A-2 初回設計 (予備費20%)** | 601.32 USD | **99,218 円** | 適合（782円の余裕） |
+| **予算上限ライン** | - | **100,000 円** | **基準線** |
+| **A-3 修正版 (予備費なし)** | 667.54 USD | **110,144 円** | **10,144 円 超過 (110.1%)** |
+| **A-3 修正版 (予備費20%)** | 801.05 USD | **132,173 円** | **32,173 円 超過 (132.2%)** |
 
-[A-3 PR #6](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/6)（比較先a2/aws-design、PR #5依存、未マージ）。
+### コスト超過の要因と主な内訳
+- **監視費用の見直し**: 東京・大阪両拠点からの毎分Canary外形監視（CloudWatch Synthetics）費用（+166.44 USD / 約2.7万円）が必須となったため。
+- **改善代替案（未承認）**:
+  1. Canaryを専用サービスから軽量Lambda定期実行へ内製化（運用保守工数とのトレードオフ）
+  2. 大阪Canaryの実行頻度を毎分から5分へ緩和
+  3. 月額予算上限を約13.2万円へ調整・引き上げ
+
+---
+
+## 5. ドキュメントマップ
+
+本検証に関する詳細資料は、目的別に以下のディレクトリに整理されています。
+
+### 企画・要件・ルール (`docs/`)
+- [要件定義・全体方針](docs/requirements.md) : ビジネス背景、制約条件、前提事項の整理
+- [実行ポリシー](docs/execution-policy.md) : AIエージェントの作業手順・禁止事項・評価方針
+- [正式業務回答](docs/sources/business-answers-2026-09-08.md) : ヒアリングに対する顧客側の正式回答
+
+### Phase A: AWS単一クラウド検証 (`experiments/A/`)
+- [**★ LEVEL3-A 総合検証結果レポート**](experiments/A/final-report.md) : **A-1〜A-3の全結果・採点・課題を集約したメインレポート**
+- **A-1: 要件定義フェーズ**
+  - [24要件一覧・受入条件](experiments/A/A-1/requirements.md) / [質疑応答台帳](experiments/A/A-1/questions.md) / [リスク・仮定一覧](experiments/A/A-1/assumptions-risks.md)
+- **A-2: アーキテクチャ設計フェーズ**
+  - [基本設計・3案比較](experiments/A/A-2/design.md) / [構成図](experiments/A/A-2/diagram.md) / [復旧・運用・IaC方針](experiments/A/A-2/recovery-operations.md) / [初期費用概算](experiments/A/A-2/cost.md) / [ADR意思決定記録](docs/decisions/ADR-A2-001.md)
+- **A-3: 設計評価・レビューフェーズ**
+  - [自己評価スコア表 (61→65点)](experiments/A/A-3/scores.md) / [指摘事項・改善仕様](experiments/A/A-3/revised-design.md) / [予算再監査レポート](experiments/A/A-3/budget.md) / [24要件追跡マトリクス](experiments/A/A-3/traceability.md)
+
+### 評価・検証プロセスログ (`evaluation/`)
+- [A-1 操作検証記録](evaluation/A-1-run.md) / [A-2 操作検証記録](evaluation/A-2-run.md) / [A-3 操作検証記録](evaluation/A-3-run.md)
+- [人間の介入記録台帳](evaluation/human-intervention.md) : AIの自律性と人間による介入回数・内容の記録
