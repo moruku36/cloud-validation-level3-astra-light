@@ -1,4 +1,22 @@
-# 再開情報（最新状態：2026-09-09）
+# B-1 再開情報（2026-09-09、以下のA記録より優先）
+
+B-1比較成果物作成済み。GitHub反映確認は後続の完了証跡で確定する。設計合格/最終採用ではなく、B-2/B-3/C未実施。
+
+- 起点：PR #8 OPEN、`reports/a-completion` / `8f427118c7a6522817d1fd7d0842d4aec7f4023c`。現在の比較先は同branch、#8依存。mainを起点としていない。
+- 作業branch：`b1/cloud-comparison`。基準事前commit `4f486d2`、初回比較commit `1812e6d`。最終head/PRは完了証跡欄へ追記し、PR headで解決する（自己参照SHAを文書内に生成しない）。
+- 成果物：[基準](experiments/B/B-1/comparison-criteria.md)、[3案・24要件](experiments/B/B-1/comparison.md)、[費用](experiments/B/B-1/cost.md)、[出典](experiments/B/B-1/sources.md)、[run記録](evaluation/B-1-run.md)。未解決は[Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9) OPEN、#4から継承。#4 CLOSEDは技術解決ではない。
+- 暫定順位：AWS64/GCP62/Azure59（B-1相対点、B-3正式採点ではない）。全案に重要未確認。AWSを最初の検討候補とするだけで採用しない。税込基本概算AWS76,034/Azure216,493/GCP135,580円＋未精算差額。Azureは確認済み固定費だけで予算超過、AWS/GCP予算適合は未確認。
+- 仮定：通常10RPS終日/日次ピーク、MAU1万人、API2KB、外向き200GB総量、外形2地点毎分/10step、PITR30日。地域DBcopyを全社共通600GB/月へ訂正。為替150/税10%/20%参考。30日PITRは業務必須ではない。
+- 未完了：全依存無人RTO/SLO・片AZ性能、国内保存/メール受信先、台帳/35日消去、論理破損4h、東京GCP単価等精算、独自auth/probe運用負担。全クラウド試験未実施。実行モデル識別/モデル費/トークン/実行時間は不明。
+- 次の1工程：**B-2：選定・設計**。開始には別途明示指示。B-3で正式初回/修正後評価・引継ぎ・B詳細レポート保存。Cへ自動移行しない。C-0予算/期限/操作許可は未確定。
+- 承認範囲：今回B-1の比較/概算/暫定判断/文書/Issue/commit/push/PR/remote確認まで。クラウド作成/変更、PR merge、B-2以降への移行は含まない。
+- 資源：今回クラウド操作なし、作成/削除/残存/期限の新規対象なし。既存台帳では本実験残存なし/実費0円、アカウント全体/請求は未確認。計画費用と実費を混同しない。
+
+再開時はPR #8とB-1 PRのstate/head/base/SHAを再確認。#8が後でmerge済みなら今回の未マージ記録を現在状態にしない。ローカル `git rev-parse HEAD` / `git ls-remote origin refs/heads/b1/cloud-comparison refs/heads/reports/a-completion` とGitHub PR情報を照合する。比較以外のテスト実行/課金はしない。
+
+---
+
+# A時点の再開情報（履歴：2026-09-09）
 
 最新確認対象main：`2a97796c7429e3f968a35997d9b6a53257eb84cb`。
 A-1〜A-3・A詳細レポートの保存は完了。PR #1/#3/#5/#6/#7はmainへマージ済み。

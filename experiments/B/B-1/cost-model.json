@@ -67,9 +67,9 @@
         {
           "item": "DB DR dump storage",
           "usd": 1.25,
-          "formula": "大阪50GB月×0.025（20GB×直近2世代＋10GB作業領域）",
+          "formula": "大阪50GB月×0.025（20GB×直近2世代＋10GB作業領域、東京単価代用）",
           "source": "A-S04",
-          "status": "V"
+          "status": "E"
         },
         {
           "item": "地域間copy",

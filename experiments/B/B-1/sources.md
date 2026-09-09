@@ -40,6 +40,8 @@ Microsoft API取得filter：serviceName eq 'Azure Container Apps' / 'Azure Datab
 
 ## 採用前に残る証跡
 
+初回案保存後の接続関係点検：[Azure公式の内部ACA＋Application Gateway WAF](https://learn.microsoft.com/en-us/azure/container-apps/waf-app-gateway)、[GCP公式のregional外部ALB＋Cloud Run/serverless NEG](https://docs.cloud.google.com/load-balancing/docs/https/setting-up-reg-ext-https-serverless)を公式検索結果で確認（2026-09-09）。後者はCloud Armor policyの選択も記載。接続方式の根拠を追加したが、選択SKUの費用・設定・性能を実証したものではない。
+
 1. 3社＋SES/受信先・DNS・ログ・鍵・CI/registryについて国内保存/転送範囲の確認。B-1は法令適合審査ではない。
 2. 35日内の全copy/version/soft-delete/手動backupの消去と削除台帳の扱い。日数設定だけで物理消去保証とはしない。
 3. 外部入口からログイン等の全依存を含む障害試験、片AZ100RPS/500人/p95、300秒安定・RPO時刻の実証（C承認後）。

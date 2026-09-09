@@ -1,4 +1,4 @@
-# クラウドアーキテクチャ検証 LEVEL3 (AWS構成編)
+# クラウドアーキテクチャ検証 LEVEL3（A: AWS / B-1: 3クラウド比較）
 
 本リポジトリは、**曖昧なビジネス要件・制約からAI（自律型エージェント）が実践的かつ合理的なクラウド構成を設計・判断・評価できるかを検証するプロジェクト**（LEVEL3検証）の記録および成果物です。
 
@@ -9,14 +9,15 @@
 ## 1. プロジェクト概要
 
 - **目的**: 曖昧なビジネス要件に対し、AIが適切な要件定義、アーキテクチャ選定、コスト見積、耐障害・運用設計を行えるかの検証
-- **検証対象モデル**: GPT-6 Astra Light
+- **指定モデル**: GPT-6 Astra Light（実行モデル識別情報は未確認）
 - **検証シナリオ**:
-  - **Phase A (本フェーズ)**: AWS単一クラウドにおける最適構成の設計と自己評価
-  - **Phase B (次フェーズ・保留中)**: AWS / Azure / Google Cloud の3大クラウド比較選定
+  - **Phase A (工程完了・設計不合格)**: AWS単一クラウドの設計と自己評価
+  - **Phase B (B-1比較まで実施)**: AWS / Azure / Google Cloud の比較。B-2選定・設計、B-3正式評価・引継ぎは未実施
   - **Phase C (将来フェーズ)**: IaC実装・実機デプロイ・カオスエンジニアリング（障害試験）
 
 ### 現在のステータス
-- **進捗**: Phase A（A-1 要件整理 〜 A-3 設計評価）完了
+- **進捗**: A工程完了、B-1比較成果物作成済み。GitHub反映の完了証跡は[handoff](handoff.md)を参照
+- **B-1結果**: 暫定順位AWS / GCP / Azure。全案に重要未確認、Azure代表案は予算未達。設計合格・最終採用ではない。[比較](experiments/B/B-1/comparison.md) / [費用](experiments/B/B-1/cost.md) / [追跡Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9)
 - **設計自己評価スコア**: **65点 / 100点**（合格基準80点に未達、**採用承認保留**）
 - **保留の主因**: 外形監視（CloudWatch Synthetics Canary）費用の精緻化に伴う**月額予算（税込10万円）の超過**（修正後: 約11.01万円〜予備費込約13.22万円）
 - **クラウド実リソース**: 未作成（Phase Aはペーパー設計・評価のみ、クラウド利用費0円）
@@ -27,9 +28,9 @@ flowchart TB
     direction LR
     A1["<b>A-1 要件整理</b><br/>曖昧要件から24要件定義"] --> A2["<b>A-2 AWS設計</b><br/>ECS+RDS Multi-AZ設計"] --> A3["<b>A-3 設計自己評価</b><br/>61→65点 (予算超過で保留)"]
   end
-  subgraph PhaseB ["Phase B: 3社マルチクラウド比較（保留中）"]
+  subgraph PhaseB ["Phase B: B-1比較まで実施（最終選定前）"]
     direction LR
-    B1["<b>B-1 共通比較基準</b>"] --> B2["<b>B-2 詳細設計</b>"] --> B3["<b>B-3 3社評価選定</b>"]
+    B1["<b>B-1 3クラウド比較</b>"] --> B2["<b>B-2 選定・設計</b>"] --> B3["<b>B-3 正式評価・引継ぎ</b>"]
   end
   subgraph PhaseC ["Phase C: 検証・障害試験（将来）"]
     C1["<b>C 実装・カオス試験</b>"]
@@ -43,12 +44,15 @@ flowchart TB
   classDef future fill:#f8f9fa,stroke:#6c757d,stroke-width:1px,stroke-dasharray: 3 3;
   class A1,A2 done;
   class A3 pending;
-  class B1,B2,B3,C1 future;
+  class B1 done;
+  class B2,B3,C1 future;
 ```
 
 ---
 
 ## 2. 業務・システム要件サマリ
+
+以下の構成列と§3〜4はAの履歴。東京/大阪・SQL・台数・毎日ピーク・監視製品は業務必須ではない。B-1は[正式回答](docs/sources/business-answers-2026-09-08.md)を優先し、外向き200GBを総量として比較した。
 
 | 項目 | 要件仕様 | 設計上のポイント・制約 |
 |---|---|---|
@@ -130,7 +134,14 @@ flowchart TB
 - [A-1 操作検証記録](evaluation/A-1-run.md) / [A-2 操作検証記録](evaluation/A-2-run.md) / [A-3 操作検証記録](evaluation/A-3-run.md)
 - [人間の介入記録台帳](evaluation/human-intervention.md) : AIの自律性と人間による介入回数・内容の記録
 
-### A完了報告・最新の再開情報（2026-09-09）
+### A完了報告（履歴）・B-1の再開情報（2026-09-09）
 - [A実行完了報告](experiments/A/completion-report.md)：PR #1/#3/#5/#6/#7はマージ済み。Issue #4は課題引継ぎとしてクローズ、技術課題は未解決。A不合格・採用承認保留。
-- [最新handoff](handoff.md)：次は別実行チャットでB-1「3クラウド比較」。本更新はプロンプト準備まででB未実施。B-2＝選定・設計、B-3＝評価・引継ぎ。A採用とB開始は別判断。
+- [最新handoff](handoff.md)：次の1工程は明示指示後のB-2「選定・設計」。B-3＝正式評価・引継ぎ・B詳細レポート保存。Cへ自動移行しない。A採用とB開始は別判断。
 - 本文のAWS構成・監視方式・毎日ピーク等はAの設計/算定仮定を含む。Bへ業務要件として固定せず、正式回答を優先する。
+
+### B-1: 3クラウド比較
+
+- [事前固定基準](experiments/B/B-1/comparison-criteria.md)（4f486d2） / [3案・24要件・暫定判断](experiments/B/B-1/comparison.md)
+- [共通使用量・費目・感度](experiments/B/B-1/cost.md) / [公式出典・未確認](experiments/B/B-1/sources.md) / [実行記録](evaluation/B-1-run.md)
+- 税込基本概算：AWS76,034円、Azure216,493円、GCP135,580円。未精算差額があり、確定見積ではない。20%参考余裕は費用表の別欄。
+- branch `b1/cloud-comparison`、base `reports/a-completion`、未マージPR #8依存。B-1 PR/最終SHAは[handoff](handoff.md)。未解決事項はIssue #9をOPENで継続。
