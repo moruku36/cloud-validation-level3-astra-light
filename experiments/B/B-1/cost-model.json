@@ -1,0 +1,508 @@
+{
+  "checked_at": "2026-09-09",
+  "currency": "USD",
+  "exchange_assumption": 150,
+  "tax_assumption": 0.1,
+  "contingency_reference": 0.2,
+  "unit_note": "V=公式確認またはAの当日公式抽出再利用。数量/性能は仮定。E=地域/適用単価の未確認を含む仮計算。全額に未精算Uが残る。",
+  "clouds": {
+    "AWS": {
+      "rows": [
+        {
+          "item": "Fargate ARM本番",
+          "usd": 71.96340000000001,
+          "formula": "2task×730h×(1vCPU×0.04045＋2GiB×0.00442)",
+          "source": "A-S02",
+          "status": "V"
+        },
+        {
+          "item": "RDS PostgreSQL t4g.medium Multi-AZ",
+          "usd": 147.46,
+          "formula": "730h×0.202（待機込み）",
+          "source": "A-S01",
+          "status": "V"
+        },
+        {
+          "item": "RDS gp3 Multi-AZ 50GB",
+          "usd": 13.8,
+          "formula": "50GB×0.276（待機込み）",
+          "source": "A-S01",
+          "status": "V"
+        },
+        {
+          "item": "ALB",
+          "usd": 23.578999999999997,
+          "formula": "730h×(0.0243＋平均1LCU×0.008)",
+          "source": "A-S03",
+          "status": "V"
+        },
+        {
+          "item": "本番IPv4",
+          "usd": 14.6,
+          "formula": "ALB2＋task2=4IP×730h×0.005",
+          "source": "A-S07",
+          "status": "V"
+        },
+        {
+          "item": "WAF",
+          "usd": 28.1356,
+          "formula": "1ACL×5＋5rules×1＋30.226百万要求×0.60",
+          "source": "A-S06",
+          "status": "V"
+        },
+        {
+          "item": "画像/版/DR object",
+          "usd": 6.464,
+          "formula": "東京120GB＋大阪120GB×0.025＋GET100万/1万×0.0037＋PUT2万/千×0.0047",
+          "source": "A-S04",
+          "status": "E"
+        },
+        {
+          "item": "DB native backup",
+          "usd": 9.5,
+          "formula": "100GB月×0.095、含有無料容量控除なし",
+          "source": "S-BACKUP",
+          "status": "E"
+        },
+        {
+          "item": "DB DR dump storage",
+          "usd": 1.25,
+          "formula": "大阪50GB月×0.025（20GB×直近2世代＋10GB作業領域）",
+          "source": "A-S04",
+          "status": "V"
+        },
+        {
+          "item": "地域間copy",
+          "usd": 54.9,
+          "formula": "DB日次20GB×30＋画像増10GB=610GB×0.09",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "本番Internet",
+          "usd": 24,
+          "formula": "動的56.7＋静的143.3=200GB×0.12",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "アプリDB AZ間",
+          "usd": 0.6,
+          "formula": "30GB×0.02（両端合計の仮単価）。RDS同期複製は含めない",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "logs/metrics/alarms/trace",
+          "usd": 13.4145,
+          "formula": "取込10GB×0.76＋保持10GB×0.033＋検索10GB×0.0067＋10metrics×0.30＋10alarm×0.10＋0.2835百万trace×5",
+          "source": "S-OBS",
+          "status": "E"
+        },
+        {
+          "item": "Secrets/KMS",
+          "usd": 4.55,
+          "formula": "3secrets×0.40＋1万読出0.05＋3keys×1＋10万KMS操作×0.03/1万",
+          "source": "S-SEC",
+          "status": "E"
+        },
+        {
+          "item": "DNS",
+          "usd": 1.8,
+          "formula": "本番/非本番2zones×0.50＋2百万query×0.40",
+          "source": "S-DNS",
+          "status": "E"
+        },
+        {
+          "item": "Registry/scan/CI",
+          "usd": 1.1600000000000001,
+          "formula": "image2GB×0.10＋4scan×0.09＋100 CI分×0.006",
+          "source": "S-CI",
+          "status": "E"
+        },
+        {
+          "item": "非本番compute/DB/disk",
+          "usd": 21.89104,
+          "formula": "task1×176h＋RDS small 176h×0.05＋32GB×0.138（disk常設）",
+          "source": "A-S01/A-S02",
+          "status": "V"
+        },
+        {
+          "item": "非本番入口/IPv4/WAF",
+          "usd": 10.795758900000001,
+          "formula": "ALB176h×0.0323＋3IP×176h×0.005＋ACL/rules176/730月＋0.1百万req×0.60",
+          "source": "A-S03/A-S06/A-S07",
+          "status": "E"
+        },
+        {
+          "item": "非本番画像/backup/転送",
+          "usd": 1.315,
+          "formula": "5GB×0.025＋10GBbackup×0.095＋2GB外向き×0.12",
+          "source": "S-BACKUP/S-NET",
+          "status": "E"
+        },
+        {
+          "item": "dump/削除/監査job",
+          "usd": 0.7464500000000001,
+          "formula": "日次dump合計5task-h×0.04929＋1GB台帳/操作等0.50（保持適合未確認）",
+          "source": "A-S02/S-BACKUP",
+          "status": "E"
+        },
+        {
+          "item": "外形監視実行（AWS東京/大阪）",
+          "usd": 7.405134600000001,
+          "formula": "87600回×0.5GiB×10秒×0.0000166667＋0.0876百万回×0.20＋Scheduler 0.0876百万回×1",
+          "source": "S-MON",
+          "status": "E"
+        },
+        {
+          "item": "監視転送（同上）",
+          "usd": 0.42047999999999996,
+          "formula": "87600回×10要求×4KB=3.504GB ×0.12",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "通知メールSES東京",
+          "usd": 1.06,
+          "formula": "10000通/1000×0.10＋0.5GB×0.12",
+          "source": "S-MAIL",
+          "status": "V"
+        },
+        {
+          "item": "夜間通知SNS（東京）",
+          "usd": 0.002,
+          "formula": "20 email通知/100000×2＋400 API/1百万×0.50＋丸め",
+          "source": "S-MON",
+          "status": "E"
+        }
+      ],
+      "subtotal_usd": 460.81236350000006
+    },
+    "Azure": {
+      "rows": [
+        {
+          "item": "Container Apps本番",
+          "usd": 169.7704,
+          "formula": "2replicas×730h×3600×(1vCPU×0.000024＋2GiB×0.000003)＋30.226百万req×0.40。全時間active上側仮定",
+          "source": "Z-RATE",
+          "status": "V"
+        },
+        {
+          "item": "PostgreSQL Flexible D2ds_v5 HA",
+          "usd": 356.24,
+          "formula": "2vCore×主待機2台×730h×0.122",
+          "source": "Z-RATE",
+          "status": "V"
+        },
+        {
+          "item": "DB premium SSD",
+          "usd": 17.664,
+          "formula": "主待機2×64GiB×0.138（50GB以上のdisk候補）",
+          "source": "Z-RATE",
+          "status": "V"
+        },
+        {
+          "item": "Application Gateway WAF v2",
+          "usd": 591.3000000000001,
+          "formula": "730h×(固定0.522＋最小2instances相当20CU×0.0144)。固定料金を2倍しない",
+          "source": "Z-RATE/Z-WAF",
+          "status": "V"
+        },
+        {
+          "item": "public IP",
+          "usd": 3.65,
+          "formula": "WAF入口1IP×730h×0.005。ACA基盤IP別確認",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "画像ZRS/西日本copy",
+          "usd": 6.619999999999999,
+          "formula": "東120GB×0.026＋西120GB×0.025＋100万GET/1万×0.004＋2万PUT/1万×0.05",
+          "source": "Z-STORAGE",
+          "status": "E"
+        },
+        {
+          "item": "DB native backup",
+          "usd": 9.5,
+          "formula": "100GB×0.095、無料容量控除なし",
+          "source": "Z-RATE",
+          "status": "V"
+        },
+        {
+          "item": "DB西日本dump",
+          "usd": 1.25,
+          "formula": "50GB×0.025",
+          "source": "Z-STORAGE",
+          "status": "E"
+        },
+        {
+          "item": "地域間copy",
+          "usd": 48.800000000000004,
+          "formula": "日次dump600＋画像10=610GB×0.08",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "本番Internet",
+          "usd": 24,
+          "formula": "200GB×0.12",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "アプリDB AZ間",
+          "usd": 0.6,
+          "formula": "30GB×両端合算0.02の暫定値。HA同期転送はサービス込み",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "logs/metrics/alarms/trace",
+          "usd": 35,
+          "formula": "10GB取込×3＋保持/検索1＋10metrics×0.30＋10alarm×0.10。traceは取込10GB内",
+          "source": "S-OBS",
+          "status": "E"
+        },
+        {
+          "item": "Key Vault",
+          "usd": 1,
+          "formula": "10万secret/key操作×0.10/1万。managed identityは付帯機能",
+          "source": "S-SEC",
+          "status": "E"
+        },
+        {
+          "item": "DNS",
+          "usd": 1.8,
+          "formula": "2zones×0.50＋2百万query×0.40",
+          "source": "S-DNS",
+          "status": "E"
+        },
+        {
+          "item": "Registry/CI",
+          "usd": 5.6,
+          "formula": "ACR Basic 1個×5/月＋100CI分×0.006",
+          "source": "S-CI",
+          "status": "E"
+        },
+        {
+          "item": "非本番compute/DB/disk",
+          "usd": 28.04,
+          "formula": "1replica176h全active＋0.1百万req×0.40＋B1MS176h×0.026＋32GB×0.138",
+          "source": "Z-RATE",
+          "status": "V"
+        },
+        {
+          "item": "非本番object/backup/通信",
+          "usd": 1.315,
+          "formula": "5GBobject＋10GBbackup＋2GB外向き。組込ACA ingress、独立WAFなし（合成データ/認証限定）",
+          "source": "Z-STORAGE/S-NET",
+          "status": "E"
+        },
+        {
+          "item": "dump/削除job",
+          "usd": 1.04,
+          "formula": "5vCPU-h/2GiB＋台帳/操作0.50",
+          "source": "Z-RATE",
+          "status": "E"
+        },
+        {
+          "item": "外形監視実行（AWS東京/大阪）",
+          "usd": 7.405134600000001,
+          "formula": "87600回×0.5GiB×10秒×0.0000166667＋0.0876百万回×0.20＋Scheduler 0.0876百万回×1",
+          "source": "S-MON",
+          "status": "E"
+        },
+        {
+          "item": "監視転送（同上）",
+          "usd": 0.42047999999999996,
+          "formula": "87600回×10要求×4KB=3.504GB ×0.12",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "通知メールSES東京",
+          "usd": 1.06,
+          "formula": "10000通/1000×0.10＋0.5GB×0.12",
+          "source": "S-MAIL",
+          "status": "V"
+        },
+        {
+          "item": "夜間通知SNS（東京）",
+          "usd": 0.002,
+          "formula": "20 email通知/100000×2＋400 API/1百万×0.50＋丸め",
+          "source": "S-MON",
+          "status": "E"
+        }
+      ],
+      "subtotal_usd": 1312.0770145999998
+    },
+    "GCP": {
+      "rows": [
+        {
+          "item": "Cloud Run本番 instance課金",
+          "usd": 115.63199999999999,
+          "formula": "2instances×730h×3600×(1vCPU×0.000018＋2GiB×0.000002)。request別課金なし",
+          "source": "G-RUN",
+          "status": "V"
+        },
+        {
+          "item": "Cloud SQL Enterprise Plus N2 HA",
+          "usd": 480.632,
+          "formula": "db-perf-optimized-N-2:2vCPU/16GiB、HA込み(2×0.1396＋16×0.0237)×730h。東京SKU照合未完",
+          "source": "G-SQL",
+          "status": "E"
+        },
+        {
+          "item": "Cloud SQL HA SSD",
+          "usd": 22.1,
+          "formula": "50GiB×0.442（HA込み仮単価）",
+          "source": "G-SQL",
+          "status": "E"
+        },
+        {
+          "item": "regional external ALB",
+          "usd": 20.09,
+          "formula": "forwarding rule 730h×0.025＋入口/応答等230GiB×0.008。regional外部用SKU照合未完",
+          "source": "G-LB",
+          "status": "E"
+        },
+        {
+          "item": "Cloud Armor Standard regional",
+          "usd": 28.1356,
+          "formula": "1policy×5＋5rules×1＋30.226百万req×0.60",
+          "source": "G-ARMOR",
+          "status": "V"
+        },
+        {
+          "item": "public IP",
+          "usd": 3.65,
+          "formula": "regional forwarding1IP×730h×0.005（適用/含有を未確認）",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "画像GCS/大阪copy",
+          "usd": 6.02,
+          "formula": "東京120＋大阪120GB×0.023＋GET100万/1万×0.004＋PUT2万/千×0.005",
+          "source": "G-STORAGE",
+          "status": "E"
+        },
+        {
+          "item": "DB native backup",
+          "usd": 10.4,
+          "formula": "100GB×0.104。PITR logs含有と課金を未精算",
+          "source": "G-SQL",
+          "status": "E"
+        },
+        {
+          "item": "DB大阪dump",
+          "usd": 1.15,
+          "formula": "50GB×0.023",
+          "source": "G-STORAGE",
+          "status": "E"
+        },
+        {
+          "item": "地域間copy",
+          "usd": 48.800000000000004,
+          "formula": "日次dump600＋画像10GB×0.08",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "本番Internet",
+          "usd": 24,
+          "formula": "200GB×0.12",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "アプリDB AZ間",
+          "usd": 0.6,
+          "formula": "30GB×両端合計0.02仮。HA内部同期を重複課金しない",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "logs/metrics/alarms/trace",
+          "usd": 10,
+          "formula": "10GB取込×0.50＋保持/検索1＋10metrics計3＋10alarm計1。traceはlog内。正式meter未精算",
+          "source": "S-OBS",
+          "status": "E"
+        },
+        {
+          "item": "Secret Manager/KMS",
+          "usd": 0.8400000000000001,
+          "formula": "6active versions×0.06＋3key versions×0.06＋10万操作計0.30",
+          "source": "S-SEC",
+          "status": "E"
+        },
+        {
+          "item": "DNS",
+          "usd": 1.2000000000000002,
+          "formula": "2zones×0.20＋2百万query×0.40",
+          "source": "S-DNS",
+          "status": "E"
+        },
+        {
+          "item": "Registry/CI",
+          "usd": 0.8,
+          "formula": "image2GB×0.10＋100CI分×0.006",
+          "source": "S-CI",
+          "status": "E"
+        },
+        {
+          "item": "非本番compute/DB/disk",
+          "usd": 36.4684,
+          "formula": "Run1×176h＋SQL Enterprise single1vCPU/3.75GiB×176h＋32GB×0.221。SQL東京単価暫定",
+          "source": "G-RUN/G-SQL",
+          "status": "E"
+        },
+        {
+          "item": "非本番object/backup/通信",
+          "usd": 1.395,
+          "formula": "5GBobject＋10GBbackup＋2GB転送。run.app認証入口、独立ALB/WAFなし",
+          "source": "G-STORAGE/S-NET",
+          "status": "E"
+        },
+        {
+          "item": "dump/削除job",
+          "usd": 0.8959999999999999,
+          "formula": "5vCPU-h/2GiB＋台帳/操作0.50",
+          "source": "G-RUN",
+          "status": "E"
+        },
+        {
+          "item": "外形監視実行（AWS東京/大阪）",
+          "usd": 7.405134600000001,
+          "formula": "87600回×0.5GiB×10秒×0.0000166667＋0.0876百万回×0.20＋Scheduler 0.0876百万回×1",
+          "source": "S-MON",
+          "status": "E"
+        },
+        {
+          "item": "監視転送（同上）",
+          "usd": 0.42047999999999996,
+          "formula": "87600回×10要求×4KB=3.504GB ×0.12",
+          "source": "S-NET",
+          "status": "E"
+        },
+        {
+          "item": "通知メールSES東京",
+          "usd": 1.06,
+          "formula": "10000通/1000×0.10＋0.5GB×0.12",
+          "source": "S-MAIL",
+          "status": "V"
+        },
+        {
+          "item": "夜間通知SNS（東京）",
+          "usd": 0.002,
+          "formula": "20 email通知/100000×2＋400 API/1百万×0.50＋丸め",
+          "source": "S-MON",
+          "status": "E"
+        }
+      ],
+      "subtotal_usd": 821.6966145999997
+    }
+  }
+}
