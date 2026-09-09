@@ -23,6 +23,15 @@ B-2（選定・設計）、B-3（正式評価・引継ぎ）、C（実装・実�
 すべてに未精算差額Uが残る。既存価格修正は増減、未計上必須費は増額となる。20%はUの上限保証でも必須業務要件でもない。
 相対点はB-3の正式評価と異なる。人間採点は行っていない。GCPの「未確認」は予算内という意味ではない。
 
+```mermaid
+xychart-beta
+    title "月額基本概算 vs 予算上限 (100,000円) [税込・JPY]"
+    x-axis ["AWS (1位: 64点)", "GCP (2位: 62点)", "Azure (3位: 59点)"]
+    y-axis "月額概算費用（円）" 0 --> 250000
+    bar [76034, 135580, 216493]
+    line [100000, 100000, 100000]
+```
+
 根拠：[比較・24要件・相対採点](comparison.md)、[費目別金額・感度](cost.md)、[計算JSON](cost-model.json)。
 
 ## 3案に共通するアプリの考え方
@@ -97,5 +106,37 @@ PR #10 merge：`7ceaf2c3394d2c2bc74a152b3eaf1be1c1bb86fa`。
 4. [実行記録](../../../evaluation/B-1-run.md) / [統合確認記録](../../../evaluation/B-1-integration-review.md)：初回・修正・今回の確認
 5. [handoff](../../../handoff.md)：次回の起点と承認範囲
 
+```mermaid
+flowchart LR
+  subgraph PhaseA["フェーズ A (完了)"]
+    A["A-1〜A-3 設計検証<br/>(65点 / 予算・要件未達)"]
+  end
+  subgraph PhaseB1["フェーズ B-1 (今回完了)"]
+    B1["同条件3社比較<br/>(AWS 64点 / GCP 62点 / Azure 59点)<br/><b>AWSを暫定優先候補化<br/>※採用は未承認・未確認事項多数</b>"]
+  end
+  subgraph PhaseB2["フェーズ B-2 (未着手)"]
+    B2["選定・詳細設計<br/>(未精算費・独自認証/監視等の検証)"]
+  end
+  subgraph PhaseB3["フェーズ B-3 (未着手)"]
+    B3["正式評価・引継ぎ<br/>B詳細レポート"]
+  end
+  subgraph PhaseC["フェーズ C (未着手)"]
+    C["実装・実証検証"]
+  end
+
+  A --> B1
+  B1 -.->|明示承認後| B2
+  B2 --> B3
+  B3 -.->|C-0予算/承認| C
+
+  classDef done fill:#e8f5e9,stroke:#2e7d32,stroke-width:1.5px;
+  classDef current fill:#e3f2fd,stroke:#1565c0,stroke-width:2px;
+  classDef future fill:#f5f5f5,stroke:#9e9e9e,stroke-width:1px,stroke-dasharray: 4 4;
+  class A done;
+  class B1 current;
+  class B2,B3,C future;
+```
+
 次は明示指示後のB-2「選定・設計」。今回は開始していない。
 クラウド操作・資源作成なし。既存台帳上は本実験残存なし/実費0円だが、アカウント全体・請求は未確認。
+
