@@ -26,6 +26,15 @@ AWSを次の検討優先候補とする比較結果です。税込基本概算�
 - **保留の主因**: 外形監視（CloudWatch Synthetics Canary）費用の精緻化に伴う**月額予算（税込10万円）の超過**（修正後: 約11.01万円〜予備費込約13.22万円）
 - **クラウド実リソース**: 未作成（Phase Aはペーパー設計・評価のみ、クラウド利用費0円）
 
+### リポジトリ構造と全体実験フロー
+```mermaid
+flowchart TD
+    Req["要件定義・方針 (docs/)"] --> ExpA["実験A: 設計・リカバリ検証 (experiments/A/)"]
+    Req --> ExpB["実験B: コスト・クラウド比較 (experiments/B/)"]
+    ExpA --> Eval["評価・採点・引継ぎ (evaluation/ & handoff.md)"]
+    ExpB --> Eval
+```
+
 ```mermaid
 flowchart TB
   subgraph PhaseA ["Phase A: AWS単一設計（完了・評価保留）"]
@@ -76,9 +85,46 @@ flowchart TB
 
 ### システム構成図
 
-<p align="center">
-  <img src="experiments/A/A-2/architecture.jpg" alt="実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成)" width="100%" style="max-width: 900px; border: 1px solid #ddd; border-radius: 6px;" />
-</p>
+```mermaid
+flowchart TB
+  U[利用者 / Internet]
+  DNS[Route53 DNSのみ]
+  U -. DNS .-> DNS
+  subgraph TOKYO[東京リージョン / 本番アカウント]
+    W[Regional WAF]
+    L[ALB HTTPS / 2AZ public入口]
+    subgraph AZA[AZ-A 障害境界]
+      A[Fargate ARM 1vCPU 2GB / public IP / ingress ALBのみ]
+      P[RDS PostgreSQL primary / private]
+    end
+    subgraph AZB[AZ-B 障害境界]
+      B[Fargate ARM 1vCPU 2GB / public IP / ingress ALBのみ]
+      S[RDS synchronous standby / private]
+    end
+    IMG[S3画像・backup / 国内保存 / private]
+    ID[Cognito Lite regional API / 認証保存]
+    SES[SES東京 / 最小メール]
+    MON[CloudWatch / 通知 / PIIなしログ]
+    SEC[Secrets Manager / KMS]
+    U -->|TLS| W --> L
+    L -->|TLS| A
+    L -->|TLS| B
+    A -->|DB TLS| P
+    B -->|DB TLS| P
+    P <-->|同期複製| S
+    A -->|S3 gateway endpoint| IMG
+    B -->|S3 gateway endpoint| IMG
+    A & B -->|TLS AWS API| ID & SES & MON & SEC
+  end
+  SES --> MAIL[受信者メール基盤 / 保存地域は別途確認]
+  subgraph DR[大阪 / 復旧用国内保存]
+    COPY[日次DB copy・画像複製 / 最大35日]
+  end
+  IMG -.-> COPY
+  P -. 日次snapshot .-> COPY
+  CI[GitHub Actions / OIDC / 人承認deploy] -->|限定role| TOKYO
+  DEV[別非本番account / 合成データ / 日中稼働]
+```
 
 ### 主要コンポーネントと選定理由
 - **DNS / ネットワーク**: Route 53 (DNSルーティング) + ALB (HTTPS終端・2AZ負荷分散)

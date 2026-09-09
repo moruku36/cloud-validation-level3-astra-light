@@ -45,6 +45,39 @@ sequenceDiagram
 RDS PITRは東京35日、日次snapshot copy大阪（最大35日・copy成功監視）。S3画像はversioning＋大阪非同期複製、旧版を35日以内削除。snapshot/失敗jobの残存を台帳確認。画像はユーザーアップロードなしで、業務確定データはDB、画像参照はオブジェクト確認後commit。Cognitoのパスワードexport/復元は前提にできず、地域復旧では利用者の再設定が必要になり得る。
 退会イベントを独立した国内の削除台帳へ保存し、30日以内に稼働DB・Cognito・outbox・派生値を削除。識別子は最小限、台帳はPIIとしてKMS保護・backup最長期間を過ぎた復元にも適用できる期間（削除後35日＋運用猶予7日を仮定）保持。台帳は業務backupを巻き戻す操作から独立させ、復元後は公開前に削除を再適用。台帳自体の保持は法令検討未了。
 論理破損：判断時刻から4時間暫定。書込停止/隔離→直前PITRを別DBに復元→破損後の正常更新を監査ID/業務履歴で照合して選択救済→削除台帳適用→整合性確認→接続切替。業務履歴自体も破損し救済不能な更新は損失一覧を示す。全面自動restoreは誤判定で損失を拡大するため不採用、日中判断開始、発見までの時間は4時間に隠さない。所要時間は未測定。
+
+```mermaid
+sequenceDiagram
+  autonumber
+  actor Admin as 運用担当者 (日中判断)
+  participant App as アプリケーション基盤
+  participant CurDB as 現行DB (破損含む)
+  participant PitrDB as 隔離PITR復元DB
+  participant Ledger as 退会削除台帳
+  actor Probe as 外部Canary監視
+
+  Note over Admin,CurDB: 【1. 検知・書込隔離】
+  Admin->>App: メンテナンス切替 / 新規書込停止
+  Admin->>PitrDB: 誤り発生直前時点へ隔離PITR復元開始
+  
+  Note over Admin,CurDB: 【2. 正常更新の選別抽出】
+  Admin->>CurDB: WAL / 監査ログ解析（破損トランザクションと健全更新の分離）
+  CurDB-->>Admin: 救済対象トランザクション抽出完了 (最大数千〜9,000件規模)
+
+  Note over Admin,PitrDB: 【3. 救済適用 & 削除台帳照合】
+  Admin->>PitrDB: 健全更新の選択的再適用
+  Admin->>Ledger: 復元期間中の退会ユーザー照合
+  Ledger->>PitrDB: 退会済み個人情報・セッションの再削除適用
+
+  Note over Probe,PitrDB: 【4. データ整合性・主要機能検証】
+  Probe->>PitrDB: 認証・主要CRUD・データ整合性の合成検証
+  PitrDB-->>Probe: 整合性確認OK
+
+  Note over Admin,App: 【5. 本番切替・運用再開】
+  Admin->>App: エンドポイントをPitrDBへ切替・ルーティング再開
+  App->>Probe: サービス正常復帰 (目標4時間枠)
+```
+
 地域停止：大阪はcold recovery（日次DB copy、画像複製、IaC/ECR資材の国内複製）。手動開始、DB業務損失はcopy成功時点以降最大約24時間＋copy遅延、コピー失敗時はさらに延長。目標復旧4〜12時間は計画仮定、保証なし。Cognito再設定・DNS伝播・容量確保で延長。平時copy費は概算に計上、復旧起動後は東京相当の追加基盤費が発生し、二重稼働なら月額最大概ね2倍。30分/5分地域DRは採用していない。
 
 ## 観測と対応
