@@ -49,3 +49,19 @@ A-1完了時の次回工程：A-2（現在の次回は下記A-3）。残る設�
 初回設計81cab82、後続は算術表記と追跡情報の訂正。次回はA-3のみ（まだ実施していない）。
 
 [A-2 PR #5](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/5)はA-1ブランチを比較先とし、PR #3に依存します。未マージ。
+
+## A-3 AWS設計評価
+
+A-3レビュー完了。設計自己採点は初回61点・修正後65点、合格条件未達・採用承認保留。A-2の約8.27万円は監視費不足を含む旧見積。修正版は約11.01万円、予備費20%込約13.22万円。
+
+- [レビュー・追加根拠](experiments/A/A-3/review.md)
+- [24要件対応・判定](experiments/A/A-3/traceability.md)
+- [修正仕様](experiments/A/A-3/revised-design.md)
+- [費用監査・感度・削減案](experiments/A/A-3/budget.md)
+- [初回/修正後採点](experiments/A/A-3/scores.md)
+- [人間判断・C試験](experiments/A/A-3/validation-handoff.md)
+- [レビュー前保存版](experiments/A/A-3/baseline/README.md)
+
+次回は人間の判断待ち。Bには自動で進まない。
+
+[A-3 PR #6](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/6)（比較先a2/aws-design、PR #5依存、未マージ）。
