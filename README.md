@@ -1,7 +1,9 @@
 # クラウド検証LEVEL3
 
 保存先：moruku36/cloud-validation-level3-astra-light（一般公開）。
-状態：正式補足の統合・GitHub保存完了。A-1正式回答反映・要件整理完了。A-2設計文書作成、クラウド作成なし。
+状態：A-1〜A-3完了。設計評価61→65点で合格条件未達、採用承認保留。クラウド作成なし。Aレポートの人間確認後、指示があればB-1。
+
+- [LEVEL3-A 詳細検証結果レポート](experiments/A/final-report.md)（過去成果物の集約、再設計・再採点なし）
 
 - [要件定義・不足部分](docs/requirements.md)
 - [共通指示](docs/execution-policy.md)
