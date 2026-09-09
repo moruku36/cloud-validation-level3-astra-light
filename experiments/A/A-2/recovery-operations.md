@@ -10,6 +10,29 @@ RDS同期Multi-AZは別AZの待機系へ自動切替。公式の60〜120秒は�
 |DB主系故障|同期standbyへ自動failover、接続再確立|上と同じ15分目標、25分までに機能復旧し最後5分確認|RDS強制failoverは部分証拠。長transaction/共通障害で超過し得る|
 |認証/地域managed service異常|AWS内部冗長化、アプリ期限内retry。JWT継続利用は既存sessionのみ|ログイン不能の顧客側代替経路なし|Cognito内部AZ停止から30分以内という保証・実証なし。ログインREQ-10適合は未確定、既存JWTをログイン成功と数えない|
 
+```mermaid
+sequenceDiagram
+  autonumber
+  participant Client as 外部クライアント/Canary
+  participant ALB as ALB
+  participant AppA as Fargate (AZ-A)
+  participant AppB as Fargate (AZ-B)
+  participant DB_Pri as RDS Primary (AZ-A)
+  participant DB_Stb as RDS Standby (AZ-B)
+
+  Note over AppA,DB_Pri: AZ-A 障害発生
+  Client->>ALB: リクエスト送信
+  ALB--xAppA: ヘルスチェック失敗 / 切離し
+  ALB->>AppB: 全トラフィックを健全なAZ-Bへ集中
+  Note over DB_Pri,DB_Stb: RDS自動failover (同期standby昇格)
+  DB_Stb-->>DB_Stb: 新Primaryとして起動 (60-120秒目安)
+  AppB->>DB_Stb: DB再接続 (指数backoff + jitter)
+  Client->>ALB: E2E合成監視 (毎分probe)
+  ALB->>AppB: 通常リクエスト処理
+  AppB->>DB_Stb: SQLクエリ実行
+  Note over Client,DB_Stb: 連続300秒(5分)の安定稼働確認 → 復旧判定
+```
+
 同期commit済みの業務更新はRPO0を期待するが試験必須。毎秒の合成確定マーカーとプロフィール/お気に入りversionで、障害時刻との差≦300秒、欠損/重複/参照整合を確認。リクエスト成功応答とcommitは別々に保存。AZ障害と論理破損を混同しない。全対象障害30/5を保証したとは結論しない。
 
 ## Backup・削除・DR（REQ-07,23,24）

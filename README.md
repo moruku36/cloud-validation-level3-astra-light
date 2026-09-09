@@ -16,6 +16,27 @@
 
 工程：A-1→A-2→A-3→B-1→B-2→B-3→C（別途定義）。1回1工程、PRは指示なしにマージしない。
 
+```mermaid
+flowchart LR
+  subgraph PhaseA [Phase A: AWS単一設計]
+    A1["A-1 要件整理<br/>(完了)"] --> A2["A-2 AWS設計<br/>(完了)"] --> A3["A-3 設計評価<br/>(61→65点: 承認保留)"]
+  end
+  subgraph PhaseB [Phase B: 3社マルチクラウド比較]
+    B1["B-1 共通条件比較<br/>(保留)"] --> B2["B-2 詳細設計"] --> B3["B-3 比較評価"]
+  end
+  subgraph PhaseC [Phase C: 検証・変更対応]
+    C1["C 実装・障害試験"]
+  end
+  A3 -.->|人間確認・承認後| B1
+  B3 -.-> C1
+  classDef done fill:#d4edda,stroke:#28a745,stroke-width:1px;
+  classDef pending fill:#fff3cd,stroke:#ffc107,stroke-width:1px;
+  classDef future fill:#e2e3e5,stroke:#6c757d,stroke-width:1px;
+  class A1,A2 done;
+  class A3 pending;
+  class B1,B2,B3,C1 future;
+```
+
 ## A-1 要件整理
 
 - [要件ID・受入条件](experiments/A/A-1/requirements.md)
