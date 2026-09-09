@@ -32,3 +32,5 @@ A-3完了68e4607を含むreports/level3-aで作成。比較先a3/aws-review、�
 残存/実クラウド費は既存記録どおりなし/0円、削除対象なし。モデル料金未取得。
 確認コマンド：git status --short、git rev-parse HEAD、git ls-remote origin reports/level3-a、gh pr view --json baseRefName,headRefOid,state。期待：作業ツリーclean、remote同一HEAD、base a3/aws-review、OPEN。
 旧段落のa3/aws-review等はA-3時点の履歴。今回のHEADは上記コマンドで取得する。
+
+レポート保存：[PR #7](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/7)（比較先a3/aws-review、依存PR #6、未マージ）、[本文作成コミット1df77b7](https://github.com/moruku36/cloud-validation-level3-astra-light/commit/1df77b7)。

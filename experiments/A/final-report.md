@@ -206,3 +206,5 @@ AWS/Fargate/RDSを正解や必須構成として持ち込まない。最適性�
 - AWS実測/請求書照合、法令適合、受信側契約、代替精密見積、図画像レンダリングは未実施/未確認。
 - 過去評価の集計誤りは確認されず、採点/設計資料は今回変更していない。
 - 相対リンクはこのレポートのブランチに継承した資料を指す。固定した全証跡は[A-3完了68e4607のツリー](https://github.com/moruku36/cloud-validation-level3-astra-light/tree/68e4607)。PR/Issue状態は今回確認時点。
+
+レポート保存：[PR #7](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/7)（比較先a3/aws-review、依存PR #6、未マージ）、[本文作成コミット1df77b7](https://github.com/moruku36/cloud-validation-level3-astra-light/commit/1df77b7)。
