@@ -1,4 +1,18 @@
-# 最新：B-2工程完了・選定保留（2026-09-10）
+# 最新：B-3評価・引継ぎ（2026-09-10）
+
+自己評価I/F/R＝66/66/66、設計不合格、AWS優先参考設計・最終選定保留、人間採点/採用承認未取得。**C移行保留、次の1工程はB-2限定差戻し。** B-3完了のremote証跡は[evaluation/B-3-run](evaluation/B-3-run.md)、最終PR/commitは本節末の反映記録を参照。
+
+- 固定対象：B-1完了`7c06ed0432a86b6a3c23db4eb85872d0e4591192`、B-2初回`7daa93c08be4508632af5d4669702a5bccb5bd67`、B-2完了/B-3起点`cbcc26dc4d6f471e0934bb5fac7200411a038321`。R補足`c0cf660d14af3ed67559a1d8d0244ddf4f164fd7`。[baseline](experiments/B/B-3/baseline.md)
+- branch `b3/evaluation-handoff`、比較先`b2/cloud-selection-design`。PR #12がOPEN/未マージであることを確認し、その最新headから開始。**PR #12依存**、mainへ直接比較しない。PRはマージしない。
+- [B詳細レポート](experiments/B/final-report.md)、[24要件](experiments/B/B-3/traceability.md)、[正式採点](experiments/B/B-3/scores.md)、[C計画](experiments/B/B-3/c-validation-plan.md)。
+- 未解決：[Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9) OPEN。H：メール受信側保存範囲/PITR期間/保守主副担当/救済不能損失。D：保存削除/管理画像権限/全依存無人復旧/片AZ容量・費用/論理復元。E：T01〜T16未実施。
+- 次工程の開始条件：ユーザーによるB-2限定差戻しの明示依頼。Hの判断を得てDの根拠を補い再評価。新規全面再選定が必要ならその範囲を別途指定。C-0は自動開始しない。C移行は設計承認/未解決扱い/別実験予算/操作許可/保持期限を個別確定後。
+- 資源：今回クラウド操作なし、新規資源/保持/期限なし。台帳上残存なし・実費0円の継承、実アカウント全体/請求未確認。計画本番83,248円＋U、短期C12,495円＋U（50%参考18,742円＋U、未承認）。モデル費用/token/実作業時間不明。
+- 承認範囲：文書レビュー/限定根拠確認/自己採点/限定文書修正/計画/レポート/GitHub保存/Issue更新/PR作成まで。クラウド/IaC/app/CI実装実行、merge、C-0/C開始、人間採点/採用/実験予算承認なし。
+
+以下はB-2以前の履歴。次工程表現は上記が最新。
+
+# B-2工程完了・選定保留（履歴：2026-09-10）
 
 最終選定保留、AWSは未承認の優先参考設計。設計合格・人間採用承認は別。B-3正式採点/人間採点/C試験なし。
 
