@@ -1,0 +1,211 @@
+[
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Environment",
+    "meterName": "Environment Management Hour",
+    "retailPrice": 0.145,
+    "unitOfMeasure": "1 Hour",
+    "meterId": "08866513-bf6c-5af1-885b-3a2d1bb3c565",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2026-09-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Dedicated",
+    "meterName": "Dedicated vCPU Usage",
+    "retailPrice": 0.057077,
+    "unitOfMeasure": "1 Hour",
+    "meterId": "1e5ef11b-d979-59d8-a7b5-1595df54d3a1",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2023-08-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Standard",
+    "meterName": "Standard Requests",
+    "retailPrice": 0.4,
+    "unitOfMeasure": "1M",
+    "meterId": "31e4637c-3cd6-5207-a4fb-622bdc64b639",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2022-06-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Dedicated",
+    "meterName": "Dedicated Memory Usage",
+    "retailPrice": 0.004978,
+    "unitOfMeasure": "1 Hour",
+    "meterId": "3e1e69c7-b555-5ca0-80aa-c965c5bf781f",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2023-08-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Dedicated",
+    "meterName": "Dedicated Plan Management",
+    "retailPrice": 0.1,
+    "unitOfMeasure": "1 Hour",
+    "meterId": "4333d1f4-1a53-5241-9708-fab0bf04292c",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2023-08-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Standard",
+    "meterName": "Standard vCPU Active Usage",
+    "retailPrice": 2.4E-05,
+    "unitOfMeasure": "1 Second",
+    "meterId": "4ef945a7-c73f-5825-9fe9-117d65d7b4a5",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2022-06-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Standard",
+    "meterName": "Standard Memory Active Usage",
+    "retailPrice": 3E-06,
+    "unitOfMeasure": "1 GiB Second",
+    "meterId": "5b8ebac4-2c47-523d-8559-a1e51867ad3c",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2022-06-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Standard",
+    "meterName": "Standard Memory Idle Usage",
+    "retailPrice": 3E-06,
+    "unitOfMeasure": "1 GiB Second",
+    "meterId": "5ea53005-8569-59a9-9b89-17b4b47f7872",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2022-06-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Environment",
+    "meterName": "Environment Private Endpoint",
+    "retailPrice": 0.145,
+    "unitOfMeasure": "1 Hour",
+    "meterId": "6f5cf214-efba-5cf4-93b7-63df566161d3",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2026-09-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Hybrid",
+    "meterName": "Hybrid vCPU Usage",
+    "retailPrice": 0.261,
+    "unitOfMeasure": "1 Hour",
+    "meterId": "97d7222e-6e4e-595f-9386-ce1129eea0ea",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2024-12-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Environment",
+    "meterName": "Environment Planned Maintenance Hour",
+    "retailPrice": 0.145,
+    "unitOfMeasure": "1 Hour",
+    "meterId": "c655c6d8-b196-5821-92c0-691c85194854",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2026-09-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Dynamic Sessions",
+    "meterName": "Dynamic Sessions",
+    "retailPrice": 0.03,
+    "unitOfMeasure": "1 Hour",
+    "meterId": "cc0cb970-cb10-5362-bcba-1475e924951a",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2026-04-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Container Apps",
+    "skuName": "Standard",
+    "meterName": "Standard vCPU Idle Usage",
+    "retailPrice": 3E-06,
+    "unitOfMeasure": "1 Second",
+    "meterId": "eacf1fec-cb5e-5c31-a259-686c542d9d84",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2022-06-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Database for PostgreSQL Flexible Server General Purpose Ddsv5 Series Compute",
+    "skuName": "1 vCore",
+    "meterName": "vCore",
+    "retailPrice": 0.122,
+    "unitOfMeasure": "1 Hour",
+    "meterId": "0112997c-6af8-54fd-879c-c8a4da982b5d",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2024-04-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Database for PostgreSQL Flexible Server Burstable BS Series Compute",
+    "skuName": "B1MS",
+    "meterName": "B1MS",
+    "retailPrice": 0.026,
+    "unitOfMeasure": "1 Hour",
+    "meterId": "7df22407-6d39-5fdf-91c7-8c1c2965fe9d",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2021-12-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Database for PostgreSQL Flex Server Storage",
+    "skuName": "Storage",
+    "meterName": "Storage Data Stored",
+    "retailPrice": 0.138,
+    "unitOfMeasure": "1 GB/Month",
+    "meterId": "cf8269ac-0978-5c40-8dd5-0faf844f04b4",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2021-06-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Azure Database for PostgreSQL Flexible Server Backup Storage",
+    "skuName": "Backup Storage LRS",
+    "meterName": "Backup Storage LRS Data Stored",
+    "retailPrice": 0.095,
+    "unitOfMeasure": "1 GB/Month",
+    "meterId": "eb9fab5c-0978-5955-82e8-534eb375ca73",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2021-06-01T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Application Gateway WAF v2",
+    "skuName": "Standard",
+    "meterName": "Standard Capacity Units",
+    "retailPrice": 0.0144,
+    "unitOfMeasure": "1/Hour",
+    "meterId": "8972d579-fd44-4081-a0b6-d8e94f422cea",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2019-05-09T00:00:00Z",
+    "currencyCode": "USD"
+  },
+  {
+    "productName": "Application Gateway WAF v2",
+    "skuName": "Standard",
+    "meterName": "Standard Fixed Cost",
+    "retailPrice": 0.522,
+    "unitOfMeasure": "1/Hour",
+    "meterId": "fd8bdb2f-ca8d-4c9a-923f-a6ef056b0264",
+    "armRegionName": "japaneast",
+    "effectiveStartDate": "2019-05-09T00:00:00Z",
+    "currencyCode": "USD"
+  }
+]
