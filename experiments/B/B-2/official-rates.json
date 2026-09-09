@@ -1,0 +1,101 @@
+{
+  "checked_at": "2026-09-10",
+  "url": "https://cloud.google.com/sql/pricing",
+  "html_sha256": "95da25eabb8a2f4028a907a09025d9ac3ecdaadcf970dd3d4769081bda46ca6d",
+  "note": "Public HTML embedded data parsed as JSON, no script evaluation. MySQL and PostgreSQL tab. No CUD/free allowance. Table path is extraction evidence, not SKU id.",
+  "tables": [
+    {
+      "path": "0.2.0.40.1.1.1.1.3.116",
+      "section": "enterprise-edition---general-purpose-machine-series",
+      "cells": [
+        "Price (USD)",
+        "vCPUs",
+        "$0.0537 / 1 hour",
+        "Memory",
+        "$0.0091 / 1 gibibyte hour",
+        "HA vCPUs",
+        "$0.1074 / 1 hour",
+        "HA Memory",
+        "$0.0182 / 1 gibibyte hour",
+        "Tokyo (asia-northeast1)"
+      ]
+    },
+    {
+      "path": "0.2.0.40.1.1.1.4.3.84",
+      "section": "enterprise-plus-edition --n2-machine-series",
+      "cells": [
+        "Price (USD)",
+        "vCPUs",
+        "$0.0698 / 1 hour",
+        "Memory",
+        "$0.0118 / 1 gibibyte hour",
+        "HA vCPUs",
+        "$0.1396 / 1 hour",
+        "HA Memory",
+        "$0.0237 / 1 gibibyte hour",
+        "Data Cache Storage",
+        "$0.000284932 / 1 gibibyte hour",
+        "HA Data Cache Storage",
+        "$0.000569863 / 1 gibibyte hour",
+        "Tokyo (asia-northeast1)"
+      ]
+    },
+    {
+      "path": "0.2.0.40.1.1.1.7.3.19",
+      "section": "storage",
+      "cells": [
+        "Item",
+        "Price (USD)",
+        "SSD storage capacity",
+        "$0.221 / 1 gibibyte month",
+        "HDD storage capacity",
+        "$0.117 / 1 gibibyte month",
+        "Backups (used)",
+        "$0.104 / 1 gibibyte month",
+        "Hyperdisk Balanced Capacity",
+        "$0.1495 / 1 gibibyte month",
+        "Hyperdisk Balanced IOPS",
+        "$0.026 / 1 month",
+        "Hyperdisk Balanced Throughput",
+        "$0.104 / 1 month",
+        "Tokyo (asia-northeast1)"
+      ]
+    },
+    {
+      "path": "0.2.0.40.1.1.1.8.3.21",
+      "section": "ha-storage",
+      "cells": [
+        "Item",
+        "Price (USD)",
+        "SSD storage capacity",
+        "$0.442 / 1 gibibyte month",
+        "HDD storage capacity",
+        "$0.234 / 1 gibibyte month",
+        "Backups (used)",
+        "$0.104 / 1 gibibyte month",
+        "Hyperdisk Balanced HA Capacity",
+        "$0.299 / 1 gibibyte month",
+        "Hyperdisk Balanced HA IOPS",
+        "$0.052 / 1 month",
+        "Hyperdisk Balanced HA Throughput",
+        "$0.208 / 1 month",
+        "Tokyo (asia-northeast1)"
+      ]
+    }
+  ],
+  "load_balancing": {
+    "url": "https://cloud.google.com/load-balancing/pricing",
+    "html_sha256": "699baae046cd8e393e0bdb62da2621e70e2ea2cf8f3a6f3dcb577650ded5686a",
+    "external_tables": [
+      [
+        "Item",
+        "Price per unit (USD)",
+        "Inbound data processed by load balancer",
+        "$0.012 / 1 gibibyte",
+        "Outbound data processed by load balancer",
+        "$0.012 / 1 gibibyte",
+        "Tokyo (asia-northeast1)"
+      ]
+    ]
+  }
+}

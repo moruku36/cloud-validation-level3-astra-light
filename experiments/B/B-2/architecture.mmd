@@ -1,0 +1,47 @@
+flowchart TB
+  U["利用者 / 管理者"] --> DNS["Route53 public DNS / metadata所在地未確認"]
+  DNS --> ALB
+  subgraph PROD["本番アカウント / 東京 ap-northeast-1"]
+    ALB["ACM HTTPS / ALB + WAF / 2AZ"]
+    subgraph ZA["AZ-A"]
+      APP1["Fargate ARM 1vCPU 2GiB / Web auth worker"]
+      DB1["private RDS PostgreSQL writer / t4g.medium"]
+    end
+    subgraph ZB["AZ-B"]
+      APP2["Fargate ARM 1vCPU 2GiB / Web auth worker"]
+      DB2["private RDS synchronous standby"]
+    end
+    ALB -->|"HTTPS / target証明書検証なし / SG限定"| APP1
+    ALB -->|"HTTPS / SG限定"| APP2
+    APP1 -->|"TLS verify-full / commit + next read"| DB1
+    APP2 -->|"TLS verify-full / writer endpoint"| DB1
+    DB1 <-->|"同期 / 自動切替はC未実証"| DB2
+    APP1 --> OBJ["private S3 images / app経由配信"]
+    APP2 --> OBJ
+    APP1 --> SES["SES東京 / SQL outbox / TLS require候補"]
+    APP2 --> SES
+    KEY["regional KMS / Secrets / ECR"] -.-> APP1
+    KEY -.-> APP2
+    DB1 --> BACK["native backup8日 / 最低PITR7日案"]
+    DB1 --> DUMP["日次dump / 元時点・期限manifest"]
+    APP1 -.-> OBS["CloudWatch / PII抑制 metrics logs"]
+    APP2 -.-> OBS
+  end
+  SES --> REC["受信サービス / 国内保存範囲の判断待ち"]
+  subgraph DR["別権限DR保管 / 大阪 ap-northeast-3"]
+    STORE["S3 dump2世代 + images / 元期限保持"]
+    MATERIAL["大阪ECR / KMS / Secrets / state復元資材"]
+    LEDGER["独立削除台帳 / 28日以内消去案"]
+  end
+  DUMP -->|"TLS / 日次20GB"| STORE
+  OBJ -->|"版と期限を継承"| STORE
+  KEY -.->|"資材copy / 東京鍵依存を残さない"| MATERIAL
+  DB1 -.->|"退会outbox / 反映未完なら復元公開禁止"| LEDGER
+  PROBE["外部probe / AWS東京・大阪 / 毎分主要操作"] -->|"public DNS HTTPS"| DNS
+  PROBE --> OBS
+  OBS --> NOTICE["通知 / 夜間即応の前提なし"]
+  subgraph DEV["非本番 別アカウント VPC"]
+    TEST["合成データ / compute DB176h / 入口とdisk常設"]
+  end
+  CI["GitHub コードのみ / OIDC / plan承認apply方針"] -.-> PROD
+  CI -.-> DEV
