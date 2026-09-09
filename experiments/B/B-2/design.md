@@ -19,6 +19,8 @@
 
 初期2taskの各1taskが100RPS＋静的要求＋auth処理を処理できるという証拠はない。500人は同時実行数ではない。pool上限候補はWeb1taskあたり20、worker5、最大6task時150＋管理予約10=160接続。実際のDB max_connections/メモリを確認し、超過前にqueue/backpressureへ。CPU60%継続5分、memory70%、接続70%、free disk30%を増強検討の仮閾値とする。自動scale後も残1AZをCで検証、台数だけで性能を判定しない。
 
+GCPへ判断が逆転する場合の対応は、東京Cloud Run instance課金1vCPU/2GiB min2、private Cloud SQL Enterprise General Purpose 2vCPU/8GiB HA/SSD50GiB、regional external ALB＋Armor、東京GCS/大阪dumpとする。Runはinternal-and-cloud-load-balancing相当のingress制限・default URL無効化可否をC前確認し、Direct VPC private egressでSQLへ接続する。IAMはservice account単位に分離し、AWS SES/probeとの認証は短命連携の対応確認、未対応なら限定secret管理/費用を再精算する。SQL logs7日/backup8世代、同じ削除・SLI品質を維持。Runのmin2を特定2AZの容量確保とみなさない。Azureは[B-1構成](../B-1/comparison.md)を未採用の条件案として保持し、要件/保護を下げない入口再設計と費用成立が先である。
+
 ## 認証・本人整合・画像・メール（REQ-02/03/06/16）
 
 - 認証は保守対象frameworkの標準auth（Django候補）＋server-side SQL session。採用versionとMFA拡張はC前にサポート期間/ライセンス/保守者を確認し固定する。独自暗号方式は作らない。passwordの安全なhash、login rate制御、汎用エラー、CSRF、Secure/HttpOnly/SameSite cookie、login時session rotationを必須タスクにする。

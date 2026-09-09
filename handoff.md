@@ -1,4 +1,24 @@
-# 最新：B-1統合・開発者向け整理
+# 最新：B-2 選定・設計（2026-09-10）
+
+最終選定保留、AWSは未承認の優先参考設計。設計合格・人間採用承認は別。B-3正式採点/人間採点/C試験なし。
+
+- 起点：最新main `4afc6cc4b7c1d1bf9ceb05b2e0aff8e958734210`。PR #8/#10/#11 mergedをAPI確認。B-1原成果物 `7c06ed0432a86b6a3c23db4eb85872d0e4591192`を保持。
+- branch：`b2/cloud-selection-design`、PR比較先`main`、未マージ前工程依存なし。初回設計commit `7daa93c`をレビュー修正前に保存。最終commit/PR/remote照合結果は下の完了証跡へ追記する。
+- 成果物：[B-2 README](experiments/B/B-2/README.md)、[selection](experiments/B/B-2/selection.md)、[design](experiments/B/B-2/design.md)、[構成図](experiments/B/B-2/architecture.mmd)、[復旧/監視](experiments/B/B-2/recovery-observability.md)、[費用](experiments/B/B-2/cost.md)、[実証対応](experiments/B/B-2/validation-plan.md)、[sources](experiments/B/B-2/sources.md)、[run](evaluation/B-2-run.md)。
+- 費用：7日PITR共通条件案で税込基本AWS83,248/GCP101,933/Azure218,588円＋各U。AWS20%参考99,898円は未精算余地の保証ではない。GCP東京DB/LB処理を確認、AWS非本番入口常設/全案監視・DR資材を加算。
+- 判断待ち：[selection U01〜U07](experiments/B/B-2/selection.md)。受信メール側国内保存範囲、7日より前の破損復元の必要性、内製担当/工数、全依存無人復旧・削除/保持、残SKU/実量精算。未回答を承認としない。[Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9)はOPEN継続。
+- 次の1工程：**B-3：評価・引継ぎ**。初回`7daa93c`と最終headを別に評価し、B詳細レポートをGitHubへ保存する。人間欄は空欄、採用承認を代行しない。Cへ自動移行しない。C-0で実験予算/期限/操作許可を確定。
+- 次回は最新mainとB-2 PR state/head/baseを取得。未マージならB-2 headを起点・比較先として依存を明記、マージ済みなら最新main。今回のPRを自動mergeしない。
+- 承認範囲：B-2の必要公式資料/価格調査・選定設計・費用/C実証項目・GitHub文書/Issue/PR反映まで。クラウド操作・IaC/app/CI-CD実装実行・PR merge・B-3/C開始はなし。
+- 資源：今回クラウド操作なし、作成/削除/保持/期限の新規対象なし。既存台帳の残存なし/実費0円とアカウント全体・請求書未確認を区別。モデル識別/料金/トークン使用量・残量/実行時間は不明。
+
+## B-2完了証跡
+
+GitHub反映後に追記する。反映未確認の段階では工程完了とはしない。
+
+---
+
+# 履歴：B-1統合・開発者向け整理
 
 PR #8と#10はmainへマージ済み。B-1原成果物head 7c06ed0432a86b6a3c23db4eb85872d0e4591192、統合commit 7ceaf2c3394d2c2bc74a152b3eaf1be1c1bb86fa。
 今回の要約はreports/b1-developer-summaryからmainへのPRで保存する。次回は当該PRのマージ状態・最新mainのSHAと本文を確認し、未マージならheadを継承して依存を明記する。
