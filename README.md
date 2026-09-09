@@ -129,3 +129,8 @@ flowchart TB
 ### 評価・検証プロセスログ (`evaluation/`)
 - [A-1 操作検証記録](evaluation/A-1-run.md) / [A-2 操作検証記録](evaluation/A-2-run.md) / [A-3 操作検証記録](evaluation/A-3-run.md)
 - [人間の介入記録台帳](evaluation/human-intervention.md) : AIの自律性と人間による介入回数・内容の記録
+
+### A完了報告・最新の再開情報（2026-09-09）
+- [A実行完了報告](experiments/A/completion-report.md)：PR #1/#3/#5/#6/#7はマージ済み。Issue #4は課題引継ぎとしてクローズ、技術課題は未解決。A不合格・採用承認保留。
+- [最新handoff](handoff.md)：次は別実行チャットでB-1「3クラウド比較」。本更新はプロンプト準備まででB未実施。B-2＝選定・設計、B-3＝評価・引継ぎ。A採用とB開始は別判断。
+- 本文のAWS構成・監視方式・毎日ピーク等はAの設計/算定仮定を含む。Bへ業務要件として固定せず、正式回答を優先する。
