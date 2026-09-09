@@ -10,6 +10,10 @@
 - 資源：今回クラウド操作なし、新規資源/保持/期限なし。台帳上残存なし・実費0円の継承、実アカウント全体/請求未確認。計画本番83,248円＋U、短期C12,495円＋U（50%参考18,742円＋U、未承認）。モデル費用/token/実作業時間不明。
 - 承認範囲：文書レビュー/限定根拠確認/自己採点/限定文書修正/計画/レポート/GitHub保存/Issue更新/PR作成まで。クラウド/IaC/app/CI実装実行、merge、C-0/C開始、人間採点/採用/実験予算承認なし。
 
+## B-3 GitHub反映記録
+
+[PR #13](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/13)、比較先`b2/cloud-selection-design`、未マージPR #12依存。成果物commit `376967eb73bb4111e54e18fe83e0252431a9311c`の14変更成果物をremote本文取得しlocal blob SHA一致確認。Issue #9は更新済み・OPEN継続。完了記録を含む最終commitは[PR #13の最終head/commit一覧](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/13/commits)とPR本文の完全SHAを参照し、push後にこの追記の本文/head/baseも確認する。B-3工程完了、PR未マージで停止。次は上記B-2限定差戻しのみ。
+
 以下はB-2以前の履歴。次工程表現は上記が最新。
 
 # B-2工程完了・選定保留（履歴：2026-09-10）
