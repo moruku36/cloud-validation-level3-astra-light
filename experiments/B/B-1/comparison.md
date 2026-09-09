@@ -35,25 +35,69 @@
 compute2台/最大6は十分な性能の証明ではない。Azureは公式一般推奨3replicasに対し2を候補にしており、zone分散設定と残1台100RPSを検証する必要がある。GCP min2も2AZ各1の容量予約ではない。DBのメモリ差は製品最小/選択tierの差であり、AWS4GiBがGCP16GiBと性能同等と主張しない。
 
 ```mermaid
-flowchart LR
-  U["国内利用者"] --> A["AWS DNS・ALB/WAF"]
-  U --> Z["Azure DNS・regional WAF"]
-  U --> G["GCP DNS・regional ALB/Armor"]
-  A --> AC["東京 ECS 2AZ候補"]
-  Z --> ZC["東日本 ACA zone冗長"]
-  G --> GC["東京 Run regional"]
-  AC --> AD["private RDS 同期HA / auth / outbox"]
-  ZC --> ZD["private PostgreSQL 同期HA / auth / outbox"]
-  GC --> GD["private Cloud SQL 同期HA / auth / outbox"]
-  AC --> AO["東京画像・大阪DR"]
-  ZC --> ZO["東日本画像・西日本DR"]
-  GC --> GO["東京画像・大阪DR"]
-  AC --> M["共通外部依存: SES東京"]
-  ZC --> M
-  GC --> M
-  P["共通外形: AWS東京/大阪"] -. public HTTPS .-> A
-  P -. public HTTPS .-> Z
-  P -. public HTTPS .-> G
+flowchart TB
+  subgraph Clients["クライアント & 共通外部依存"]
+    U["国内一般利用者<br/>(ブラウザ / モバイル)"]
+    M["共通外部依存: SES東京<br/>(メール送信 API)"]
+    P["共通外形監視: AWS 東京/大阪<br/>(Scheduler + Lambda 毎分Probe)"]
+  end
+
+  subgraph AWS["【AWS代表案】 (暫定1位 / 64点)"]
+    direction TB
+    A_Pub["Route53 → 東京 ALB + WAF"]
+    A_App["ECS Fargate ARM (2AZ配置)<br/>1vCPU / 2GiB × 2 (最大6)"]
+    A_DB[("RDS PostgreSQL t4g.medium<br/>同期Multi-AZ (東京)")]
+    A_Obj["S3 Bucket (東京・画像配信)"]
+    A_DR[("S3 大阪リージョン<br/>日次dump 600GB/月 + 画像版")]
+    
+    A_Pub -->|Private通信| A_App
+    A_App --> A_DB
+    A_App --> A_Obj
+    A_DB -.->|日次dump転送| A_DR
+    A_Obj -.->|レプリケーション| A_DR
+  end
+
+  subgraph Azure["【Azure代表案】 (暫定3位 / 59点)"]
+    direction TB
+    Z_Pub["Azure DNS → App Gateway WAF v2"]
+    Z_App["Container Apps (Zone冗長)<br/>1vCPU / 2GiB × 2 (最大6)"]
+    Z_DB[("PostgreSQL Flexible D2ds_v5<br/>別AZ同期HA (東日本)")]
+    Z_Obj["Blob Storage (ZRS 東日本)"]
+    Z_DR[("Blob 西日本リージョン<br/>日次dump 600GB/月 + 画像版")]
+
+    Z_Pub -->|Private VNet| Z_App
+    Z_App --> Z_DB
+    Z_App --> Z_Obj
+    Z_DB -.->|日次dump転送| Z_DR
+    Z_Obj -.->|レプリケーション| Z_DR
+  end
+
+  subgraph GCP["【GCP代表案】 (暫定2位 / 62点)"]
+    direction TB
+    G_Pub["Cloud DNS → regional ext ALB + Armor"]
+    G_App["Cloud Run (managed zone分散)<br/>1vCPU / 2GiB min2 (最大6)"]
+    G_DB[("Cloud SQL Enterprise Plus N2<br/>regional同期HA (東京)")]
+    G_Obj["Cloud Storage (東京・画像配信)"]
+    G_DR[("Cloud Storage 大阪<br/>日次dump 600GB/月 + 画像版")]
+
+    G_Pub -->|Direct VPC / Ingress制限| G_App
+    G_App --> G_DB
+    G_App --> G_Obj
+    G_DB -.->|日次dump転送| G_DR
+    G_Obj -.->|レプリケーション| G_DR
+  end
+
+  U ==> A_Pub
+  U -.->|排他検討| Z_Pub
+  U -.->|排他検討| G_Pub
+
+  A_App -->|API送信| M
+  Z_App -.->|API送信| M
+  G_App -.->|API送信| M
+
+  P -.->|毎分 public HTTPS probe| A_Pub
+  P -.->|毎分 public HTTPS probe| Z_Pub
+  P -.->|毎分 public HTTPS probe| G_Pub
 ```
 
 図の3分岐は同時構築するmulti-cloud本番ではなく相互排他的な代表案。AWS共通mail/probeだけAzure/GCPから外部利用する。入口のみpublic、DB/objectはprivate権限、DRは別国内地域・別削除権限。AWStask publicIPの受信はALB SGからのみ。Azure ACA内部ingress、GCP ingress制限で直URL迂回を閉じる方針だが設定検証は未実施。TLS暗号化とバックエンド相手認証は別確認、ALBのtarget証明書検証を誤って保証しない。
@@ -106,6 +150,38 @@ flowchart LR
 
 RTOの比較用時間枠：検知2分以内＋自動回復/再接続23分以内＋実時間300秒安定=30分。これは**予算配分であって実測/保証ではない**。5分安定は少なくとも時刻t,t+60,…,t+300の6観測、失敗/欠測でreset。観測間の障害を見逃すため、実リクエストSLI/health/時刻証跡との照合をCで行う。暦月99.9%の許容停止は30日月43.2分、31日月44.64分。複数回の30分復旧でSLOを超えるためRTO達成だけでSLO適合としない。
 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Probe as 共通外形監視Probe (東京/大阪)
+    participant Ingress as Public入口 (ALB/Armor/WAF)
+    participant App as Web/App Compute (残AZ)
+    participant DB as managed DB (同期HA待機系)
+    actor Alert as 運用通知 (SNS/メール)
+
+    Note over Probe,DB: 【フェーズ1: 障害検知 (0〜2分)】
+    Probe->>Ingress: 毎分 multi-step probe (ログイン/参照/更新)
+    Ingress--xProbe: 応答途絶 / HTTP 5xx / 欠測
+    Probe->>Ingress: 連続失敗を検知 (2分枠内で異常判定)
+
+    Note over Ingress,DB: 【フェーズ2: 自動回復 & 切替 (2〜25分 / 23分枠)】
+    Ingress->>App: 異常AZインスタンス切離し・残存健全AZへ縮退ルーティング
+    DB->>DB: DB主系ダウン時: 同期待機系へ自動フェイルオーバー (60〜120秒目安)
+    App->>DB: コネクションプール再接続 & トランザクション再試行
+
+    Note over Probe,App: 【フェーズ3: 実時間300秒安定稼働確認 (25〜30分 / 5分枠)】
+    loop 毎分 probe (計6回観測: t, t+60, ... t+300)
+        Probe->>Ingress: 合成要求 (認証/主要CRUD)
+        Ingress->>App: 要求中継 (残1台で処理)
+        App-->>Probe: 200 OK (p95 ≤ 500ms, エラーなし)
+    end
+    Note over Probe,DB: 300秒連続成功で RTO 30分以内の自動復旧完了と認定
+
+    opt 自動回復不能 / 300秒未達時
+        Ingress-->>Alert: 夜間SNS通知発行 (※夜間即応は前提にしない)
+    end
+```
+
 片AZ喪失後にAWS/ACA残1×1vCPU/2GiBで100RPSの15分を処理できるかは未確認。仮に1要求CPU10msなら100RPSだけで1core相当になり余裕なし。auth hash/画像/DB待ちを含むCPU時間が短い実装だけで成立し得る。GCPは実配置の詳細非公開なので同じ1instance制約試験は代理に過ぎず、実AZ障害と同一視しない。各案とも正常時/縮退時API別p95≤500ms・error<1%とpool/DBcredit/CPU/メモリを確認する必要がある。
 
 ## 5. 保存・退会削除・論理破損・地域DR
@@ -120,6 +196,43 @@ RTOの比較用時間枠：検知2分以内＋自動回復/再接続23分以内�
 |IaC/CI/資材/鍵|公開GitHubはコード/合成条件のみ、PII/State/Plan/secretを公開しない。機密State/鍵は将来各社国内別権限領域|CI log/registry/鍵のDR利用可能性と所在地未確認。本工程はIaC/Stateを作成しない|
 
 論理破損：誤り直前へ隔離PITR→破損範囲を判定→健全な後続更新を現行DB/transaction記録から選別救済→削除台帳適用→全主要操作確認→切替。開始判断から4hは暫定目標、発見前経過と夜間判断待ちは別。後続正常更新と悪性更新を安全に分離できなければ自動再適用しない。全rollbackで復元点以降の正常更新を失い得る。業務1RPSの書込みなら1hで3,600更新、ピーク10RPSの15分で9,000更新が救済対象になり得る。DB変更履歴/個人情報保持との整合、復元時間、4h達成は未確認。
+
+```mermaid
+flowchart TD
+    E["論理破損 / 悪性データ更新の発生"] --> D{"復旧方針の決定<br/>(人の判断 / 4h目標)"}
+    
+    subgraph Isolation["1. 隔離復元環境"]
+        D -->|直前PITR| PITR["誤り発生直前の時点へ<br/>隔離DBインスタンスをPITR復元"]
+    end
+    
+    subgraph Rescue["2. 正常トランザクション選別・救済"]
+        D -->|現行DB解析| Log["WAL / トランザクション記録から<br/>健全な後続更新を選別抽出<br/>(1h最大3,600件、ピーク時9,000件規模)"]
+        PITR --> Apply["選別した健全更新を<br/>隔離復元DBへ再適用"]
+        Log --> Apply
+    end
+    
+    subgraph Deletion["3. 退会削除の再適用"]
+        Apply --> Ledger["削除台帳との照合<br/>(復元期間中に退会したユーザーの<br/>個人情報・sessionを再削除)"]
+    end
+    
+    subgraph Verification["4. E2E検証 & 切替"]
+        Ledger --> Verify["外形Probeによる全主要操作の疎通検証<br/>(認証・整合性・データ完全性)"]
+        Verify --> Cutover["本番トラフィックを復旧DBへ切替<br/>(復旧完了)"]
+    end
+
+    classDef stage fill:#f8f9fa,stroke:#495057,stroke-width:1.5px;
+    class Isolation,Rescue,Deletion,Verification stage;
+```
+
+```mermaid
+timeline
+    title ユーザーデータ保管と消去ライフサイクル (REQ-07 / REQ-16 / REQ-23)
+    Day 0 : 退会申請受付 : 即時セッション失効・本番アクセス遮断
+    Day 1 - 29 : 稼働系DB物理消去 : 30日以内消去期限・削除台帳へ匿名識別子を記録
+    Day 30 : 本番DB native PITR満了 : 30日PITR世代破棄
+    Day 35 : バックアップ完全破棄上限 : すべての世代・日次dumpから消滅 (最大35日)
+    復旧時 (随時) : PITR / 地域DR復元実行時 : 削除台帳を照合し退会済みデータを確実に再消去
+```
 
 地域全停止：国内別地域に保存済み日次dump/画像/必要資材からcold restoreし、DB authも復元、退会差分再削除、TLS/秘密/入口確認後DNSを切替。main regionにある鍵/台帳だけを頼らない。平常copy費と24hの臨時起動費はcostに記載。成功した最終日次dumpまで戻るためRPO目安約24h＋copy失敗分、復旧時間は人の開始判断・容量確保次第で未確認。別地域常時standbyは初期代表案に含めず、30分/5分を保証しない。
 
@@ -157,6 +270,14 @@ RTOの比較用時間枠：検知2分以内＋自動回復/再接続23分以内�
 |Complexity|5|3|2|3|AzureはWAF/VNet/ACAと外部AWS管理の組合せの見直しが必要|
 |Vendor lock-in/移行性|5|4|4|4|OCI/SQL/HTTP、provider固有IAM等の再構築負担を明示|
 |合計|100|64|59|62|Σ重み×点/5。人間評価は未記入|
+
+```mermaid
+xychart-beta
+    title "B-1 相対採点結果 (100点満点)"
+    x-axis ["AWS (1位)", "GCP (2位)", "Azure (3位)"]
+    y-axis "総合得点" 0 --> 100
+    bar [64, 62, 59]
+```
 
 初回相対採点はこの文書を最初にコミットした版。後の文書修正があればrun記録とコミット差分に残す。B-3の初回/レビュー後正式採点を代行しない。順位は1位AWS/2位GCP/3位Azureだが、**全案の重要必須未確認は解消していない**。
 
