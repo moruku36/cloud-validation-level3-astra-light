@@ -10,6 +10,12 @@
 - クラウドAPI/CLI操作・資源作成/変更/削除・負荷/故障/メール・サブエージェント・PRマージはなし。新規実験資源なし、既存アカウント資源/残存/請求は未確認。モデル識別/トークン/料金/実作業時間は取得できず不明。
 - 再開時：PR head/base/状態と承認版を再確認し、人間の回答で許可された1工程だけを行う。C-0文書の合意やPRマージを構築開始許可にしない。
 
+### C-0 GitHub反映記録
+
+[PR #15](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/15)、head `c0/transition-readiness`、比較先`main`（確認SHA `6bd48f162d027da0056112cac45f08f52d54e903`）。成果物変更SHA `d416ab632c8fe7b3c95ab50cf46f777d2d15746b` の9ファイルをGitHubから取得し、local blob SHAと全件一致。Issue #9へ[更新コメント](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5614540866)を保存、未解決継続。PRはOPEN・未マージ。未マージ依存PRなし。
+
+この反映記録を追加した最終変更SHAは[PR #15 commits](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/15/commits)とPR本文に完全SHAを記載する（自身のcommit SHAを本文へ埋め込む循環を避ける）。追記push後もhead/baseと追記ファイルを照合する。承認票の全項目は未承認のまま、次工程へ進まない。
+
 以下は過去工程の記録。最新状態は本節を優先する。
 
 ## Phase B（B-1〜B-3）成果物の main マージ完了・開発者向け整理（2026-09-10）

@@ -32,4 +32,15 @@ branch `c0/transition-readiness`、PR比較先`main`。#14→#13→#12の依存�
 
 文書検査：C-0文書と本記録の相対リンクの参照先欠落0、対応表のT01〜T16欠落0、既存JSON再計算12,495円/50%参考18,742円で一致。変更文書の秘密鍵/APIキー/メールアドレス形式の検索で該当なし（完全な機密不存在の機械保証ではなく、内容も確認）。`git diff --check`問題なし。設計/コード変更がないためクラウド/実装試験は実施しない。
 
-変更SHA・PRとリモート照合結果は反映確認後に追記する。C-0整理完了と承認取得を混同せず、次工程には進まない。
+成果物変更SHA `d416ab632c8fe7b3c95ab50cf46f777d2d15746b` をpushし、[PR #15](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/15)作成成功。OPEN/merged=false、head `c0/transition-readiness`、base `main` / `6bd48f162d027da0056112cac45f08f52d54e903`。9変更ファイルを固定SHAでremote取得しgit ls-treeのblob SHAと全件一致した。
+
+|C-0主要成果物|照合済みblob SHA|
+|---|---|
+|README|cebd91ec689639e11e31dc3cb1513b3ae8cffb3a|
+|blockers|9078f8d75008154efc043b430500f63cf95c953d|
+|decision|37d20958682b376e501307afb462b74050090150|
+|approval|6c59a44bedbcdbf4780c6fea4919bfc5a9dd1acc|
+
+Issue #9へ[コメント5614540866](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5614540866)を保存。既存本文/チェック/状態は変更せず、C-0結果・PR・次工程・未承認条件を追記した。今後の判定に古い未マージ記述を使わない。
+
+本追記のcommitは[PRのcommit一覧](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/15/commits)とPR本文の最終headで識別し、push後に追記2ファイルのremote blobとPR head/base/未マージ、Issue OPENを再確認する。成果物SHAと完了記録SHAを区別する。C-0整理完了と承認取得を混同せず、次工程には進まない。
