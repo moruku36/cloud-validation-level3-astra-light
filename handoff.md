@@ -1,5 +1,7 @@
 ## 最新：CP1承認票具体化（2026-09-11）
 
+GitHub反映：[PR #17](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/17)、成果物変更SHA `f9b384475f465a441ce0c9622d501128f365f538`。比較先 `b2/limited-design-completion` / `f843183def131b1c42f2b192bdb72392f5150bad`、直接#16/間接#15未マージ依存。変更9ファイルを固定SHAでGitHubから取得しlocal blob全件一致確認。[Issue #9更新](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5623415358)、未解決継続。この反映記録を含む最終SHAはPR本文と[commits](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/17/commits)に保存し、追記push後のhead/base/追記blobを照合する。文書のみで停止する。
+
 [C-0小範囲承認案](experiments/C/C-0/minimal-experiment.md)と[費用モデル](experiments/C/C-0/minimal-cost-model.json)を作成。文書工程完了、**準備判定B**。実験承認なし、C構築開始不可・通常C移行保留。66/66/66不合格、LC1未採点、最終選定/人間採点/採用承認保留。
 
 - 起点：PR #16 `f843183def131b1c42f2b192bdb72392f5150bad`、OPEN/未マージ、base `c0/transition-readiness`。PR #15 OPEN/未マージ、head `609c90467482529329ac80efc4716dab2e6aa1e5`、base main `6bd48f162d027da0056112cac45f08f52d54e903` をGitHubで再確認。C-0とLC1を継承。

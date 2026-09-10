@@ -10,5 +10,7 @@
 - 文書整合/JSON計算/差分・非機密公開範囲を点検する。クラウド構築/試験/負荷/故障/メール/サブエージェント/mergeなし。既存資源・請求最新状態未確認。
 - 編集中handoff追記のPowerShell文字列構文が失敗（exit1、書込みなし）。対象差分patchで追記した。秘密を含むログ/内部思考は保存対象外。
 - 実際のモデル識別、トークン、モデル料金、実作業時間は取得できず不明。指定名を実測モデルとしない。
-- GitHub PR/変更SHA/Issue9/remote照合結果は反映後追記。停止点はPR反映確認、実装以降は今回実施しない。
-
+- GitHub：[PR #17](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/17)、成果物SHA `f9b384475f465a441ce0c9622d501128f365f538`、比較先b2/limited-design-completion / f843183def131b1c42f2b192bdb72392f5150bad。直接#16/間接#15依存、未マージ。
+- 固定成果物SHAの9変更ファイルをGitHubから取得しlocal blobと全件一致。相対リンク/JSONの計算一致。B2/B3固定版に差分なし。差分検査で本記録の末尾空行1件を検出し、この追記で除去した。
+- [Issue #9コメント5623415358](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5623415358)に判定B/具体案/未承認/依存を保存。未解決項目は閉じない。ユーザーの「トークンが戻ったので続けて」を受け、未完了のremote照合と記録を継続した。利用量回復をこちらで測定した記録ではない。
+- この追記を含む最終SHAはPR本文/commitsに保存し、push後にhead/base/未マージと追記2ファイルのblobを再確認する。停止点はPR反映確認、実装以降は今回実施しない。
