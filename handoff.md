@@ -1,3 +1,17 @@
+## 最新：CP1承認票具体化（2026-09-11）
+
+[C-0小範囲承認案](experiments/C/C-0/minimal-experiment.md)と[費用モデル](experiments/C/C-0/minimal-cost-model.json)を作成。文書工程完了、**準備判定B**。実験承認なし、C構築開始不可・通常C移行保留。66/66/66不合格、LC1未採点、最終選定/人間採点/採用承認保留。
+
+- 起点：PR #16 `f843183def131b1c42f2b192bdb72392f5150bad`、OPEN/未マージ、base `c0/transition-readiness`。PR #15 OPEN/未マージ、head `609c90467482529329ac80efc4716dab2e6aa1e5`、base main `6bd48f162d027da0056112cac45f08f52d54e903` をGitHubで再確認。C-0とLC1を継承。
+- 作業branch：`c0/minimal-experiment-approval`、比較先 `b2/limited-design-completion` / 起点SHA。直接依存PR #16、間接依存PR #15。PR/変更SHAは反映記録へ追記する。
+- 承認されたのは今回の文書更新/公式公開単価確認/GitHub PRのみ。コード/Plan未作成。クラウド/試験/メール/mergeはなし。資源/請求最新状態は未確認。
+- 提案：東京、S3 2個/KMS 1個/IAM role 3個のState/lock/IAM/cleanup。最大6h、5hでcleanup、税込計画300円＋事故予備200円＝500円。鍵1個の7日待機と実DeletionDate＋24h以内確認は未承認例外、後日確認は別依頼。
+- 必要回答：専用account/principal/国内端末と転送、実験主副と当日6h枠/後日責任、税/為替条件と必須追加費。E1〜12全未承認、設計不合格の限定例外/部分C-1/段階予算/metadata/鍵残存を個別判断。メール/PITR/正常更新/auth-probe本番体制の4業務回答は未回答のまま後続へ。
+- 次の1工程：回答をbindingし例外承認後、この限定C-1の実装準備。実装SHAと両stackのPlan/費用/操作を人間が確認・承認してからapply。本票の文書完成を操作許可へ読み替えない。
+- 再開時はPR head/base/依存と承認版を再確認。非機密要約だけ公開しState/Plan/実account/担当個人情報を保存しない。実モデル識別/トークン/料金/実作業時間は取得できず不明。
+
+以下は過去工程の記録。
+
 ## 最新：B-2限定設計補完LC1（2026-09-10）
 
 [必要4群の補完](experiments/B/B-2/limited-completion/README.md)は条件付き文書補完完了。4群はC-0 decisionから特定し、G1原期限/台帳/救済、G2画像IAM/保守/国内経路、G3依存回復/容量、G4費用U/State/cleanupを補完。旧初回/完了/B-3/C-0の記録を保持。LC1は未採点、B正式66/66/66点不合格、AWS優先参考・最終選定/人間採点/採用承認/C移行保留、構築開始不可。
