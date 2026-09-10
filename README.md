@@ -1,8 +1,8 @@
-# クラウドアーキテクチャ検証 LEVEL3（A: AWS / B-1: 3クラウド比較）
+# クラウドアーキテクチャ検証 LEVEL3（B-2: 選定・設計）
 
-**B-1を読む方へ：[開発者向け結果サマリー](experiments/B/B-1/README.md)**
+**最新：[B-2 開発者向け結論](experiments/B/B-2/README.md)** ／ [B-1 比較サマリー](experiments/B/B-1/README.md)
 
-AWSを次の検討優先候補とする比較結果です。税込基本概算はAWS約7.60万、GCP約13.56万、Azure約21.65万円。全案に重要未確認があり、採用は未承認。B-2は明示指示待ちです。
+最終選定保留、AWSは未承認の優先参考設計です。7日PITRの共通条件付き概算はAWS83,248円、GCP101,933円、Azure218,588円/月（各未精算Uあり）。国内保存・削除・無人復旧等に重要未確認が残ります。設計合格・人間採用承認・B-3評価は別です。
 
 本リポジトリは、**曖昧なビジネス要件・制約からAI（自律型エージェント）が実践的かつ合理的なクラウド構成を設計・判断・評価できるかを検証するプロジェクト**（LEVEL3検証）の記録および成果物です。
 
@@ -16,11 +16,11 @@ AWSを次の検討優先候補とする比較結果です。税込基本概算�
 - **指定モデル**: GPT-6 Astra Light（実行モデル識別情報は未確認）
 - **検証シナリオ**:
   - **Phase A (工程完了・設計不合格)**: AWS単一クラウドの設計と自己評価
-  - **Phase B (B-1比較まで実施)**: AWS / Azure / Google Cloud の比較。B-2選定・設計、B-3正式評価・引継ぎは未実施
+  - **Phase B (B-2工程完了・選定保留)**: AWS / Azure / Google Cloud比較と条件別設計。[PR #12](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/12)は未マージ。B-3正式評価・引継ぎは未実施
   - **Phase C (将来フェーズ)**: IaC実装・実機デプロイ・カオスエンジニアリング（障害試験）
 
 ### 現在のステータス
-- **進捗**: A工程完了、B-1比較・GitHub反映完了。[PR #10](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/10)はmainへマージ済み（依存PR #8も統合済み）。完了証跡は[handoff](handoff.md)
+- **進捗**: A/B-1工程完了。PR #8/#10/#11はmainへマージ済み。B-2文書・費用・C実証対応を作成、最終選定保留。反映証跡・PR・次工程は[handoff](handoff.md)
 - **B-1結果**: 暫定順位AWS / GCP / Azure。全案に重要未確認、Azure代表案は予算未達。設計合格・最終採用ではない。[比較](experiments/B/B-1/comparison.md) / [費用](experiments/B/B-1/cost.md) / [追跡Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9)
 - **Aの設計自己評価スコア**: **65点 / 100点**（合格基準80点に未達、**採用承認保留**）
 - **保留の主因**: 外形監視（CloudWatch Synthetics Canary）費用の精緻化に伴う**月額予算（税込10万円）の超過**（修正後: 約11.01万円〜予備費込約13.22万円）
@@ -41,7 +41,7 @@ flowchart TB
     direction LR
     A1["<b>A-1 要件整理</b><br/>曖昧要件から24要件定義"] --> A2["<b>A-2 AWS設計</b><br/>ECS+RDS Multi-AZ設計"] --> A3["<b>A-3 設計自己評価</b><br/>61→65点 (予算超過で保留)"]
   end
-  subgraph PhaseB ["Phase B: B-1比較まで実施（最終選定前）"]
+  subgraph PhaseB ["Phase B: B-2条件別設計（最終選定保留）"]
     direction LR
     B1["<b>B-1 3クラウド比較</b>"] --> B2["<b>B-2 選定・設計</b>"] --> B3["<b>B-3 正式評価・引継ぎ</b>"]
   end
@@ -50,7 +50,7 @@ flowchart TB
   end
 
   PhaseA -->|人間の承認・指示後| PhaseB
-  PhaseB --> PhaseC
+  PhaseB -->|"B-3評価 / C-0承認後・自動移行なし"| PhaseC
 
   classDef done fill:#14532d,stroke:#22c55e,stroke-width:2px,color:#ffffff;
   classDef pending fill:#713f12,stroke:#eab308,stroke-width:2px,color:#ffffff;
@@ -58,7 +58,8 @@ flowchart TB
   class A1,A2 done;
   class A3 pending;
   class B1 done;
-  class B2,B3,C1 future;
+  class B2 pending;
+  class B3,C1 future;
 ```
 
 ---
@@ -213,7 +214,7 @@ flowchart TB
 
 ### A完了報告（履歴）・B-1の再開情報（2026-09-09）
 - [A実行完了報告](experiments/A/completion-report.md)：PR #1/#3/#5/#6/#7はマージ済み。Issue #4は課題引継ぎとしてクローズ、技術課題は未解決。A不合格・採用承認保留。
-- [最新handoff](handoff.md)：次の1工程は明示指示後のB-2「選定・設計」。B-3＝正式評価・引継ぎ・B詳細レポート保存。Cへ自動移行しない。A採用とB開始は別判断。
+- [最新handoff](handoff.md)：次の1工程は明示指示後のB-3「評価・引継ぎ」。B詳細レポートをGitHub保存。Cへ自動移行しない。選定/設計合格/人間採用承認は別判断。
 - 本文のAWS構成・監視方式・毎日ピーク等はAの設計/算定仮定を含む。Bへ業務要件として固定せず、正式回答を優先する。
 
 ### B-1: 3クラウド比較
