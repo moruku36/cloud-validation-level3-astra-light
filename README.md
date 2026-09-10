@@ -1,8 +1,8 @@
-# クラウドアーキテクチャ検証 LEVEL3（B-2: 選定・設計）
+# クラウドアーキテクチャ検証 LEVEL3（B-3: 評価・引継ぎ）
 
-**最新：[B-2 開発者向け結論](experiments/B/B-2/README.md)** ／ [B-1 比較サマリー](experiments/B/B-1/README.md)
+**最新：[B詳細レポート](experiments/B/final-report.md)** ／ [B-3成果物](experiments/B/B-3/README.md) ／ [引継ぎ](handoff.md)
 
-最終選定保留、AWSは未承認の優先参考設計です。7日PITRの共通条件付き概算はAWS83,248円、GCP101,933円、Azure218,588円/月（各未精算Uあり）。国内保存・削除・無人復旧等に重要未確認が残ります。設計合格・人間採用承認・B-3評価は別です。
+自己評価は初回/B-2完了/B-3限定修正後66/66/66点、設計不合格。AWS優先参考・最終選定/人間採用承認保留、C移行保留。次はB-2限定差戻しです。基本月額AWS83,248円＋未精算U。工程のGitHub反映は[run](evaluation/B-3-run.md)参照。
 
 本リポジトリは、**曖昧なビジネス要件・制約からAI（自律型エージェント）が実践的かつ合理的なクラウド構成を設計・判断・評価できるかを検証するプロジェクト**（LEVEL3検証）の記録および成果物です。
 
@@ -16,11 +16,11 @@
 - **指定モデル**: GPT-6 Astra Light（実行モデル識別情報は未確認）
 - **検証シナリオ**:
   - **Phase A (工程完了・設計不合格)**: AWS単一クラウドの設計と自己評価
-  - **Phase B (B-2工程完了・選定保留)**: AWS / Azure / Google Cloud比較と条件別設計。[PR #12](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/12)は未マージ。B-3正式評価・引継ぎは未実施
+  - **Phase B (B-3評価・選定保留)**: 3社比較/条件別設計を評価しB詳細レポートを作成。B-3 PRは未マージ[PR #12](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/12)に依存、比較先b2/cloud-selection-design
   - **Phase C (将来フェーズ)**: IaC実装・実機デプロイ・カオスエンジニアリング（障害試験）
 
 ### 現在のステータス
-- **進捗**: A/B-1工程完了。PR #8/#10/#11はmainへマージ済み。B-2文書・費用・C実証対応を作成、最終選定保留。反映証跡・PR・次工程は[handoff](handoff.md)
+- **進捗**: B-3で24要件/正式採点/限定訂正/C計画を作成。設計不合格・C移行保留。反映証跡・PR・次工程は[handoff](handoff.md)。以下のA/B-1結果は各工程の履歴です。
 - **B-1結果**: 暫定順位AWS / GCP / Azure。全案に重要未確認、Azure代表案は予算未達。設計合格・最終採用ではない。[比較](experiments/B/B-1/comparison.md) / [費用](experiments/B/B-1/cost.md) / [追跡Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9)
 - **Aの設計自己評価スコア**: **65点 / 100点**（合格基準80点に未達、**採用承認保留**）
 - **保留の主因**: 外形監視（CloudWatch Synthetics Canary）費用の精緻化に伴う**月額予算（税込10万円）の超過**（修正後: 約11.01万円〜予備費込約13.22万円）
