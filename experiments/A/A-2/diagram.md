@@ -11,45 +11,45 @@
 ## 論理構成図 (Mermaid)
 
 ```mermaid
-flowchart LR
-  subgraph Internet["パブリック / クライアント"]
-    direction TB
-    U["利用者 / ブラウザ"]
-    DNS["Route 53 (DNS)"]
+%%{init: {'themeVariables': { 'fontSize': '20px', 'fontFamily': 'ui-sans-serif, -apple-system, BlinkMacSystemFont, sans-serif' }}}%%
+flowchart TB
+  subgraph PublicLayer ["パブリックアクセス"]
+    direction LR
+    U["<b>👤 利用者 / クライアント</b>"]
+    DNS["<b>🌐 Route 53</b><br/>DNSルーティング"]
     U -. DNS解決 .-> DNS
   end
 
-  subgraph Tokyo["AWS 東京リージョン (本番環境)"]
+  subgraph IngressLayer ["エントリ & セキュリティ"]
+    direction LR
+    WAF["<b>🛡️ AWS WAF (Regional)</b><br/>Rate Limit / 入力攻撃防御"]
+    ALB["<b>⚖️ ALB (Load Balancer)</b><br/>HTTPS終端 / 2AZ負荷分散"]
+    WAF ==>|検査後転送| ALB
+  end
+
+  subgraph TokyoVPC ["AWS 東京リージョン (本番VPC / 2AZ冗長)"]
     direction TB
-    subgraph Ingress["公開入口 & セキュリティ"]
-      WAF["AWS WAF (Regional)"]
-      ALB["ALB (HTTPS終端 / 2AZ負荷分散)"]
-      WAF --> ALB
-    end
-
-    subgraph ComputeData["VPC 内部リソース (2AZ冗長)"]
+    subgraph ComputeTier ["アプリケーション層 (常時2タスク並行)"]
       direction LR
-      subgraph AZ_A["AZ-A 障害境界"]
-        AppA["ECS Fargate ARM<br/>(1vCPU / 2GB)"]
-        DB_Pri[("RDS PostgreSQL<br/>Primary (gp3 50GB)")]
-      end
-      subgraph AZ_B["AZ-B 障害境界"]
-        AppB["ECS Fargate ARM<br/>(1vCPU / 2GB)"]
-        DB_Stb[("RDS PostgreSQL<br/>Standby (同期待機)")]
-      end
+      AppA["<b>🚀 ECS Fargate ARM (AZ-A)</b><br/>1vCPU / 2GB"]
+      AppB["<b>🚀 ECS Fargate ARM (AZ-B)</b><br/>1vCPU / 2GB"]
     end
 
-    subgraph InternalServices["付帯マネージドサービス"]
-      S3["S3 バケット (画像・内部バックアップ)"]
-      Cognito["Cognito Lite (認証)"]
-      SES["SES 東京 (メール送信)"]
-      CW["CloudWatch (監視・アラーム)"]
-      KMS["Secrets Manager / KMS"]
+    subgraph DatabaseTier ["データストア層 (同期Multi-AZ)"]
+      direction LR
+      DB_Pri[("<b>🗄️ RDS PostgreSQL Primary</b><br/>AZ-A (gp3 50GB)")]
+      DB_Stb[("<b>🗄️ RDS PostgreSQL Standby</b><br/>AZ-B (同期待機)")]
+      DB_Pri <===>|同期レプリケーション<br/>(RPO=0)| DB_Stb
     end
   end
 
-  subgraph Osaka["大阪リージョン (DR保管)"]
-    DR_S3[("S3 大阪バケット<br/>(日次DB dump / 画像複製)")]
+  subgraph ManagedAndDR ["付帯マネージドサービス & DR保管"]
+    direction LR
+    S3["<b>📦 S3 バケット (東京)</b><br/>画像保管・内部バックアップ"]
+    Cognito["<b>🔑 Cognito Lite</b><br/>ユーザー認証"]
+    SES["<b>✉️ SES 東京</b><br/>通知メール送信"]
+    CW["<b>📊 CloudWatch</b><br/>毎分外形監視・アラーム"]
+    DR_S3[("<b>🗾 S3 大阪バケット (DR)</b><br/>日次DBダンプ / 画像複製 (35日)")]
   end
 
   U ==>|HTTPS| WAF
@@ -57,11 +57,9 @@ flowchart LR
   ALB -->|Private| AppB
   AppA -->|TLS| DB_Pri
   AppB -->|TLS| DB_Pri
-  DB_Pri <===>|同期複製| DB_Stb
-  AppA & AppB -.->|Gateway EP| S3
-  AppA & AppB -.->|Private API| Cognito & SES & CW & KMS
-  S3 -.->|非同期レプリケーション| DR_S3
-  DB_Pri -.->|日次snapshot転送| DR_S3
+  AppA & AppB -.-> S3 & Cognito & SES & CW
+  S3 -.->|非同期クロスリージョン複製| DR_S3
+  DB_Pri -.->|日次スナップショット転送| DR_S3
 ```
 
 ALBからのみtask ingress許可。DB/S3は非公開。矢印は論理経路であり、AWS管理サービスの内部AZ構成を実測した図ではない。
