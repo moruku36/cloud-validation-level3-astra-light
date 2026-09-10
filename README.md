@@ -1,5 +1,7 @@
 # クラウドアーキテクチャ検証 LEVEL3（B-3: 評価・引継ぎ）
 
+**開発者向け：[B結果サマリー](experiments/B/README.md)**
+
 **最新：[B詳細レポート](experiments/B/final-report.md)** ／ [B-3成果物](experiments/B/B-3/README.md) ／ [引継ぎ](handoff.md)
 
 自己評価は初回/B-2完了/B-3限定修正後66/66/66点、設計不合格。AWS優先参考・最終選定/人間採用承認保留、C移行保留。次はB-2限定差戻しです。基本月額AWS83,248円＋未精算U。工程のGitHub反映は[run](evaluation/B-3-run.md)参照。
@@ -26,32 +28,14 @@
 - **保留の主因**: 外形監視（CloudWatch Synthetics Canary）費用の精緻化に伴う**月額予算（税込10万円）の超過**（修正後: 約11.01万円〜予備費込約13.22万円）
 - **クラウド実リソース**: 未作成（Phase Aはペーパー設計・評価のみ、クラウド利用費0円）
 
-```mermaid
-flowchart TB
-  subgraph PhaseA ["Phase A: AWS単一設計（完了・評価保留）"]
-    direction LR
-    A1["<b>A-1 要件整理</b><br/>曖昧要件から24要件定義"] --> A2["<b>A-2 AWS設計</b><br/>ECS+RDS Multi-AZ設計"] --> A3["<b>A-3 設計自己評価</b><br/>61→65点 (予算超過で保留)"]
-  end
-  subgraph PhaseB ["Phase B: B-2条件別設計（最終選定保留）"]
-    direction LR
-    B1["<b>B-1 3クラウド比較</b>"] --> B2["<b>B-2 選定・設計</b>"] --> B3["<b>B-3 正式評価・引継ぎ</b>"]
-  end
-  subgraph PhaseC ["Phase C: 検証・障害試験（将来）"]
-    C1["<b>C 実装・カオス試験</b>"]
-  end
+|工程|現在の状態|次の扱い|
+|---|---|---|
+|A|工程完了・設計不合格|履歴として保持|
+|B-1|3クラウド比較完了|比較条件と仮定を継承|
+|B-2|参考設計作成・選定保留|限定差戻しが必要|
+|B-3|評価・引継ぎ完了、66点不合格|設計合格・採用承認とは別|
+|C-0/C|未開始・移行保留|必要条件の確定前に開始しない|
 
-  PhaseA -->|人間の承認・指示後| PhaseB
-  PhaseB -->|"B-3評価 / C-0承認後・自動移行なし"| PhaseC
-
-  classDef done fill:#d4edda,stroke:#28a745,stroke-width:2px;
-  classDef pending fill:#fff3cd,stroke:#ffc107,stroke-width:2px;
-  classDef future fill:#f8f9fa,stroke:#6c757d,stroke-width:1px,stroke-dasharray: 3 3;
-  class A1,A2 done;
-  class A3 pending;
-  class B1 done;
-  class B2 pending;
-  class B3,C1 future;
-```
 
 ---
 
