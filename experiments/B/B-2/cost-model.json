@@ -5,6 +5,45 @@
   "contingency_reference": 0.2,
   "baseline_commit": "7c06ed0432a86b6a3c23db4eb85872d0e4591192",
   "note": "Unapproved 7-day minimum PITR scenario; U excluded, not zero. Quantities remain assumptions. All backup billed quantities unchanged.",
+  "limited_completion_LC1": {
+    "status": "UNAPPROVED CONDITIONAL DESIGN; NOT A QUOTE; U IS NOT ZERO",
+    "source_commit": "609c90467482529329ac80efc4716dab2e6aa1e5",
+    "cloud": "AWS reference only; no reselection",
+    "baseline_usd": 504.53560460000006,
+    "assumptions": {
+      "extra_collector_task_hours_per_30day_month": 12,
+      "extra_import_task_hours_per_month": 4,
+      "extra_task_ip_usd_per_hour": 0.05429,
+      "extra_object_gb_month": 5,
+      "extra_logs_gb_month": 2,
+      "extra_control_signing_keys": 1,
+      "note": "Collector 720 launches x 60-second Linux billing minimum =12 billed hours; image download/longer scans add U. Import4h includes per-launch minimum provisionally; frequency unknown. Object delta=1 quarantine+2 ledger/manifest+2 state/versions, above baseline allowance. No claim of sufficient capacity. Unit rates reused; current SKU/application differences remain U."
+    },
+    "delta_rows": [
+      {"id": "LC-C01", "item": "extra collector/import compute and IPv4", "formula": "(12+4)*(0.04929+0.005)", "usd": 0.86864, "status": "E reused rates; new quantity assumption"},
+      {"id": "LC-C02", "item": "extra quarantine/ledger/manifest/state all-version storage", "formula": "(1+2+2)*0.025", "usd": 0.125, "status": "E region/application unverified"},
+      {"id": "LC-C03", "item": "extra audit ingestion/retention/query", "formula": "2*(0.76+0.033+0.0067)", "usd": 1.5994, "status": "E beyond existing 10GB; event/API fees separate U"},
+      {"id": "LC-C04", "item": "control manifest signing key", "formula": "1*1", "usd": 1, "status": "E key-type/application unverified; API separate U"}
+    ],
+    "reference_delta_usd": 3.59304,
+    "reference_delta_jpy_tax_included": 592.8516,
+    "reference_known_total_jpy_tax_included": 83841.226359,
+    "reference_20pct_jpy": 100609.4716308,
+    "unsettled_U_jpy": null,
+    "approved_C_budget_jpy": null,
+    "U_items": [
+      {"id": "LC-U01", "scope": "G1/G2", "item": "scan/runtime, versions, S3 requests, replication late arrivals, ledger sync, import decode and retry beyond assumptions"},
+      {"id": "LC-U02", "scope": "G1/G3", "item": "PITR P, change history/index/WAL, snapshots and clone growth, required DB tier/CPU credits/IOPS"},
+      {"id": "LC-U03", "scope": "G2/G3", "item": "mandatory audit events and metadata, regional transfer, metrics/alarms, limited rollback controller"},
+      {"id": "LC-U04", "scope": "G4", "item": "domestic execution host, State/lock/API and bootstrap, exact Terraform/provider version, key type/quantity/API"},
+      {"id": "LC-U05", "scope": "G4", "item": "retry/extension/deletion failures/pending resources, billing delay, cancellation of scheduled key deletion"}
+    ],
+    "sensitivity": [
+      {"scenario": "two additional tasks for 730 hours incl IPv4, not approved capacity", "formula": "2*730*(0.04929+0.005)*165", "delta_jpy": 13078.461},
+      {"scenario": "additional 50GB Multi-AZ gp3 only, backup/IOPS excluded", "formula": "50*0.276*165", "delta_jpy": 2277}
+    ],
+    "C_note": "Do not add monthly delta directly to C. Recalculate stage hours/GB/requests/keys/cleanup. Prior 12495+U and 18742+U remain historical unapproved references."
+  },
   "clouds": {
     "AWS": {
       "rows": [
