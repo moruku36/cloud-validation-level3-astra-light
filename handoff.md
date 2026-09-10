@@ -12,6 +12,12 @@
 - クラウド資源・請求は今回確認せず最新状態未確認。クラウド操作/構築/試験/課金資源作成/メール/サブエージェント/mergeなし。モデル識別・トークン・料金・実作業時間は取得不能で不明。
 - 再開：PR #15と今回PRのhead/base/依存、変更SHA、人間回答・承認版を再確認。許可された次の1工程だけ実施する。設計補完完了・PRマージをC開始承認へ読み替えない。
 
+### LC1 GitHub反映記録
+
+[PR #16](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/16)、head `b2/limited-design-completion`、比較先`c0/transition-readiness` / `609c90467482529329ac80efc4716dab2e6aa1e5`、直接依存は未マージPR #15。成果物変更SHA `13a1d83e34b59143149449ab9712e95ec468b77c` の17変更ファイルを固定SHAでGitHubから取得しlocal blobと全件一致確認。Issue #9へ[コメント5618696882](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5618696882)を追加、未解決のチェック/状態は変えていない。
+
+この反映記録を含む最終変更SHAは[PR #16 commits](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/16/commits)とPR本文に完全SHAを保存する。追記push後にhead/base/未マージ・追記2ファイルのblob・Issue OPENを再確認する。文書補完だけで停止、次工程の承認/実行はなし。
+
 以下は過去工程の記録。
 
 ## C-0整理完了・承認待ち（2026-09-10）

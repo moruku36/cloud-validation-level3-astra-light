@@ -26,4 +26,8 @@ GitHub APIでPR #15はOPEN/merged=false、head `c0/transition-readiness` / `609c
 
 文書確認時の失敗：root文書の相対リンク検査で親path空文字を渡したため、絶対親pathへ直して再確認。gitの一時`core.autocrlf=false`指定によるCRLF差分を実変更の空白不備と扱わず、通常設定に戻して差分確認成功。クラウド/実装の試験は行っていない。
 
-PR・変更SHAとremote照合結果は反映後に追記する。次の1工程はC-0承認票の具体化・限定実験可否判断（文書のみ）を推奨し、今回そこでの判断や実行は行わない。
+成果物commit `13a1d83e34b59143149449ab9712e95ec468b77c` をpush、[PR #16](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/16)を作成。OPEN/merged=false、head `b2/limited-design-completion`、base `c0/transition-readiness` / `609c90467482529329ac80efc4716dab2e6aa1e5`。未マージPR #15依存。17変更ファイルを固定commitでremote取得し、git ls-treeのlocal blob SHAと全件一致確認した。
+
+[Issue #9コメント5618696882](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5618696882)へ結果/4群/未回答/次工程を追記。既存チェックを完了にせず、Issue状態も変更しない。
+
+この追記の最終commitは[PR #16 commit一覧](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/16/commits)とPR本文で完全SHAを識別する。push後に追記2ファイルのremote blob、PR head/base/未マージ、依存PR #15/Issue #9の状態を再確認する。次の1工程はC-0承認票の具体化・限定実験可否判断（文書のみ）を推奨し、今回そこでの判断や実行は行わない。
