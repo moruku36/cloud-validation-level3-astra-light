@@ -1,5 +1,7 @@
 # 復旧・保持/削除・監視の参考設計
 
+**LC1限定補完（C-0後）**：[G1 原期限/台帳/正常更新救済](limited-completion/retention-recovery.md)、[G3 依存回復/容量/停止](limited-completion/dependencies-capacity.md)、[G4 cleanup](limited-completion/experiment-lifecycle.md)を該当範囲で優先する。copy系譜とrestore_floor、台帳連続性・期限到来時の復元禁止を追加し、旧「毎日」collectorを1h間隔の設計案へ具体化。7/8/14/28日は未承認の条件値、30/35日の正式要件は不変。旧B-2とB-3補足を保持し、実証済みとはしない。
+
 未承認、全試験未実施。[構成](design.md)、[実証対応](validation-plan.md)。SLAや典型的failover秒数をE2E保証へ読み替えない。
 
 ## 障害と全依存（REQ-09/10/11/13）
