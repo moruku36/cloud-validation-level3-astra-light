@@ -1,8 +1,8 @@
-# A-2 構成図
+﻿# A-2 構成図
 
 <p align="center">
-  <a href="https://raw.githubusercontent.com/moruku36/cloud-validation-level3-astra-light/main/experiments/A/A-2/architecture.jpg" target="_blank" title="クリックして高解像度・原寸大で拡大表示">
-    <img src="architecture.jpg" alt="実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成)" width="100%" style="max-width: 1050px; border: 1px solid #e1e4e8; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+  <a href="architecture.jpg" target="_blank" title="クリックして高解像度・原寸大で拡大表示">
+    <img src="architecture.jpg" alt="実験構成図: AWS構成" width="100%" style="max-width: 1050px; border: 1px solid #e1e4e8; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
   </a>
   <br>
   <sub>🔍 <b>画像をタップ/クリックすると別タブで原寸大・高解像度表示されます</b></sub>

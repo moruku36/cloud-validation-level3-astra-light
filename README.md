@@ -16,7 +16,8 @@
 
 ## 1. 検証フェーズ（A → B → C）エグゼクティブサマリー
 
-本リポジトリは、**Phase A（単一クラウド設計）**、**Phase B（3社比較・選定設計・評価）** を経て、現在 **Phase C（承認ゲート・IaC・実機／カオス検証・変更シナリオ対応）** の段階に入りました。
+本検証は、**Phase A（単一クラウド設計）**、**Phase B（3社比較・選定設計・評価）** を経て、現在 **Phase C（承認ゲート・IaC・実機／カオス検証・変更シナリオ対応）** の段階に入りました。
+本アプリケーションはプライベートなWebシステムを想定しており、公開URL等は記載せず、機密性・プライバシーに配慮した検証を実施しています。
 
 | フェーズ | 検証テーマ | 主要成果・ステータス | 評価・自己採点 | 判定・開発者にとっての意味 |
 |---|---|---|:---:|---|
@@ -155,15 +156,12 @@ flowchart TD
 ## 6. アーキテクチャ概要 (AWS優先参考設計)
 
 専任1名の運用負荷を抑えつつ、同期整合性（SQL）と夜間の自動復旧を両立するため、**AWS Fargate (ARM) + Amazon RDS PostgreSQL (Multi-AZ)** をベースとしています。
+※ プライベートなアプリケーション環境のため、外部公開エンドポイントURLや実機URLは一切掲載していません。
 
 ### システム構成図
 
 <p align="center">
-  <a href="https://raw.githubusercontent.com/moruku36/cloud-validation-level3-astra-light/main/experiments/A/A-2/architecture.jpg" target="_blank" title="クリックして高解像度・原寸大で拡大表示">
-    <img src="experiments/A/A-2/architecture.jpg" alt="実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成)" width="100%" style="max-width: 1050px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
-  </a>
-  <br>
-  <sub>🔍 <b>画像をタップ/クリックすると別タブで原寸大・高解像度表示されます</b></sub>
+  <img src="experiments/A/A-2/architecture.jpg" alt="実験構成図: AWS構成" width="100%" style="max-width: 1050px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
 </p>
 
 #### 論理構成図 (Mermaid)
@@ -259,6 +257,7 @@ flowchart TB
 - [C費用モデル定義 (JSON)](experiments/B/B-3/c-cost-model.json) : 小型構成(L)・本番相当構成(H)のコスト積算
 
 ### 評価プロセス・運用記録 (valuation/)
+- [C 実行記録](evaluation/C-run.md)
 - [B-3 実行記録](evaluation/B-3-run.md) / [B-2 実行記録](evaluation/B-2-run.md) / [B-1 実行記録](evaluation/B-1-run.md)
 - [A-3 実行記録](evaluation/A-3-run.md) / [A-2 実行記録](evaluation/A-2-run.md) / [A-1 実行記録](evaluation/A-1-run.md)
 - [人間の介入記録台帳](evaluation/human-intervention.md) : AIの自律性と介入記録
