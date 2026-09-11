@@ -1,99 +1,84 @@
-# クラウドアーキテクチャ検証 LEVEL3（Phase A〜Phase B-3 総合結果）
+﻿# クラウドアーキテクチャ検証 LEVEL3（Phase A → B → C 総合検証）
 
 <p align="center">
-  <b>曖昧なビジネス要件・制約から自律型AIが実践的クラウド構成を設計・評価するLEVEL3検証</b>
+  <b>曖昧なビジネス要件・制約から自律型AIが実践的クラウド構成を設計・評価・実機検証するLEVEL3検証</b>
 </p>
 
 <p align="center">
-  <a href="experiments/B/README.md"><b>🚀 開発者向けB結果サマリー</b></a> │
-  <a href="experiments/B/final-report.md"><b>📊 B詳細レポート</b></a> │
-  <a href="experiments/B/B-3/README.md"><b>📝 B-3成果物（採点・C計画）</b></a> │
-  <a href="experiments/B/B-2/README.md"><b>📋 B-2条件別設計</b></a> │
+  <a href="experiments/A/final-report.md"><b>🅰️ Phase A結果</b></a> │
+  <a href="experiments/B/README.md"><b>🅱️ Phase B結果</b></a> │
+  <a href="experiments/C/README.md"><b>🅲 Phase C検証（現在）</b></a> │
+  <a href="experiments/B/B-3/c-validation-plan.md"><b>📝 C計画書</b></a> │
   <a href="handoff.md"><b>📌 最新引継ぎ（handoff）</b></a>
 </p>
 
 ---
 
-## 1. エグゼクティブサマリー（B-3完了時点）
+## 1. 検証フェーズ（A → B → C）エグゼクティブサマリー
 
-| 評価項目 | 現在のステータス | 判定・開発者にとっての意味 |
-|---|---|---|
-| **検証進捗** | **B-3（評価・引継ぎ）完了** | B-1（3社比較）→ B-2（条件別設計）→ B-3（正式採点・レポート）を完了 |
-| **設計自己評価スコア** | **66点 / 100点** | 合格基準80点に未達のため **「設計不合格」**（初回66点・修正後66点） |
-| **クラウド選定** | **AWSを優先参考設計として選定** | ただし最終選定・人間の採用承認は **「保留」**（B-2限定差戻し待ち） |
-| **月額基本費用概算** | **AWS: 83,248円 ＋ U** | 月額上限10万円に対し基本枠内（余地約1.68万円）。未精算Uと追加要件で変動 |
-| **次工程の扱い** | **B-2限定差戻し（D）** | **Phase C（実機・カオス試験）へは自動移行せず保留**。人間判断（H）の確定が必要 |
+本リポジトリは、**Phase A（単一クラウド設計）**、**Phase B（3社比較・選定設計・評価）** を経て、現在 **Phase C（承認ゲート・IaC・実機／カオス検証・変更シナリオ対応）** の段階に入りました。
+
+| フェーズ | 検証テーマ | 主要成果・ステータス | 評価・自己採点 | 判定・開発者にとっての意味 |
+|---|---|---|:---:|---|
+| **Phase A** | **AWS単一設計・リカバリ** | 要件定義（24要件）策定、Fargate+RDS設計、外形監視・運用設計 | 61点 → 65点 (不合格) | 外形監視費計上漏れで予算10万円超過判明。Bへの課題抽出完了 |
+| **Phase B** | **3社比較・選定・評価** | AWS/GCP/Azure同一条件比較、AWS優先参考設計化、B-3評価・C計画策定 | 66点 / 100点 (不合格) | 最安既知基本費でAWSを優先参考設計とするも、必須要件根拠不足で合格基準（80点）未達 |
+| **Phase C** | **実機検証・障害・変更対応** | **【現在フェーズ】** 承認ゲート、IaC、実機負荷、カオスDB障害、論理復元、4変更シナリオ | C-0承認待ち → C-1〜C-10順次実施 | 設計合格・人間採用承認の前提となる実証データを取得・合否判定 |
 
 > [!IMPORTANT]
-> **「文書工程の完了」と「設計合格・採用承認」は別です。**
-> B-3までの検証により、3社の比較根拠・AWS優先参考設計・配点別課題・C検証計画が揃いましたが、必須要件（国内データ保存・完全削除・無人復旧・運用体制）の成立根拠が不足しているため、合格基準（80点）未達の **66点（不合格）** を維持しています。
+> **「文書工程の完了」と「設計合格・実機採用」の分離**
+> Phase A（65点）、Phase B（66点）の設計自己採点はいずれも合格基準（80点）未達のままです。Phase C では、残された技術的論点（無人自動復旧、片AZ性能、論理破損復元、4つの変更シナリオ耐性）を実機試験（C-1〜C-10）によって検証・証明し、設計の成立可否を判定します。
 
 ---
 
-## 2. プロジェクト概要と全体実験フロー
+## 2. 全体検証フローとリポジトリ構造
 
-- **目的**: 曖昧なビジネス要件に対し、AIが適切な要件定義、アーキテクチャ選定、コスト見積、耐障害・運用設計を行えるかの検証
-- **指定モデル**: GPT-6 Astra Light（実行モデル識別情報は未確認）
-- **クラウド実リソース**: 未作成（Phase A / B はペーパー設計・評価のみ。利用費0円）
-
-### リポジトリ構造と実験フロー
-
-```mermaid
+`mermaid
 flowchart TD
-    Req["要件定義・共通方針 (docs/)"] --> ExpA["実験A: AWS単一設計・リカバリ (experiments/A/)"]
-    Req --> ExpB["実験B: 3社比較・選定設計・評価 (experiments/B/)"]
+    Req["要件定義・共通方針 (docs/)"] --> ExpA["Phase A: AWS単一設計・リカバリ (experiments/A/)"]
+    ExpA --> ExpB["Phase B: 3社比較・選定設計・評価 (experiments/B/)"]
+    ExpB --> ExpC["Phase C: IaC・実機カオス試験・変更対応 (experiments/C/)"]
     ExpA --> Eval["評価・採点・引継ぎ (evaluation/ & handoff.md)"]
     ExpB --> Eval
-    Eval -.->|人間判断/差戻し解消後| ExpC["実験C: IaC実装・カオス試験 (Phase C / 保留)"]
-```
+    ExpC --> Eval
+`
 
-```mermaid
+`mermaid
 flowchart TB
-  subgraph PhaseA ["Phase A: AWS単一設計（完了・評価保留）"]
+  subgraph PhaseA ["Phase A: AWS単一設計（完了）"]
     direction LR
     A1["<b>A-1 要件定義</b><br/>24要件定義"] --> A2["<b>A-2 AWS設計</b><br/>ECS+RDS Multi-AZ"] --> A3["<b>A-3 設計評価</b><br/>61→65点 (予算超過)"]
   end
 
-  subgraph PhaseB ["Phase B: 3社比較・選定・評価（完了・設計不合格）"]
+  subgraph PhaseB ["Phase B: 3社比較・選定・評価（完了）"]
     direction LR
     B1["<b>B-1 3社比較</b><br/>AWS/GCP/Azure比較"] --> B2["<b>B-2 選定・設計</b><br/>AWS優先参考/条件統一"] --> B3["<b>B-3 評価・引継ぎ</b><br/>66点不合格・C計画作成"]
   end
 
-  subgraph NextActions ["次のアクション（Phase C前）"]
+  subgraph PhaseC ["Phase C: 検証・障害試験（進行中フェーズ）"]
     direction LR
-    H["<b>H 人間判断</b><br/>メール保存/PITR/内製体制"]
-    D["<b>D B-2限定差戻し</b><br/>再削除/管理者IAM/無人復旧"]
-  end
-
-  subgraph PhaseC ["Phase C: 検証・障害試験（保留・未開始）"]
-    direction LR
-    C0["<b>C-0 承認・準備</b>"] --> C1["<b>C1〜C10 実装・カオス試験</b>"]
+    C0["<b>C-0 承認・前提確定</b><br/>予算・期限・許可"] --> C1["<b>C-1〜C-6 実機・カオス</b><br/>無人復旧/論理復元/片AZ"] --> C2["<b>C-7〜C-10 変更対応・終了</b><br/>1000RPS/2倍/Private/Cleanup"]
   end
 
   PhaseA -->|課題引継ぎ| PhaseB
-  PhaseB -->|限定差戻し| NextActions
-  NextActions -.->|承認・条件確定後| PhaseC
+  PhaseB -->|C計画引継ぎ| PhaseC
 
   classDef done fill:#14532d,stroke:#22c55e,stroke-width:2px,color:#ffffff;
   classDef failed fill:#7f1d1d,stroke:#ef4444,stroke-width:2px,color:#ffffff;
-  classDef pending fill:#713f12,stroke:#eab308,stroke-width:2px,color:#ffffff;
-  classDef future fill:#1e293b,stroke:#64748b,stroke-width:1.5px,stroke-dasharray: 4 4,color:#ffffff;
+  classDef current fill:#1d4ed8,stroke:#3b82f6,stroke-width:2px,color:#ffffff;
   class A1,A2,B1,B2 done;
   class A3,B3 failed;
-  class H,D pending;
-  class C0,C1 future;
-```
+  class C0,C1,C2 current;
+`
 
 ### 全工程のステータス一覧
 
-| 工程 | 状態 | 自己評価 | 主な結果と次の扱い | 関連成果物 |
-|---|---|:---:|---|---|
-| **Phase A** | 完了 | 65 / 100 | AWS単一設計。外形監視費用の計上漏れ発覚により月額10万円超過で不合格。 | [A詳細レポート](experiments/A/final-report.md) |
-| **B-1** | 完了 | - | 3社（AWS/GCP/Azure）を同一負荷条件で比較。暫定順位: AWS > GCP > Azure。 | [B-1サマリー](experiments/B/B-1/README.md) |
-| **B-2** | 完了 | 66 / 100 | 7日PITR共通条件案でAWSを優先参考設計化。最終選定・採用承認は保留。 | [B-2設計](experiments/B/B-2/README.md) |
-| **B-3** | 完了 | **66 / 100** | 24要件追跡・配点別レビュー・限定修正・C計画作成。**設計不合格・C移行保留**。 | [B詳細レポート](experiments/B/final-report.md) |
-| **次工程** | 待機 | - | **人間判断待ち（H）とB-2限定差戻し（D）** を実施。Cへの自動移行なし。 | [handoff.md](handoff.md) / [#9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9) |
-| **Phase C** | 保留 | - | IaC・実機デプロイ・カオス試験。短期計画12,495円＋Uは未承認。 | [C検証計画](experiments/B/B-3/c-validation-plan.md) |
+| フェーズ | 工程 | 状態 | 自己評価 | 主な結果と次の扱い | 関連成果物 |
+|---|---|---|:---:|---|---|
+| **Phase A** | **A-1〜A-3** | 完了 | 65 / 100 | AWS単一設計。外形監視費用の計上漏れ発覚により月額10万円超過で不合格。 | [A詳細レポート](experiments/A/final-report.md) |
+| **Phase B** | **B-1** | 完了 | - | 3社（AWS/GCP/Azure）を同一負荷条件で比較。暫定順位: AWS > GCP > Azure。 | [B-1サマリー](experiments/B/B-1/README.md) |
+| **Phase B** | **B-2** | 完了 | 66 / 100 | 7日PITR共通条件案でAWSを優先参考設計化。最終選定・採用承認は保留。 | [B-2設計](experiments/B/B-2/README.md) |
+| **Phase B** | **B-3** | 完了 | **66 / 100** | 24要件追跡・配点別レビュー・限定修正・C計画作成。**設計不合格・C移行**。 | [B詳細レポート](experiments/B/final-report.md) |
+| **Phase C** | **C-0〜C-10** | **進行中** | - | **承認ゲート確認・IaC構築・実機負荷・カオス障害・変更シナリオ検証**。 | [C概要](experiments/C/README.md) / [C検証計画](experiments/B/B-3/c-validation-plan.md) |
 
 ---
 
@@ -112,53 +97,58 @@ flowchart TB
 
 ---
 
-## 4. なぜ66点（不合格）なのか？（B-3レビュー指摘 F01〜F11）
+## 4. Phase B 評価結果と Phase C での実機検証項目
 
-合格基準である総合80点、および重点項目（Architecture, Security/IAM, Availability, Cost, Backup/DR）での「4以上」に対し、すべて「3」に留まりました。
+Phase B自己評価スコア（66点）において「3」にとどまった重点項目を、Phase Cの実機・カオス試験で検証します。
 
-### 主な未解決課題と差戻し事項
+`mermaid
+flowchart LR
+  subgraph PhaseB_Issues ["Phase B 設計課題 (F01〜F11)"]
+    F1["データ主権・保存境界<br/>(SES受信側・Route53ログ)"]
+    F2["退会削除・原期限保持<br/>(S3複製先・PITR再削除)"]
+    F3["夜間無人復旧・片AZ容量<br/>(RTO30分/RPO5分/100RPS)"]
+    F4["内製運用の実現性<br/>(専任1名での保守負荷)"]
+  end
 
-1. **データ主権・保存境界（F04 / REQ-08, 16）**:
-   - メール送信（SES）において、受信側メールサーバーでの国内保存境界が未定義。
-   - Route 53 Query Loggingが国内保存対象外となるため、代替の監査・監視経路の設計が必要。
-2. **退会削除・保持期限の不整合（F02 / REQ-07, 16, 23）**:
-   - 要件の「退会30日以内削除」に対し、バックアップ（PITR 7日〜35日）やクロスリージョン複製先での再削除メカニズムが実証・設計不足。
-3. **夜間無人復旧と片AZ性能（F05 / REQ-06, 09, 10）**:
-   - 平日専任1名・夜間即応なし体制において、全依存障害からの完全自動復旧（RTO 30分・RPO 5分・300秒安定）の根拠が不足。
-   - 単一AZ障害時に片側AZだけでピーク負荷（100 RPS）を処理しきれるかの性能根拠が未確認。
-4. **内製化による運用負荷（F07 / REQ-13, 14, 18）**:
-   - コスト削減のために認証やCanary監視を自前実装（ECS/Lambda）とした結果、専任1名での運用・保守負荷が過大となる懸念。
+  subgraph PhaseC_Tests ["Phase C 実機検証対応 (C-1〜C-10)"]
+    T1["C-2: 認証・画像・SES送信境界検証"]
+    T2["C-5: 論理破損復元 & 退会再削除台帳"]
+    T3["C-3/C-4: 片AZ負荷 & 制御DBフェイルオーバー"]
+    T4["C-10: ロールバック & 保守運用演習"]
+  end
+
+  F1 --> T1
+  F2 --> T2
+  F3 --> T3
+  F4 --> T4
+`
 
 ---
 
-## 5. 次工程への引継ぎ（担当別タスク）
+## 5. Phase C の検証ステップ（C-0 〜 C-10）と変更シナリオ
 
-未解決事項は [Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9) および [handoff.md](handoff.md) で追跡されています。
+Phase C は以下のステップに沿って独立して実施されます。
 
-```mermaid
+`mermaid
 flowchart TD
-  subgraph H ["【H】人間（ビジネス・法務）判断待ち"]
-    H1["メール受信側の国内保存範囲の確定"]
-    H2["最低PITR期間の承認 (7日案は未承認)"]
-    H3["内製認証・監視の運用担当と工数承認"]
-    H4["論理破損時の正常更新救済ポリシー"]
+  C0["<b>C-0 承認ゲート・前提確定</b><br/>実験予算 (12,495円+U) / 保持期限 / 操作許可"] --> C1["<b>C-1 隔離環境再構築 (L)</b><br/>IaC再現性・State分離"]
+  C1 --> C2["<b>C-2 機能・セキュリティ (L)</b><br/>内製認証・画像制限・SES・Canary"]
+  C2 --> C3["<b>C-3 負荷・片AZ容量 (H)</b><br/>通常10RPS / ピーク100RPS / 片AZ縮退"]
+  C3 --> C4["<b>C-4 無人復旧・制御DB障害 (H)</b><br/>タスク/DB障害・自動フェイルオーバー"]
+  C4 --> C5["<b>C-5 論理破損・退会再削除 (H)</b><br/>20GB特定時点復元 (4h)・再削除"]
+  C5 --> C6["<b>C-6 国内リージョン復元 (H)</b><br/>大阪DR・東京依存遮断コールド復旧"]
+
+  subgraph ChangeScenarios ["必須4変更シナリオの検証"]
+    C7["<b>C-7 シナリオ1: 1000 RPS</b><br/>10倍負荷・スケール限界検証"]
+    C8["<b>C-8 シナリオ3: 月額2倍分析</b><br/>支出なし・感度分析・再選定条件"]
+    C9["<b>C-9 シナリオ4: Public IP禁止</b><br/>Private化・NAT/Endpoint検証"]
   end
 
-  subgraph D ["【D】B-2 設計限定差戻し"]
-    D1["S3クロスリージョン複製・再削除・削除台帳"]
-    D2["管理者画像更新の専用IAM role・監査"]
-    D3["全依存無人復旧手順と片AZ性能の上限根拠"]
-    D4["必要容量と未精算Uの精算"]
-  end
-
-  subgraph E ["【E】Phase C 実機検証待ち (T01〜T16)"]
-    E1["T01〜T10: 基本機能・性能・復旧試験"]
-    E2["T11〜T16: 削除台帳・カオス・ロールバック試験"]
-  end
-
-  H --> D
-  D --> E
-```
+  C6 --> C7
+  C7 --> C8
+  C8 --> C9
+  C9 --> C10["<b>C-10 保守引継ぎ・最終Cleanup</b><br/>ロールバック演習・全リソース完全削除"]
+`
 
 ---
 
@@ -178,7 +168,7 @@ flowchart TD
 
 #### 論理構成図 (Mermaid)
 
-```mermaid
+`mermaid
 flowchart TB
   subgraph PublicLayer ["パブリックアクセス"]
     direction LR
@@ -234,27 +224,26 @@ flowchart TB
   AppB --> CW
   S3 -.->|非同期複製| DR_S3
   DB_Pri -.->|日次スナップショット| DR_S3
-```
-
-### 主要コンポーネントと選定理由
-- **DNS / ネットワーク**: Route 53 (DNSルーティング) + ALB (HTTPS終端・2AZ負荷分散)
-- **セキュリティ**: AWS WAF (Rate Limit・SQLi防御)
-- **コンテナ基盤**: AWS Fargate (ARM Graviton, 1vCPU / 2GB × 2AZ)。EKSは専任1名での運用複雑性を考慮し不採用。
-- **データストア**: Amazon RDS for PostgreSQL (`db.t4g.medium`, gp3 50GB, Multi-AZ)。スタンバイ系への自動フェイルオーバー（60〜120秒）。
-- **認証**: アプリ内製認証（Cognitoコストを削減しつつ国内完結）。
-- **バックアップ / DR**: 大阪リージョンへのS3クロスリージョン複製および日次スナップショット転送（Cold DR）。
+`
 
 ---
 
-## 7. ドキュメントマップ
+## 7. ドキュメントマップ（Phase A → B → C）
 
-### 企画・要件・共通ルール (`docs/`)
+### 企画・要件・共通ルール (docs/)
 - [要件定義・全体方針](docs/requirements.md) : ビジネス背景、24要件、制約条件の整理
 - [実行ポリシー](docs/execution-policy.md) : AIエージェントの作業手順・禁止事項・評価方針
 - [正式業務回答](docs/sources/business-answers-2026-09-08.md) : ヒアリングに対する顧客側の正式回答
 - [ADR意思決定記録](docs/decisions/ADR-A2-001.md) : 初期アーキテクチャ選定理由
 
-### Phase B: 3クラウド比較・選定設計・総合評価 (`experiments/B/`)
+### Phase A: AWS単一クラウド検証 (xperiments/A/)
+- [**★ LEVEL3-A 総合検証結果レポート**](experiments/A/final-report.md) : A-1〜A-3の全結果・採点・課題
+- [A実行完了報告](experiments/A/completion-report.md) : A完了時の引継ぎ記録
+- **A-1**: [24要件一覧](experiments/A/A-1/requirements.md) / [質疑応答台帳](experiments/A/A-1/questions.md) / [リスク・仮定](experiments/A/A-1/assumptions-risks.md)
+- **A-2**: [AWS基本設計](experiments/A/A-2/design.md) / [構成図](experiments/A/A-2/diagram.md) / [復旧・運用](experiments/A/A-2/recovery-operations.md) / [初期費用](experiments/A/A-2/cost.md)
+- **A-3**: [自己評価スコア (61→65点)](experiments/A/A-3/scores.md) / [改善仕様](experiments/A/A-3/revised-design.md) / [予算監査](experiments/A/A-3/budget.md) / [要件追跡](experiments/A/A-3/traceability.md)
+
+### Phase B: 3クラウド比較・選定設計・総合評価 (xperiments/B/)
 - [**★ LEVEL3-B 開発者向け結果サマリー**](experiments/B/README.md) : **B工程全体（B-1〜B-3）の要約と開発者向け解説**
 - [**★ LEVEL3-B 詳細レポート**](experiments/B/final-report.md) : **比較・設計・評価の正式統合レポート**
 - **B-1: 3クラウド比較フェーズ**
@@ -264,14 +253,12 @@ flowchart TB
 - **B-3: 評価・引継ぎフェーズ**
   - [B-3 成果物トップ](experiments/B/B-3/README.md) / [配点別採点表 (66点)](experiments/B/B-3/scores.md) / [レビュー指摘 (F01〜F11)](experiments/B/B-3/review.md) / [限定修正](experiments/B/B-3/revised-design.md) / [24要件追跡](experiments/B/B-3/traceability.md) / [Phase C検証計画](experiments/B/B-3/c-validation-plan.md)
 
-### Phase A: AWS単一クラウド検証 (`experiments/A/`)
-- [LEVEL3-A 総合検証結果レポート](experiments/A/final-report.md) : A-1〜A-3の全結果・採点・課題
-- [A実行完了報告](experiments/A/completion-report.md) : A完了時の引継ぎ記録
-- **A-1**: [24要件一覧](experiments/A/A-1/requirements.md) / [質疑応答台帳](experiments/A/A-1/questions.md) / [リスク・仮定](experiments/A/A-1/assumptions-risks.md)
-- **A-2**: [AWS基本設計](experiments/A/A-2/design.md) / [構成図](experiments/A/A-2/diagram.md) / [復旧・運用](experiments/A/A-2/recovery-operations.md) / [初期費用](experiments/A/A-2/cost.md)
-- **A-3**: [自己評価スコア (61→65点)](experiments/A/A-3/scores.md) / [改善仕様](experiments/A/A-3/revised-design.md) / [予算監査](experiments/A/A-3/budget.md) / [要件追跡](experiments/A/A-3/traceability.md)
+### Phase C: 実機検証・カオス試験・変更対応 (xperiments/C/)
+- [**★ LEVEL3-C 検証計画・実施概要**](experiments/C/README.md) : **C工程の概要、フロー、変更シナリオ対応**
+- [Phase C 検証計画書（詳細）](experiments/B/B-3/c-validation-plan.md) : C-0〜C-10のテスト定義と合否基準
+- [C費用モデル定義 (JSON)](experiments/B/B-3/c-cost-model.json) : 小型構成(L)・本番相当構成(H)のコスト積算
 
-### 評価プロセス・運用記録 (`evaluation/`)
+### 評価プロセス・運用記録 (valuation/)
 - [B-3 実行記録](evaluation/B-3-run.md) / [B-2 実行記録](evaluation/B-2-run.md) / [B-1 実行記録](evaluation/B-1-run.md)
 - [A-3 実行記録](evaluation/A-3-run.md) / [A-2 実行記録](evaluation/A-2-run.md) / [A-1 実行記録](evaluation/A-1-run.md)
 - [人間の介入記録台帳](evaluation/human-intervention.md) : AIの自律性と介入記録
