@@ -1,6 +1,6 @@
 # クラウドアーキテクチャ検証 LEVEL3（Phase A〜Phase B-3 総合結果）
 
-**最新：[C-0最小実験承認案CP1](experiments/C/C-0/minimal-experiment.md)** — 文書具体化完了、準備判定B（account・国内環境・担当・課金条件の回答後に承認可能）。C-1のState/lock/IAM/cleanup部分、S3 2個・KMS鍵1個・IAM role 3個、最大6h、税込500円の未承認案。実装版/Planは未作成。設計不合格・66/66/66、LC1未採点・C移行保留・構築開始不可を維持します。
+**最新：[C-1準備P1：コード・runbook](infra/c1/README.md)** — 限定実装・ローカル検証完了（fmt、2構成validate、Python構文、mock27件）。実Plan/実証は未実施。[CP1](experiments/C/C-0/minimal-experiment.md)の500円・6h・鍵待機等は全て未承認。[差分/開始条件](infra/c1/changes-and-gates.md)を人間判断へ。設計不合格66/66/66、LC1未採点、C移行保留・構築開始不可を維持します。
 
 <p align="center">
   <b>曖昧なビジネス要件・制約から自律型AIが実践的クラウド構成を設計・評価するLEVEL3検証</b>
