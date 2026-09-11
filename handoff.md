@@ -1,5 +1,7 @@
 ## 最新：C-1準備P1（2026-09-11）
 
+GitHub反映：[PR #18](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/18)、成果物変更SHA `e0db25c39992420fab5ff1fbde6c1f580c9c61ea`。比較先 `c0/minimal-experiment-approval` / `38c406c9d260db749f6578375480ff8189b09530`、直接#17/間接#16→#15未マージ依存。24変更ファイルを固定SHAでGitHubから取得しlocal blob全件一致。[Issue #9追記](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5633016778)、未解決継続。最終記録commitの完全SHAはPR本文/[commits](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/18/commits)に保存し、push後のhead/base/記録blobを照合する。C-1準備だけで停止。
+
 [コード/runbook](infra/c1/README.md)／[計画差分・残条件](infra/c1/changes-and-gates.md)／[ローカル検証記録](evaluation/C-1-preparation-run.md)。**準備成果物完了、C-1実証未実施。実験・500円予算・各例外は未承認。** 不合格66/66/66、LC1未採点、最終選定・C移行保留。
 
 - 起点：PR #17 `38c406c9d260db749f6578375480ff8189b09530`、OPEN/merged=false、base b2/limited-design-completion / f843183def131b1c42f2b192bdb72392f5150bad。#16/#15もOPEN/未マージを再確認。

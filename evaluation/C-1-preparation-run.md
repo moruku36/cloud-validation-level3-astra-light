@@ -31,4 +31,6 @@ Terraform内部API/Stateサイズの予約根拠、実アカウントのSCP等�
 
 秘密/個人情報/機密State/Planは公開しない。コードは将来のprivate保存先をrepo外に限定し、.gitignoreも補強する。内部思考は記録対象外。実モデル識別・トークン・料金・実作業時間は未取得のため不明。
 
-PR/変更SHA/Issue #9/リモート照合の結果は反映後に追記。PR提出と照合後に停止し、次の回答/承認工程や実環境確認を自動実行しない。
+GitHub：[PR #18](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/18)、成果物SHA `e0db25c39992420fab5ff1fbde6c1f580c9c61ea`、比較先c0/minimal-experiment-approval / 38c406c9d260db749f6578375480ff8189b09530、直接#17/間接#16→#15未マージ依存。24変更ファイルを固定SHAでGitHub取得してlocal blob全件一致。相対リンク、差分空白検査、公開対象にState/Plan/private情報/バイナリがないことを確認。[Issue #9コメント5633016778](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5633016778)を追加、未解決継続。
+
+この記録commitの完全SHAはPR本文/commitsに保存する。push後の最終head/base/未マージと追記2ファイルのblobを確認して停止し、次の回答/承認工程や実環境確認を自動実行しない。
