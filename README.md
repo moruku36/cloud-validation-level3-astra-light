@@ -1,6 +1,6 @@
 # クラウドアーキテクチャ検証 LEVEL3（Phase A〜Phase B-3 総合結果）
 
-**最新：[C-1 read-only preflight](evaluation/C-1-read-only-preflight-run.md) はINCOMPLETE（AWS API 0回）** — 実profile、期待account ID、実験ID、private暗号化証跡先のbinding不足をAPI前に検出し停止。30分/6時間枠は未開始です。設計不合格66/66/66、LC1未採点、C全体移行保留・C-1実証未完了を維持します。
+**最新：[C-1 private binding](evaluation/C-1-private-binding-run.md) はNOT_READY（AWS API 0回）** — 安全な実値入力が未完了で、BitLocker状態も権限不足により未確認のためprivate領域を作成せず停止。[履歴に値を残さない設定手順](infra/c1/private-binding-setup.md)を追加しました。30分/6時間枠は未開始、設計不合格66/66/66、LC1未採点、C全体移行保留です。
 
 <p align="center">
   <b>曖昧なビジネス要件・制約から自律型AIが実践的クラウド構成を設計・評価するLEVEL3検証</b>

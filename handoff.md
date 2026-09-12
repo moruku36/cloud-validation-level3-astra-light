@@ -1,3 +1,15 @@
+## 最新：C-1 private binding NOT_READY（2026-09-12）
+
+[実行記録](evaluation/C-1-private-binding-run.md)／[安全な設定手順](infra/c1/private-binding-setup.md)。起点PR #20 head `0aa8e85ee6b1af4dfe9164a37ecf19bf3e338e5c`、比較先 `codex/c1-read-only-preflight`。直接依存#20、間接#19→#18→#17→#16→#15、全件OPEN・未マージ。作業branch `codex/c1-private-binding`。変更SHA/PRはGitHub反映後に追記する。
+
+- 判定NOT_READY。profile/account/operator ARN/実験ID/固定5名称は未設定・未算出。private証跡先はBitLocker状態を権限不足で確認できず未作成。ACL/同期外/今回時点の国内PC private宣言も未確認。
+- 固定コード・命名式・資源数は変更なし。`check-config` はオフラインと確認したが、実値JSONがないためguard未実行。
+- AWS通信/API/retryは0。profile/credentialを読出し・変更していない。30分/6時間枠は未開始。
+- 次はユーザー自身がローカル端末で暗号化・同期外領域へ履歴に残らない方法で入力し、オフラインguardと手動gateを実行する。READY後も最大6 API・30分枠を改めて人間承認する。
+- remote backend、Terraform init/Plan/apply/destroy、資源操作、Actions、mergeなし。資源/請求未確認。66/66/66点不合格、LC1未採点、C移行保留。
+
+以下は過去工程の記録。
+
 ## 最新：C-1 read-only preflight INCOMPLETE（2026-09-12）
 
 [実行記録](evaluation/C-1-read-only-preflight-run.md)。起点PR #19 head `150769f0297cb39da7fa63bc925139fe069cc1b6`、比較先 `codex/c1-approval-gates`。直接依存#19、間接#18→#17→#16→#15。公開GitHub API/pull refで全件OPEN・未マージ、head/base一致を再確認。作業branch `codex/c1-read-only-preflight`。[PR #20](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/20)、成果物commit `ad8055639617a692b4f7634fea464817dc8cf72f`。[Issue #9コメント5645664497](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5645664497)。最終記録commitはPR head/commitsで確認する。
