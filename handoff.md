@@ -1,6 +1,6 @@
 ## 最新：C-1 IAM Identity Center有効化前審査（2026-09-13）
 
-[審査](infra/c1/identity-center-precheck.md)／[Permission Set](infra/c1/identity-center-permission-sets.md)／[確認・有効化ゲート](infra/c1/identity-center-activation-gates.md)／[実行記録](evaluation/C-1-identity-center-precheck-run.md)。起点PR #22 head `2edc99a652f12780e802008ea009946a9a29e1e1`、比較先 `codex/c1-operator-auth-guard` / 同SHA。直接依存#22、間接#21→#20→#19→#18→#17→#16→#15（全てOPEN・未マージ）。作業branch `codex/c1-identity-center-precheck`。変更SHA/PRはpush後の記録を正本とする。
+[審査](infra/c1/identity-center-precheck.md)／[Permission Set](infra/c1/identity-center-permission-sets.md)／[確認・有効化ゲート](infra/c1/identity-center-activation-gates.md)／[実行記録](evaluation/C-1-identity-center-precheck-run.md)。起点PR #22 head `2edc99a652f12780e802008ea009946a9a29e1e1`、比較先 `codex/c1-operator-auth-guard` / 同SHA。直接依存#22、間接#21→#20→#19→#18→#17→#16→#15（全てOPEN・未マージ）。作業branch `codex/c1-identity-center-precheck`。[PR #23](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/23)、成果物変更SHA `5afdc9cd46faba0bb9225c8dbd2e4e0497f0e2ce`、[Issue #9追記](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5649394265)。最終記録commitはPR head/commitsで確認する。
 
 - 方針：東京organization instance、single-region、AWS owned key、Identity Center directory、private user＋group、Preflight専用custom Permission Set、MFA、1h、CLI v2 token providerを未承認候補とした。
 - standaloneならOrganizations all-features新設、memberならmanagement account側作業が必要。account instanceはPermission Set/AWS account access非対応。既存instanceが東京外なら直接Region変更不可。
