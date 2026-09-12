@@ -1,3 +1,15 @@
+## 最新：C-1 IAM Identity Center有効化前審査（2026-09-13）
+
+[審査](infra/c1/identity-center-precheck.md)／[Permission Set](infra/c1/identity-center-permission-sets.md)／[確認・有効化ゲート](infra/c1/identity-center-activation-gates.md)／[実行記録](evaluation/C-1-identity-center-precheck-run.md)。起点PR #22 head `2edc99a652f12780e802008ea009946a9a29e1e1`、比較先 `codex/c1-operator-auth-guard` / 同SHA。直接依存#22、間接#21→#20→#19→#18→#17→#16→#15（全てOPEN・未マージ）。作業branch `codex/c1-identity-center-precheck`。変更SHA/PRはpush後の記録を正本とする。
+
+- 方針：東京organization instance、single-region、AWS owned key、Identity Center directory、private user＋group、Preflight専用custom Permission Set、MFA、1h、CLI v2 token providerを未承認候補とした。
+- standaloneならOrganizations all-features新設、memberならmanagement account側作業が必要。account instanceはPermission Set/AWS account access非対応。既存instanceが東京外なら直接Region変更不可。
+- C-1既存S3 2/KMS 1/role 3とは別に、organization/instance/store/portal/user/group/set/assignment/予約Role/profile/cache/logが増える。全て計画で実在未確認。
+- 次の1工程は本人によるOrganizations/Identity Center Consoleのread-only状態分類。画面閲覧も未承認で、Enable/Create/Edit/Delete/Assign等は禁止する。
+- AWS接続/API/Console操作0、設定・profile・identity・Role・資源変更なし。66/66/66点不合格、LC1未採点、C移行保留。モデル識別・トークン・料金・実作業時間は不明。
+
+以下は過去工程の記録。
+
 ## 最新：C-1 Operator認証guard修正（2026-09-13）
 
 [設計](infra/c1/operator-authentication.md)／[検証記録](evaluation/C-1-operator-auth-guard-run.md)。起点はPR #21 head `7e9b133c750db93953e0e5e260c9c4c0a65a5a8d`、比較先 `codex/c1-private-binding` / 同SHA。直接依存#21、間接#20→#19→#18→#17→#16→#15（全て未マージ）。作業branch `codex/c1-operator-auth-guard`。[PR #22](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/22)、成果物変更SHA `3693710bac7efb0bf0c7169cc285857dedbea1de`、[Issue #9追記](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5649319935)。最終記録commitはPR head/commitsで確認する。
@@ -277,4 +289,3 @@ A-3完了68e4607を含むreports/level3-aで作成。比較先a3/aws-review、�
 旧段落のa3/aws-review等はA-3時点の履歴。今回のHEADは上記コマンドで取得する。
 
 レポート保存：[PR #7](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/7)（比較先a3/aws-review、依存PR #6、未マージ）、[本文作成コミット1df77b7](https://github.com/moruku36/cloud-validation-level3-astra-light/commit/1df77b7)。
-
