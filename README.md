@@ -1,6 +1,6 @@
 # クラウドアーキテクチャ検証 LEVEL3（Phase A〜Phase B-3 総合結果）
 
-**最新：[C-1限定条件の承認反映CP2](experiments/C/C-0/approval-2026-09-12.md)** — 固定コード、東京、S3 2/key 1/role 3、合成data、500円、6h、限定例外を条件枠として承認。AWS read/Plan/apply/試験/cleanupは未承認です。[12段階ゲートと次のpreflight候補](infra/c1/execution-gates-2026-09-12.md)を固定。設計不合格66/66/66、LC1未採点、C全体移行保留・C-1実証未完了を維持します。
+**最新：[C-1 read-only preflight](evaluation/C-1-read-only-preflight-run.md) はINCOMPLETE（AWS API 0回）** — 実profile、期待account ID、実験ID、private暗号化証跡先のbinding不足をAPI前に検出し停止。30分/6時間枠は未開始です。設計不合格66/66/66、LC1未採点、C全体移行保留・C-1実証未完了を維持します。
 
 <p align="center">
   <b>曖昧なビジネス要件・制約から自律型AIが実践的クラウド構成を設計・評価するLEVEL3検証</b>

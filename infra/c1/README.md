@@ -1,6 +1,6 @@
 # C-1準備 P1：実行順と承認境界
 
-2026-09-12追記：[CP2承認反映](../../experiments/C/C-0/approval-2026-09-12.md)により限定条件/予算枠/例外は承認済み。現在の正本ゲートは[12段階ゲートとG1 preflight候補](execution-gates-2026-09-12.md)。以下の「全て未承認」はP1作成時点の履歴で、現在もAWS read/Plan/apply/試験/cleanup自体は未承認。
+2026-09-12追記：[G1実行記録](../../evaluation/C-1-read-only-preflight-run.md)はprivate入力binding不足でINCOMPLETE、AWS API 0回。再実施には設定準備後の新しい個別承認が必要。[CP2承認反映](../../experiments/C/C-0/approval-2026-09-12.md)と[12段階ゲート](execution-gates-2026-09-12.md)を正本とする。
 
 **今回実施済みなのはコード作成・ローカル検証だけ。以下のAWS操作は将来の手順であり未承認。** 正本はPR #17 / `38c406c9d260db749f6578375480ff8189b09530` の [CP1](../../experiments/C/C-0/minimal-experiment.md)。66/66/66点不合格、LC1未採点、最終選定・C移行保留を保持する。
 
