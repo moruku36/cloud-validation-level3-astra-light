@@ -1,6 +1,6 @@
 ## 最新：C-1 private binding NOT_READY（2026-09-12）
 
-[実行記録](evaluation/C-1-private-binding-run.md)／[安全な設定手順](infra/c1/private-binding-setup.md)。起点PR #20 head `0aa8e85ee6b1af4dfe9164a37ecf19bf3e338e5c`、比較先 `codex/c1-read-only-preflight`。直接依存#20、間接#19→#18→#17→#16→#15、全件OPEN・未マージ。作業branch `codex/c1-private-binding`。変更SHA/PRはGitHub反映後に追記する。
+[実行記録](evaluation/C-1-private-binding-run.md)／[安全な設定手順](infra/c1/private-binding-setup.md)。起点PR #20 head `0aa8e85ee6b1af4dfe9164a37ecf19bf3e338e5c`、比較先 `codex/c1-read-only-preflight`。直接依存#20、間接#19→#18→#17→#16→#15、全件OPEN・未マージ。作業branch `codex/c1-private-binding`。[PR #21](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/21)、成果物commit `68b530107b2f84904eb10ae0e5e3172c0316681c`。[Issue #9コメント5645718047](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5645718047)。最終記録commitはPR head/commitsで確認する。
 
 - 判定NOT_READY。profile/account/operator ARN/実験ID/固定5名称は未設定・未算出。private証跡先はBitLocker状態を権限不足で確認できず未作成。ACL/同期外/今回時点の国内PC private宣言も未確認。
 - 固定コード・命名式・資源数は変更なし。`check-config` はオフラインと確認したが、実値JSONがないためguard未実行。
