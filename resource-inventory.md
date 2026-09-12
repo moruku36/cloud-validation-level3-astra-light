@@ -1,5 +1,19 @@
 # 残存リソース・費用
 
+## C-1 read-only preflight（2026-09-12、最新）
+
+判定INCOMPLETE。API前のprivate入力不足によりAWS APIは0回で、固定名の実値は取得・公開していない。ローカル確認は2026-09-12 20:39:51〜20:40:12 JST（11:39:51〜11:40:12 UTC）。
+
+|固定対象ラベル|予定API|結果|確認範囲|
+|---|---|---|---|
+|S3 State用|`GetBucketLocation`|未確認・0回|名前の不存在/存在、account全体とも未確認|
+|S3 fixture用|`GetBucketLocation`|未確認・0回|同上|
+|IAM plan role|`GetRole`|未確認・0回|名前の不存在/存在、account全体とも未確認|
+|IAM apply role|`GetRole`|未確認・0回|同上|
+|IAM cleanup role|`GetRole`|未確認・0回|同上|
+
+KMS、請求、その他資源も未確認。新規資源、State、Plan、生API証跡は作成していない。今回のAWS API実費は0円。アカウント全体の残存ゼロ又は請求ゼロを意味しない。
+
 ## C-1限定条件CP2（2026-09-12、最新）
 
 固定コードの計画資源S3 2個/KMS key 1個/IAM role 3個、税込500円、最大6h、key 7日待機の**条件枠/例外だけ承認済み**。AWS接続/API/Plan/apply/試験/cleanupは未承認・未実施で、計画資源は実在資源ではない。keyは未作成でPendingDeletionでもない。既存資源・残存・請求の最新状態は**未確認**。将来keyを作成した場合だけ、実DeletionDateから24h以内の別工程確認まで残存として追跡する。
