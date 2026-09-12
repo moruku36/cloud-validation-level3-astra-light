@@ -2,6 +2,8 @@
 
 日付：2026-09-13。起点はPR #21 head `7e9b133c750db93953e0e5e260c9c4c0a65a5a8d`、比較先 `codex/c1-private-binding` / `7e9b133c750db93953e0e5e260c9c4c0a65a5a8d`。直接依存#21、間接#20→#19→#18→#17→#16→#15（全て未マージ）。
 
+提出先：[PR #22](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/22)。成果物変更SHA `3693710bac7efb0bf0c7169cc285857dedbea1de`。
+
 ## 修正と判定
 
 STS前の完全operator ARN入力を廃止し、privateのaccount、`assumed-role`、完全role名、認証方式、profileへ置換した。SSOはPermission Set名と実予約Role名を分離し、AssumeRoleはlocal role ARNを構造parseする。STS応答はpartition/service/account/principal/role/sessionを順に構造照合し、部分一致・root・IAM user・federated-user・percent encoding・不正segmentを拒否する。公開結果には実識別子を含めない。
