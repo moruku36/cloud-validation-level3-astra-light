@@ -1,6 +1,6 @@
 ## 最新：C-1 Operator認証guard修正（2026-09-13）
 
-[設計](infra/c1/operator-authentication.md)／[検証記録](evaluation/C-1-operator-auth-guard-run.md)。起点はPR #21 head `7e9b133c750db93953e0e5e260c9c4c0a65a5a8d`、比較先 `codex/c1-private-binding` / 同SHA。直接依存#21、間接#20→#19→#18→#17→#16→#15（全て未マージ）。作業branch `codex/c1-operator-auth-guard`。[PR #22](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/22)、成果物変更SHA `3693710bac7efb0bf0c7169cc285857dedbea1de`。最終記録commitはPR head/commitsで確認する。
+[設計](infra/c1/operator-authentication.md)／[検証記録](evaluation/C-1-operator-auth-guard-run.md)。起点はPR #21 head `7e9b133c750db93953e0e5e260c9c4c0a65a5a8d`、比較先 `codex/c1-private-binding` / 同SHA。直接依存#21、間接#20→#19→#18→#17→#16→#15（全て未マージ）。作業branch `codex/c1-operator-auth-guard`。[PR #22](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/22)、成果物変更SHA `3693710bac7efb0bf0c7169cc285857dedbea1de`、[Issue #9追記](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5649319935)。最終記録commitはPR head/commitsで確認する。
 
 - STS前の完全operator ARN入力を廃止。privateのaccount、`assumed-role`、完全role名、認証方式、profileをofflineで拘束し、STS後にpartition/service/account/principal/role/sessionを構造照合する。SSOのPermission Set名と予約IAM Role名も分離した。
 - Python syntax PASS、既存mock 27＋追加認証9＝36/36 PASS。`.tf`/provider lock差分なしのためTerraform fmt/validateは再実行していない。
