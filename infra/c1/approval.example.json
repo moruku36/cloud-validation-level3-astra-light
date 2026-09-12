@@ -4,6 +4,7 @@
   "code_sha256": "UNANSWERED",
   "environment": false,
   "operators": false,
+  "operator_authentication": false,
   "schedule": false,
   "budget": false,
   "metadata_exception": false,

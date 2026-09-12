@@ -1,5 +1,7 @@
 # P1：計画差分・承認待ち・証跡対応
 
+2026-09-13追記：Operator認証guardは[修正版](operator-authentication.md)へ更新した。旧PR #18固定版の実行条件は新コードへ継承されない。認証guard修正とRole設計文書だけ承認済みで、新固定版、AWS API、Role/profile、Plan/apply/cleanupは未承認。
+
 2026-09-12追記：条件枠と限定例外の回答は[CP2承認反映](../../experiments/C/C-0/approval-2026-09-12.md)へ反映済み。現在の未承認操作と次工程は[実行ゲート](execution-gates-2026-09-12.md)を正本とする。以下はP1実装時点の差分履歴として保持する。
 
 正本：PR #17 `38c406c9d260db749f6578375480ff8189b09530`。[CP1](../../experiments/C/C-0/minimal-experiment.md)の業務判断/料金/実験承認欄は変更しない。

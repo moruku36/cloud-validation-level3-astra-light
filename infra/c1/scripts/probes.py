@@ -5,8 +5,9 @@ import os
 from pathlib import Path
 import subprocess
 import uuid
-from c1 import (ApiError, Stop, Aws, atomic, bucket_args, classify_denial, classify_lock,
-                private_path, now, digest, REGION, LIMITS, timestamp)
+from c1 import (ApiError, Stop, Aws, atomic, bucket_args, caller_policy, classify_denial,
+                classify_lock, expected_account, private_path, resolved_operator_role_arn,
+                now, digest, REGION, LIMITS, timestamp)
 
 def put(api, bucket, key, path, conditional=False):
     if Path(path).stat().st_size > 1_048_576:
@@ -21,8 +22,8 @@ def iam_probe(api, c, approval):
     # Destructive denial uses a disposable canary, NEVER the actual State object.
     if not approval.get("canary_substitution_approved"):
         raise Stop("Review canary substitution before IAM probe")
-    operator = Aws(c, c["profiles"]["operator"])
-    operator.identity(c["operator_arn"])
+    operator = Aws(c, c["aws_profile"])
+    operator.identity(caller_policy(c))
     directory = private_path(c["evidence_dir"])
     sample = directory / "canary.private.txt"
     sample.write_text("CP1 synthetic canary\n", encoding="utf-8")
@@ -92,7 +93,10 @@ def lock_probe(api, c, approval, runner=subprocess.run):
             "kms_key_id":c["kms_arn"],"use_lockfile":True}.items()):
         raise Stop("Probe backend scope mismatch")
     values = json.loads(tfvars.read_text())
-    if any(values.get(k) != c.get(k) for k in ("account_id","experiment_id","operator_arn","expires_at","kms_arn")):
+    expected = {"account_id": expected_account(c), "experiment_id": c["experiment_id"],
+                "operator_arn": resolved_operator_role_arn(c), "expires_at": c["expires_at"],
+                "kms_arn": c["kms_arn"]}
+    if any(values.get(k) != v for k, v in expected.items()):
         raise Stop("Probe input scope mismatch")
     if approval.get("fixture_tfvars_sha256") != digest(tfvars):
         raise Stop("Input version changed")
