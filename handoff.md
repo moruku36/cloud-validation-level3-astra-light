@@ -1,6 +1,6 @@
 ## 最新：C-1 read-only preflight INCOMPLETE（2026-09-12）
 
-[実行記録](evaluation/C-1-read-only-preflight-run.md)。起点PR #19 head `150769f0297cb39da7fa63bc925139fe069cc1b6`、比較先 `codex/c1-approval-gates`。直接依存#19、間接#18→#17→#16→#15。公開GitHub API/pull refで全件OPEN・未マージ、head/base一致を再確認。作業branch `codex/c1-read-only-preflight`。変更SHA/新規PRは反映後に記録する。
+[実行記録](evaluation/C-1-read-only-preflight-run.md)。起点PR #19 head `150769f0297cb39da7fa63bc925139fe069cc1b6`、比較先 `codex/c1-approval-gates`。直接依存#19、間接#18→#17→#16→#15。公開GitHub API/pull refで全件OPEN・未マージ、head/base一致を再確認。作業branch `codex/c1-read-only-preflight`。[PR #20](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/20)、成果物commit `ad8055639617a692b4f7634fea464817dc8cf72f`。[Issue #9コメント5645664497](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5645664497)。最終記録commitはPR head/commitsで確認する。
 
 - 判定：**INCOMPLETE**。実profile、期待account ID、実験ID、private暗号化証跡先と実行時国内PC確認のbinding不足。固定コード/命名式/資源数は変更なし。
 - AWS API：0/6回。STS 0、S3 0/2、IAM 0/3、自動/手動retry 0。STS前で停止し全API未実行。

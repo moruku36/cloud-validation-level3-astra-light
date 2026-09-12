@@ -49,3 +49,7 @@ KMS API、請求API、一覧API、remote backend、Terraform init/Plan/apply/des
 次の1工程は同じG1の再実施候補。AWS接続前に、repo外で実profile、期待account ID、実験ID、算出5名称、国内暗号化証跡先、実行時国内PC確認、`ap-northeast-1`、retry 1 attemptを一つのprivate設定へbindし、固定コードhashと照合する。その具体設定と新しい最大6回・30分枠について人間の再承認を得る。入力準備だけではAPI承認を再利用しない。
 
 根拠：AWS公式の[IAM/STS料金説明](https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html#intro-structure)と[S3料金](https://aws.amazon.com/s3/pricing/)、既存の[限定費用モデル](../experiments/C/C-0/minimal-cost-model.json)。
+
+## GitHub反映
+
+[PR #20](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/20)、成果物commit `ad8055639617a692b4f7634fea464817dc8cf72f`、比較先 `codex/c1-approval-gates` / `150769f0297cb39da7fa63bc925139fe069cc1b6`。直接依存#19、間接依存#18→#17→#16→#15で、すべてOPEN・未マージ。[Issue #9コメント5645664497](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5645664497)へINCOMPLETEと再開条件を追記し、Issueを未解決のまま維持した。最終記録commitはPR head/commitsで確認する。
