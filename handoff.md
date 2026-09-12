@@ -1,3 +1,16 @@
+## 最新：C-1 Operator認証guard修正（2026-09-13）
+
+[設計](infra/c1/operator-authentication.md)／[検証記録](evaluation/C-1-operator-auth-guard-run.md)。起点はPR #21 head `7e9b133c750db93953e0e5e260c9c4c0a65a5a8d`、比較先 `codex/c1-private-binding` / `7e9b133c750db93953e0e5e260c9c4c0a65a5a8d`。直接依存#21、間接#20→#19→#18→#17→#16→#15（全て未マージ）。作業branch `codex/c1-operator-auth-guard`。変更SHAと新PRはcommit/push後にPR本文とcommitsを正本として確認する。
+
+- STS前の完全operator ARN入力を廃止。privateのaccount、`assumed-role`、完全role名、認証方式、profileをofflineで拘束し、STS後にpartition/service/account/principal/role/sessionを構造照合する。SSOのPermission Set名と予約IAM Role名も分離した。
+- Python syntax PASS、既存mock 27＋追加認証9＝36/36 PASS。`.tf`/provider lock差分なしのためTerraform fmt/validateは再実行していない。
+- local metadata分類はprofile 2、静的2、許可候補0。値・名前・credentialは非表示。既存Operator Roleの実在と新設要否はUNDETERMINED。
+- 承認済みは認証guard修正とRole設計文書。新固定版、AWS API、Role作成、profile変更、SSO login、Plan/apply/probe/cleanupは未承認。旧固定版の実行条件は継承しない。
+- 次の1工程は認証経路の人間選択と、必要ならOperator Role/profileを作るための別承認。private binding、preflightへは進んでいない。
+- AWS通信/API 0回、Role/profile/credential/Plan/State/資源変更なし。資源・請求最新状態未確認。66/66/66点不合格、LC1未採点、C移行保留。モデル識別・トークン・料金・実作業時間は不明。
+
+以下は過去工程の記録。
+
 ## 最新：C-1 private binding NOT_READY（2026-09-12）
 
 [実行記録](evaluation/C-1-private-binding-run.md)／[安全な設定手順](infra/c1/private-binding-setup.md)。起点PR #20 head `0aa8e85ee6b1af4dfe9164a37ecf19bf3e338e5c`、比較先 `codex/c1-read-only-preflight`。直接依存#20、間接#19→#18→#17→#16→#15、全件OPEN・未マージ。作業branch `codex/c1-private-binding`。[PR #21](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/21)、成果物commit `68b530107b2f84904eb10ae0e5e3172c0316681c`。[Issue #9コメント5645718047](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5645718047)。最終記録commitはPR head/commitsで確認する。
@@ -264,3 +277,4 @@ A-3完了68e4607を含むreports/level3-aで作成。比較先a3/aws-review、�
 旧段落のa3/aws-review等はA-3時点の履歴。今回のHEADは上記コマンドで取得する。
 
 レポート保存：[PR #7](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/7)（比較先a3/aws-review、依存PR #6、未マージ）、[本文作成コミット1df77b7](https://github.com/moruku36/cloud-validation-level3-astra-light/commit/1df77b7)。
+

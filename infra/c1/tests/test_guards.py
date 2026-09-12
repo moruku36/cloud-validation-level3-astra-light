@@ -20,14 +20,20 @@ class GuardTests(unittest.TestCase):
         acct = "246813579024"  # synthetic mock only; no AWS executor in these tests
         exp = "c1-0123456789abcdef"
         prefix = exp + "-" + acct
-        self.c = dict(account_id=acct, region=c1.REGION, experiment_id=exp,
-                      operator_arn=f"arn:aws:iam::{acct}:role/mock-operator",
+        self.c = dict(expected_account_id=acct, expected_partition="aws",
+                      expected_principal_type="assumed-role", expected_role_name="mock-operator",
+                      expected_sso_permission_set_name=None,
+                      session_name_pattern=c1.SESSION_NAME_PATTERN, expected_authentication_type="assume-role",
+                      aws_profile="mock", region=c1.REGION, retry_max_attempts=1, experiment_id=exp,
                       backend_bucket=prefix+"-state", fixture_bucket=prefix+"-fixture",
                       state_key=f"state/{exp}/terraform.tfstate", evidence_dir=self.tmp.name,
                       roles={r:f"arn:aws:iam::{acct}:role/{prefix}-{r}" for r in ("plan","apply","cleanup")},
+                      profiles={r:"mock-"+r for r in ("plan","apply","cleanup")},
                       budget_jpy=500, estimated_total_jpy=212,
                       expires_at="2026-09-11T15:00:00+09:00",
-                      domestic_encrypted_workspace_confirmed=True, unpriced_incremental_costs=[])
+                      domestic_managed_pc_confirmed=True, private_evidence_volume_encrypted=True,
+                      private_evidence_sync_excluded=True, private_evidence_acl_restricted=True,
+                      unpriced_incremental_costs=[])
         self.at = dt.datetime(2026, 9, 11, 1, tzinfo=dt.timezone.utc)
         self.a = dict.fromkeys(c1.REQUIRED_APPROVALS, True)
         self.a.update(actions=list(c1.ACTIONS), start="2026-09-11T09:00:00+09:00",
@@ -39,16 +45,20 @@ class GuardTests(unittest.TestCase):
     def rebind(self):
         self.a["config_sha256"] = hashlib.sha256(json.dumps(self.c,sort_keys=True).encode()).hexdigest()
 
+    def guard(self, action="preflight", live=True, at=None):
+        with patch("c1.validate_profile_binding", return_value={"authentication_candidate":True}):
+            return c1.guard(self.c,self.a,action,live,at or self.at)
+
     def test_no_live_flag(self):
-        with self.assertRaises(c1.Stop): c1.guard(self.c,self.a,"preflight",False,self.at)
+        with self.assertRaises(c1.Stop): self.guard(live=False)
 
     def test_mock_valid(self):
-        c1.guard(self.c,self.a,"preflight",True,self.at)
+        self.guard()
 
     def test_dummy_account(self):
         for acct in c1.BLOCKED_ACCOUNTS:
-            self.c["account_id"] = acct
-            with self.assertRaises(c1.Stop): c1.validate_config(self.c)
+            changed=dict(self.c,expected_account_id=acct)
+            with self.assertRaises(c1.Stop): c1.validate_config(changed)
 
     def test_wrong_region_and_bucket(self):
         for key, value in (("region","us-east-1"),("backend_bucket","existing-production")):
@@ -57,24 +67,24 @@ class GuardTests(unittest.TestCase):
 
     def test_approval_and_code_change(self):
         self.a["budget"] = False
-        with self.assertRaises(c1.Stop): c1.guard(self.c,self.a,"preflight",True,self.at)
+        with self.assertRaises(c1.Stop): self.guard()
         self.a["budget"] = True
         self.a["code_sha256"] = "stale"
-        with self.assertRaises(c1.Stop): c1.guard(self.c,self.a,"preflight",True,self.at)
+        with self.assertRaises(c1.Stop): self.guard()
 
     def test_cost_observation_stale_and_missing_estimate(self):
         self.a["cost_observed_at"] = (self.at - dt.timedelta(minutes=16)).isoformat()
-        with self.assertRaises(c1.Stop): c1.guard(self.c,self.a,"preflight",True,self.at)
+        with self.assertRaises(c1.Stop): self.guard()
         self.a["cost_observed_at"] = self.at.isoformat()
         self.c["estimated_total_jpy"] = None
         self.rebind()
-        with self.assertRaises(c1.Stop): c1.guard(self.c,self.a,"preflight",True,self.at)
+        with self.assertRaises(c1.Stop): self.guard()
 
     def test_no_live_command_with_unapproved_example(self):
         self.a["actions"] = []
         with patch("c1.subprocess.run") as process:
             with self.assertRaises(c1.Stop):
-                c1.guard(self.c,self.a,"bootstrap-apply",True,self.at)
+                self.guard("bootstrap-apply")
             process.assert_not_called()
 
     def test_tf_apply_rejects_disabled_inputs_before_runner(self):
@@ -88,8 +98,9 @@ class GuardTests(unittest.TestCase):
         self.a.update(terraform_binary_sha256=c1.digest(executable),
                       bootstrap_tfvars_sha256=c1.digest(values))
         runner = Mock()
-        with self.assertRaises(c1.Stop):
-            tf_steps.terraform_step(Mock(c=self.c),self.c,self.a,"bootstrap-apply",runner)
+        with patch("tf_steps.resolved_operator_role_arn",return_value="arn:aws:iam::246813579024:role/mock-operator"):
+            with self.assertRaises(c1.Stop):
+                tf_steps.terraform_step(Mock(c=self.c),self.c,self.a,"bootstrap-apply",runner)
         runner.assert_not_called()
 
     def test_tf_changed_input_never_executes(self):
@@ -121,15 +132,16 @@ class GuardTests(unittest.TestCase):
         executable.write_text("not executable")
         (work / "reviewed.tfplan").write_text("mock saved plan")
         self.c.update(bootstrap_workdir=str(work),bootstrap_tfvars=str(values),
-                      terraform_executable=str(executable),profiles={"operator":"mock"})
+                      terraform_executable=str(executable))
         self.a.update(terraform_binary_sha256=c1.digest(executable),
                       bootstrap_tfvars_sha256=c1.digest(values),terraform_bound_reviewed=True,
                       terraform_request_reservation={k:1 for k in c1.LIMITS},
                       bootstrap_plan_sha256="wrong",bootstrap_plan_approved=True)
         api=c1.Aws(self.c,"mock",runner=Mock())
         runner=Mock()
-        with self.assertRaises(c1.Stop):
-            tf_steps.terraform_step(api,self.c,self.a,"bootstrap-apply",runner)
+        with patch("tf_steps.resolved_operator_role_arn",return_value="arn:aws:iam::246813579024:role/mock-operator"):
+            with self.assertRaises(c1.Stop):
+                tf_steps.terraform_step(api,self.c,self.a,"bootstrap-apply",runner)
         runner.assert_not_called()
 
     def test_multipart_stops_before_delete(self):
@@ -151,19 +163,19 @@ class GuardTests(unittest.TestCase):
     def test_unknown_cost_blocks(self):
         self.c["unpriced_incremental_costs"] = ["audit"]
         self.rebind()
-        with self.assertRaises(c1.Stop): c1.guard(self.c,self.a,"preflight",True,self.at)
+        with self.assertRaises(c1.Stop): self.guard()
 
     def test_overnight(self):
         self.a.update(start="2026-09-11T23:00:00+09:00",end="2026-09-12T02:00:00+09:00")
-        with self.assertRaises(c1.Stop): c1.guard(self.c,self.a,"preflight",True,self.at)
+        with self.assertRaises(c1.Stop): self.guard()
 
     def test_stop_new_work_keep_cleanup(self):
         late = self.at + dt.timedelta(hours=5)
-        with self.assertRaises(c1.Stop): c1.guard(self.c,self.a,"iam-probe",True,late)
-        c1.guard(self.c,self.a,"cleanup-backend",True,late)
+        with self.assertRaises(c1.Stop): self.guard("iam-probe",at=late)
+        self.guard("cleanup-backend",at=late)
 
     def test_residual_separate_approval(self):
-        with self.assertRaises(c1.Stop): c1.guard(self.c,self.a,"residual",True,self.at)
+        with self.assertRaises(c1.Stop): self.guard("residual")
 
     def test_public_evidence_forbidden(self):
         with self.assertRaises(c1.Stop): c1.private_path(c1.REPO / "raw.tfstate")
@@ -196,10 +208,105 @@ class GuardTests(unittest.TestCase):
     def test_account_identity_mock(self):
         runner = Mock(return_value=Mock(returncode=0,stdout=json.dumps({"Account":"999999999999","Arn":"bad"})))
         api = c1.Aws(self.c,"mock",runner=runner)
-        with self.assertRaises(c1.Stop): api.identity(self.c["operator_arn"])
+        with self.assertRaises(c1.Stop): api.identity(c1.caller_policy(self.c))
         self.assertEqual(runner.call_count,1)
         env = runner.call_args.kwargs["env"]
         self.assertEqual(env["AWS_EC2_METADATA_DISABLED"],"true")
+
+    def test_assumed_role_identity_success(self):
+        result={"Account":self.c["expected_account_id"],
+                "Arn":f'arn:aws:sts::{self.c["expected_account_id"]}:assumed-role/mock-operator/session_01'}
+        self.assertEqual(c1.validate_caller_identity(result,c1.caller_policy(self.c))["principal_type"],
+                         "assumed-role")
+        safe=c1.validate_caller_identity(result,c1.caller_policy(self.c))
+        self.assertNotIn(self.c["expected_account_id"],json.dumps(safe))
+        self.assertNotIn(self.c["expected_role_name"],json.dumps(safe))
+
+    def test_sso_assumed_role_identity_success(self):
+        self.c["expected_role_name"]="AWSReservedSSO_Operator_abcdef0123456789"
+        self.c["expected_sso_permission_set_name"]="Operator"
+        self.c["expected_authentication_type"]="sso"
+        result={"Account":self.c["expected_account_id"],
+                "Arn":f'arn:aws:sts::{self.c["expected_account_id"]}:assumed-role/{self.c["expected_role_name"]}/user@example.com'}
+        self.assertTrue(c1.validate_caller_identity(result,c1.caller_policy(self.c))["session_name_valid"])
+
+    def test_iam_role_path_normalizes_to_exact_role_name(self):
+        arn=f'arn:aws:iam::{self.c["expected_account_id"]}:role/team/operators/mock-operator'
+        self.assertEqual(c1.parse_iam_role_arn(arn,self.c["expected_account_id"])["role_name"],"mock-operator")
+
+    def test_identity_rejections_are_structural_and_redacted(self):
+        acct=self.c["expected_account_id"]
+        policy=c1.caller_policy(self.c)
+        cases=[
+            {"Account":"135790246813","Arn":f"arn:aws:sts::{acct}:assumed-role/mock-operator/session"},
+            {"Account":acct,"Arn":f"arn:aws-us-gov:sts::{acct}:assumed-role/mock-operator/session"},
+            {"Account":acct,"Arn":f"arn:aws:iam::{acct}:root"},
+            {"Account":acct,"Arn":f"arn:aws:iam::{acct}:user/mock-operator"},
+            {"Account":acct,"Arn":f"arn:aws:sts::{acct}:federated-user/mock-operator"},
+            {"Account":acct,"Arn":f"arn:aws:sts::{acct}:assumed-role/Notmock-operator/session"},
+            {"Account":acct,"Arn":f"arn:aws:sts::{acct}:assumed-role/mock-operator%2Fother/session"},
+            {"Account":acct,"Arn":f"arn:aws:sts::{acct}:assumed-role/mock-operator/"},
+            {"Account":acct,"Arn":f"arn:aws:sts::{acct}:assumed-role//session"},
+            {"Account":acct,"Arn":"not-an-arn"},
+            {"Account":acct,"Arn":f"arn:aws:s3::{acct}:assumed-role/mock-operator/session"},
+        ]
+        for result in cases:
+            with self.subTest(result=result["Arn"].split(":")[2] if ":" in result["Arn"] else "malformed"):
+                with self.assertRaises(c1.Stop) as error:
+                    c1.validate_caller_identity(result,policy)
+                self.assertNotIn(acct,str(error.exception))
+                self.assertNotIn(result["Arn"],str(error.exception))
+
+    def test_offline_sso_profile_success(self):
+        self.c["expected_authentication_type"]="sso"
+        self.c["expected_sso_permission_set_name"]="mock-operator"
+        self.c["expected_role_name"]="AWSReservedSSO_mock-operator_0123456789abcdef"
+        root=Path(self.tmp.name)/"aws"; root.mkdir()
+        (root/"config").write_text(
+            "[profile mock]\nsso_session = session\nsso_account_id = "+self.c["expected_account_id"]+
+            "\nsso_role_name = mock-operator\n[sso-session session]\nsso_start_url = https://example.invalid/start\n"
+            "sso_region = ap-northeast-1\n",
+            encoding="utf-8")
+        result=c1.validate_profile_binding(self.c,root)
+        self.assertEqual(result["authentication_type"],"sso")
+        self.assertEqual(result["live_authentication"],"STS_REQUIRED")
+        self.assertTrue(c1.resolved_operator_role_arn(self.c,root).endswith("/"+self.c["expected_role_name"]))
+
+        missing=dict(self.c); missing.pop("expected_sso_permission_set_name")
+        with self.assertRaises(c1.Stop): c1.validate_config(missing)
+
+    def test_offline_assume_role_with_sso_source_and_role_path(self):
+        root=Path(self.tmp.name)/"aws"; root.mkdir()
+        (root/"config").write_text(
+            "[profile mock]\nrole_arn = arn:aws:iam::"+self.c["expected_account_id"]+
+            ":role/team/mock-operator\nsource_profile = source\n[profile source]\nsso_session = session\n"
+            "sso_account_id = "+self.c["expected_account_id"]+"\nsso_role_name = SourceRole\n",
+            encoding="utf-8")
+        self.c["expected_authentication_type"]="assume-role"
+        self.assertEqual(c1.validate_profile_binding(self.c,root)["authentication_type"],"assume-role")
+
+    def test_direct_static_profile_rejected_without_reading_secret(self):
+        root=Path(self.tmp.name)/"aws"; root.mkdir()
+        (root/"credentials").write_text("[mock]\naws_access_key_id = synthetic\naws_secret_access_key = synthetic\n",
+                                        encoding="utf-8")
+        with self.assertRaises(c1.Stop): c1.validate_profile_binding(self.c,root)
+
+    def test_credential_process_is_undetermined_and_not_executed(self):
+        root=Path(self.tmp.name)/"aws"; root.mkdir()
+        marker=root/"must-not-run"
+        (root/"config").write_text("[profile mock]\ncredential_process = ignored > "+str(marker)+"\n",encoding="utf-8")
+        self.c["expected_authentication_type"]="credential-process"
+        with self.assertRaises(c1.Stop): c1.validate_profile_binding(self.c,root)
+        self.assertFalse(marker.exists())
+
+    def test_required_operator_policy_fields(self):
+        for key in ("expected_account_id","expected_principal_type","expected_role_name","aws_profile",
+                    "expected_authentication_type","retry_max_attempts","domestic_managed_pc_confirmed",
+                    "private_evidence_volume_encrypted","private_evidence_sync_excluded",
+                    "private_evidence_acl_restricted"):
+            changed=dict(self.c); changed.pop(key)
+            with self.subTest(key=key), self.assertRaises((c1.Stop,KeyError)):
+                c1.validate_config(changed)
 
     def test_quantity_stop_before_command(self):
         runner = Mock()

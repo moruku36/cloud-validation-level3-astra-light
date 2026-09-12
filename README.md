@@ -1,5 +1,7 @@
 # クラウドアーキテクチャ検証 LEVEL3（Phase A〜Phase B-3 総合結果）
 
+**最新：[C-1 Operator認証ガード修正](evaluation/C-1-operator-auth-guard-run.md)** — STS前の完全caller ARN要求を構造化policyへ変更し、36/36ローカルテストPASS。local profile 2件はいずれも不許可の静的認証分類で、Role実在・新設要否は未確認。AWS API 0回、新固定版とAWS操作は未承認。設計不合格66/66/66、LC1未採点、C全体移行保留を維持する。
+
 **最新：[C-1 private binding](evaluation/C-1-private-binding-run.md) はNOT_READY（AWS API 0回）** — 安全な実値入力が未完了で、BitLocker状態も権限不足により未確認のためprivate領域を作成せず停止。[履歴に値を残さない設定手順](infra/c1/private-binding-setup.md)を追加しました。30分/6時間枠は未開始、設計不合格66/66/66、LC1未採点、C全体移行保留です。
 
 <p align="center">

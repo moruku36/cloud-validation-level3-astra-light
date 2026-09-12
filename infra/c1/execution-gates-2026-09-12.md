@@ -1,5 +1,7 @@
 # C-1 CP2：実行ゲートとread-only preflight候補
 
+> 2026-09-13：G1の完全operator ARN事前入力は[構造化したOperator policy](operator-authentication.md)へ置換した。本書の旧記述は履歴であり、本修正後コードは未承認。G1も未承認のまま。
+
 固定実装：PR #18 head `f5b8982010a2420e0084cf700db6e0d2c695a640` の `infra/c1`。承認記録：[C-0 CP2](../../experiments/C/C-0/approval-2026-09-12.md)。本書は手順と将来の個別承認単位を固定する文書で、クラウド操作許可ではない。
 
 ## 固定ゲート
@@ -9,7 +11,7 @@
 |G|工程・現在状態|必要入力|そのゲートで許可する候補操作|停止条件|取得する証跡|
 |---|---|---|---|---|---|
 |G0|文書承認反映：今回完了|2026-09-12の承認要約、固定SHA、依存PR|公開文書・PR・Issue更新だけ|秘密/実ID混入、承認内容の拡大|承認項目、固定SHA、PR head/base、remote blob一致|
-|G1|実環境read-only preflight：**未承認・次候補**|private account ID/operator ARN/profile、experiment ID、計算した2 bucket名/3 role名、国内PC/経路、1回6 API attemptの承認、開始/終了絶対時刻|下表のSTS 1、S3 2、IAM 3だけ。作成/変更/削除/請求API/一覧取得なし|caller/account/role不一致、東京以外、名前の既存又はAccessDenied/通信不明、想定外endpoint/proxy、権限/U/保存先不明、API上限到達|rawは国内private。公開可：固定コードhash、実IDを塩付きhash等で置換した照合結果、各APIの成功/期待NotFound/未確認、時刻、呼出数|
+|G1|実環境read-only preflight：**未承認**|private account ID、`assumed-role`、完全role名、認証方式、profile、必要ならSSO Permission Set名、experiment ID、計算した2 bucket名/3 role名、国内PC/経路、1回6 API attemptの承認、開始/終了絶対時刻|下表のSTS 1、S3 2、IAM 3だけ。作成/変更/削除/請求API/一覧取得なし|offline認証分類が非許可/不明、caller/account/role不一致、東京外、名前の既存又はAccessDenied/通信不明、想定外endpoint/proxy、API上限到達|rawは国内private。公開可：account/主体/role/sessionの照合成否、各APIの成功/期待NotFound/未確認、時刻、呼出数。実識別子は保存しない|
 |G2|bootstrap Plan作成：未承認|G1 PASS、固定コード/input/binary hash、operatorの必要権限とTerraform予約量/U、local State保存先|local backendのinit、AWS providerのreadを伴うbootstrap Plan保存。applyなし|PlanにS3 1/key 1/role 3＋付随設定以外、update/import/replacement/既存対象、東京外、500円根拠不足|private Plan/State、Plan SHA、非機密resource/action集計、API予約/費用見込|
 |G3|bootstrap Plan人間承認：未承認|G2の完全Plan、操作/権限/価格/U、開始時刻案|private Planの人間レビューと承認記録だけ|生Planを公開、差分/U/権限が説明不能|承認者役割、日付、Plan/code/input SHA、許可action、失効条件|
 |G4|bootstrap apply：未承認|G3承認、実行開始/終了JST、15分以内の費用評価、本人在席|承認Planそのもののapply。State bucket 1/key 1/role 3と付随設定だけ|Plan/hash/caller不一致、見込300円以上又は総額500円説明不能、5h/同日余裕不足、部分失敗/未知応答|private local State/Plan/CLI結果、作成時刻/ID/RoleId、費用/数量、非機密作成集計|
@@ -29,7 +31,7 @@ G1は課金資源を作らないため、C-1の6h実行枠を開始しない。G
 
 |順序/API・回数|必要権限|取得情報と判定|機密性・保存|課金可能性|
 |---|---|---|---|---|
-|1. STS `GetCallerIdentity` ×1|AWS仕様上、この呼出し自体に権限は不要。ただし使用する認証profileは別途承認|Account、Arn、UserId。private account IDと既存operator roleのassumed-role ARNに一致した場合だけ継続|account ID/ARN/UserIdは管理情報。rawは国内private、公開は一致/不一致と置換hashのみ|STS呼出しの直接料金は想定しない。監査・通信・組織契約の間接費Uは未確認|
+|1. STS `GetCallerIdentity` ×1|AWS仕様上、この呼出し自体に権限は不要。ただし使用する短期認証profileは別途承認|Account完全一致後、Arnを構造parseしpartition/service/`assumed-role`/完全role名/session形式が全て一致した場合だけ継続|account ID/ARN/UserIdは管理情報。rawは国内private、公開は各照合の成否だけ|STS呼出しの直接料金は想定しない。監査・通信・組織契約の間接費Uは未確認|
 |2–3. S3 `GetBucketLocation` ×2（正確なbackend/fixture候補名、`ExpectedBucketOwner`指定）|`s3:GetBucketLocation`。ただし存在しない名前の確認結果や他account所有時の応答は権限/サービス挙動に依存|各名前が`NoSuchBucket`なら未使用候補。応答成功、AccessDenied、別errorは既存又は不明として停止。bucket一覧は取らない|bucket名はaccount IDを含む管理情報。raw/nameはprivate。公開は用途別の不存在/不明、置換hash、error分類のみ|S3 request meterと監査/通信費が生じ得る。2 attemptを500円枠のAPI量へ算入し、無料扱いしない|
 |4–6. IAM `GetRole` ×3（計算済みplan/apply/cleanup名）|`iam:GetRole`を当該3 role名に限定|各`NoSuchEntity`なら未使用候補。roleが返る、AccessDenied、別errorは停止。全role一覧・policy本文は取らない|role名/ARN/RoleId/信頼policy等を返し得るためrawはprivate。公開は役割別の不存在/不明と置換hashだけ|IAM呼出しの直接料金は想定しない。CloudTrail等の記録・契約費Uは未確認|
 
@@ -47,7 +49,7 @@ G1は課金資源を作らないため、C-1の6h実行枠を開始しない。G
 
 ## G1前に追加で必要な人間承認
 
-1. 実account ID、既存operator role ARN、AWS CLI profile、experiment IDと計算済み5名称を**private入力**としてbindする。
+1. 実account ID、`assumed-role`、完全role名、認証方式、AWS CLI profile、SSO時のPermission Set名、experiment IDと計算済み5名称を**private入力**としてbindする。完全caller ARNは事前入力しない。
 2. 国内本人管理PC、暗号化されたrepo外証跡dir、通信proxy/endpoint、AWS CLI版を確認する。実ID・資格・raw出力を公開しない。
 3. G1の上記6 API attemptだけを、絶対開始/終了JST（提案30分以内）とともに許可する。エラー時の追加callは再承認。
 4. APIによる管理metadata経路の限定例外がG1にも適用されること、S3/監査等のごく小さい未反映費を500円枠へ含めることを確認する。

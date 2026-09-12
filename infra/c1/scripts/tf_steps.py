@@ -3,7 +3,8 @@ import json
 import os
 from pathlib import Path
 import subprocess
-from c1 import Stop, REGION, private_path, digest, atomic, check_plan
+from c1 import (Stop, REGION, private_path, digest, atomic, check_plan, expected_account,
+                resolved_operator_role_arn)
 from probes import reserve_terraform
 
 def terraform_step(api, c, a, action, runner=subprocess.run):
@@ -16,8 +17,10 @@ def terraform_step(api, c, a, action, runner=subprocess.run):
     if digest(tfvars) != a.get(stack + "_tfvars_sha256"):
         raise Stop("Input file changed")
     values = json.loads(tfvars.read_text())
-    for key in ("account_id", "experiment_id", "operator_arn", "expires_at"):
-        if values.get(key) != c.get(key):
+    expected = {"account_id": expected_account(c), "experiment_id": c["experiment_id"],
+                "operator_arn": resolved_operator_role_arn(c), "expires_at": c["expires_at"]}
+    for key, value in expected.items():
+        if values.get(key) != value:
             raise Stop("Terraform inputs differ from approved configuration")
     if values.get("execution_authorized") is not True:
         raise Stop("Execution remains disabled in tfvars")
@@ -42,7 +45,7 @@ def terraform_step(api, c, a, action, runner=subprocess.run):
     if not a.get("terraform_bound_reviewed"):
         raise Stop("Terraform request bound not reviewed")
     reserve_terraform(api, a.get("terraform_request_reservation", {}))
-    profile = c["profiles"]["operator" if stack == "bootstrap" else "apply"]
+    profile = c["aws_profile"] if stack == "bootstrap" else c["profiles"]["apply"]
     env = {k:v for k,v in os.environ.items() if not k.startswith(("AWS_", "TF_"))}
     cli_config = private_path(c["evidence_dir"]) / "execution.tfrc"
     cli_config.write_text("disable_checkpoint = true\n", encoding="utf-8")
@@ -62,7 +65,7 @@ def terraform_step(api, c, a, action, runner=subprocess.run):
             raise Stop("Backend config not approved")
         configured = json.loads(backend.read_text())
         wanted = dict(bucket=c["backend_bucket"],key=c["state_key"],region=REGION,encrypt=True,
-                      kms_key_id=c["kms_arn"],use_lockfile=True,allowed_account_ids=[c["account_id"]],max_retries=1)
+                       kms_key_id=c["kms_arn"],use_lockfile=True,allowed_account_ids=[expected_account(c)],max_retries=1)
         if configured != wanted:
             raise Stop("Unexpected backend configuration")
         # First binding only. Never force-copy or silently overwrite an existing remote State.

@@ -1,8 +1,15 @@
 {
-  "account_id": "UNANSWERED",
+  "expected_account_id": "UNANSWERED",
+  "expected_partition": "aws",
+  "expected_principal_type": "assumed-role",
+  "expected_role_name": "UNANSWERED",
+  "expected_sso_permission_set_name": "UNANSWERED_OR_NULL_FOR_ASSUME_ROLE",
+  "session_name_pattern": "^[A-Za-z0-9_+=,.@-]{2,64}$",
+  "expected_authentication_type": "UNANSWERED",
+  "aws_profile": "UNANSWERED",
   "region": "ap-northeast-1",
+  "retry_max_attempts": 1,
   "experiment_id": "UNANSWERED",
-  "operator_arn": "UNANSWERED",
   "backend_bucket": "UNANSWERED",
   "fixture_bucket": "UNANSWERED",
   "state_key": "UNANSWERED",
@@ -13,7 +20,6 @@
     "cleanup": "UNANSWERED"
   },
   "profiles": {
-    "operator": "UNANSWERED",
     "plan": "UNANSWERED",
     "apply": "UNANSWERED",
     "cleanup": "UNANSWERED"
@@ -25,7 +31,10 @@
   "fixture_workdir": "UNANSWERED",
   "fixture_tfvars": "UNANSWERED",
   "terraform_executable": "UNANSWERED",
-  "domestic_encrypted_workspace_confirmed": false,
+  "domestic_managed_pc_confirmed": false,
+  "private_evidence_volume_encrypted": false,
+  "private_evidence_sync_excluded": false,
+  "private_evidence_acl_restricted": false,
   "budget_jpy": null,
   "estimated_total_jpy": null,
   "unpriced_incremental_costs": [

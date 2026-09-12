@@ -14,13 +14,17 @@ import tempfile
 import uuid
 
 REGION = "ap-northeast-1"
+PARTITION = "aws"
+PRINCIPAL_TYPE = "assumed-role"
+SESSION_NAME_PATTERN = r"^[A-Za-z0-9_+=,.@-]{2,64}$"
+AUTHENTICATION_TYPES = {"sso", "assume-role", "credential-process"}
 REPO = Path(__file__).resolve().parents[3]
 JST = dt.timezone(dt.timedelta(hours=9))
 BLOCKED_ACCOUNTS = {str(n) * 12 for n in range(10)} | {"123456789012"}
 CLEANUP = {"cleanup-fixture", "cleanup-backend", "schedule-key", "cleanup-roles", "residual"}
 ACTIONS = {"preflight", "bind", "iam-probe", "lock-probe",
            "bootstrap-init", "bootstrap-plan", "bootstrap-apply", "fixture-init", "fixture-plan", "fixture-apply"} | CLEANUP
-REQUIRED_APPROVALS = ("environment", "operators", "schedule", "budget", "metadata_exception",
+REQUIRED_APPROVALS = ("environment", "operators", "operator_authentication", "schedule", "budget", "metadata_exception",
                       "failed_design_exception", "key_residual_exception", "phased_budget")
 LIMITS = {"tier1": 1000, "tier2": 2000, "kms": 10000, "egress": 1_000_000_000}
 BOOT_TYPES = {
@@ -79,19 +83,217 @@ def private_path(path):
         raise Stop("Private inputs/evidence must be outside the repository")
     return result
 
+def expected_account(c):
+    return c["expected_account_id"]
+
+def parse_arn(value, *, service, resource_prefix, account=None, partition=PARTITION):
+    """Parse an ARN structurally; never include the supplied ARN in an error."""
+    if not isinstance(value, str) or "%" in value:
+        raise Stop("Principal ARN is malformed")
+    parts = value.split(":", 5)
+    if len(parts) != 6 or parts[0] != "arn" or parts[1] != partition or parts[2] != service:
+        raise Stop("Principal ARN partition/service mismatch")
+    if parts[3] or not re.fullmatch(r"[0-9]{12}", parts[4]):
+        raise Stop("Principal ARN region/account is malformed")
+    if account is not None and parts[4] != account:
+        raise Stop("Principal account mismatch")
+    prefix = resource_prefix + "/"
+    if not parts[5].startswith(prefix):
+        raise Stop("Principal type mismatch")
+    segments = parts[5][len(prefix):].split("/")
+    if not segments or any(not s for s in segments):
+        raise Stop("Principal resource is malformed")
+    return {"partition": parts[1], "service": parts[2], "account": parts[4], "segments": segments}
+
+def parse_iam_role_arn(value, account):
+    parsed = parse_arn(value, service="iam", resource_prefix="role", account=account)
+    if any(not re.fullmatch(r"[A-Za-z0-9_+=,.@-]{1,64}", s) for s in parsed["segments"]):
+        raise Stop("IAM role path/name is malformed")
+    return {**parsed, "role_name": parsed["segments"][-1]}
+
+def caller_policy(c, role_name=None):
+    return {
+        "partition": c["expected_partition"],
+        "principal_type": PRINCIPAL_TYPE,
+        "account": expected_account(c),
+        "role_name": role_name or c["expected_role_name"],
+        "session_name_pattern": SESSION_NAME_PATTERN,
+    }
+
+def validate_caller_identity(result, policy):
+    """Return only non-secret booleans/classification; raw identifiers stay private."""
+    if not isinstance(result, dict) or result.get("Account") != policy["account"]:
+        raise Stop("Caller account mismatch")
+    parsed = parse_arn(result.get("Arn"), service="sts", resource_prefix="assumed-role",
+                       account=policy["account"], partition=policy["partition"])
+    if policy["principal_type"] != PRINCIPAL_TYPE or len(parsed["segments"]) != 2:
+        raise Stop("Caller principal type/resource mismatch")
+    role_name, session_name = parsed["segments"]
+    if role_name != policy["role_name"]:
+        raise Stop("Caller role mismatch")
+    if not re.fullmatch(policy["session_name_pattern"], session_name, flags=re.ASCII):
+        raise Stop("Caller session name is unsafe")
+    return {"account_match": True, "principal_type": PRINCIPAL_TYPE,
+            "role_match": True, "session_name_valid": True}
+
+def _read_ini_metadata(path, capture_values=()):
+    """Read section/key metadata; retain only explicitly allowed non-secret values."""
+    result, section = {}, None
+    try:
+        stream = Path(path).open(encoding="utf-8")
+    except FileNotFoundError:
+        return result
+    except OSError as exc:
+        raise Stop("AWS profile metadata is unreadable") from exc
+    with stream:
+        for raw in stream:
+            stripped = raw.strip()
+            if not stripped or stripped.startswith(("#", ";")):
+                continue
+            if stripped.startswith("[") and stripped.endswith("]"):
+                section = stripped[1:-1].strip()
+                result.setdefault(section, {})
+                continue
+            if section is None or "=" not in raw:
+                continue
+            key, value = raw.split("=", 1)
+            key = key.strip().lower()
+            result[section][key] = value.strip() if key in capture_values else True
+    return result
+
+def aws_profile_metadata(aws_dir=None):
+    root = Path(aws_dir) if aws_dir else Path.home() / ".aws"
+    safe_values = {"sso_account_id", "sso_role_name", "sso_session", "sso_region",
+                   "role_arn", "source_profile", "credential_source"}
+    config = _read_ini_metadata(root / "config", safe_values)
+    credentials = _read_ini_metadata(root / "credentials")
+    return config, credentials
+
+def _profile_sections(profile):
+    return ("default" if profile == "default" else "profile " + profile, profile)
+
+def classify_profile(profile, aws_dir=None):
+    if not isinstance(profile, str) or not re.fullmatch(r"[A-Za-z0-9_+=,.@-]{1,128}", profile):
+        raise Stop("AWS profile name is missing or malformed")
+    config, credentials = aws_profile_metadata(aws_dir)
+    config_section, credential_section = _profile_sections(profile)
+    cfg, creds = config.get(config_section), credentials.get(credential_section)
+    if cfg is None and creds is None:
+        return {"exists": False, "authentication_type": "undetermined"}
+    cfg = cfg or {}
+    static_keys = {"aws_access_key_id", "aws_secret_access_key"}
+    static = bool((creds and (static_keys & creds.keys())) or (static_keys & cfg.keys()))
+    if static:
+        return {"exists": True, "authentication_type": "static", "status": "forbidden"}
+    if "role_arn" in cfg:
+        source = cfg.get("source_profile")
+        if source:
+            source_cfg_name, source_cred_name = _profile_sections(source)
+            source_cfg, source_creds = config.get(source_cfg_name, {}), credentials.get(source_cred_name, {})
+            if static_keys & (source_creds.keys() | source_cfg.keys()):
+                return {"exists": True, "authentication_type": "assume-role", "status": "forbidden-static-source"}
+            if "credential_process" in source_cfg:
+                return {"exists": True, "authentication_type": "assume-role", "status": "undetermined-source"}
+            source_is_sso = ({"sso_account_id", "sso_role_name"} <= source_cfg.keys() and
+                             ("sso_session" in source_cfg or "sso_start_url" in source_cfg))
+            if not source_is_sso:
+                return {"exists": True, "authentication_type": "assume-role", "status": "undetermined-source"}
+        elif "credential_source" in cfg:
+            return {"exists": True, "authentication_type": "assume-role", "status": "undetermined-source"}
+        else:
+            return {"exists": True, "authentication_type": "assume-role", "status": "undetermined-source"}
+        return {"exists": True, "authentication_type": "assume-role", "status": "candidate",
+                "role_arn": cfg["role_arn"]}
+    if {"sso_account_id", "sso_role_name"} <= cfg.keys() and ({"sso_session"} <= cfg.keys() or "sso_start_url" in cfg):
+        session_cfg = config.get("sso-session " + str(cfg.get("sso_session", "")), {})
+        sso_region = cfg.get("sso_region") or session_cfg.get("sso_region")
+        if not isinstance(sso_region, str) or not re.fullmatch(r"[a-z]{2}(?:-gov)?-[a-z]+-[0-9]", sso_region):
+            return {"exists": True, "authentication_type": "sso", "status": "undetermined-region"}
+        return {"exists": True, "authentication_type": "sso", "status": "candidate",
+                "account": cfg["sso_account_id"], "role_name": cfg["sso_role_name"], "sso_region": sso_region}
+    if "credential_process" in cfg:
+        return {"exists": True, "authentication_type": "credential-process", "status": "undetermined"}
+    return {"exists": True, "authentication_type": "undetermined", "status": "undetermined"}
+
+def validate_profile_binding(c, aws_dir=None):
+    info = classify_profile(c["aws_profile"], aws_dir)
+    if not info["exists"]:
+        raise Stop("AWS profile is not configured")
+    if info["authentication_type"] in {"static", "undetermined"} or info.get("status", "").startswith("forbidden"):
+        raise Stop("AWS profile authentication is forbidden or undetermined")
+    if info["authentication_type"] == "credential-process" or info.get("status") != "candidate":
+        raise Stop("AWS profile authentication requires separate review")
+    if info["authentication_type"] != c["expected_authentication_type"]:
+        raise Stop("AWS profile authentication type mismatch")
+    if info["authentication_type"] == "sso":
+        if (info["account"] != expected_account(c) or
+                info["role_name"] != c["expected_sso_permission_set_name"]):
+            raise Stop("SSO profile account/role mismatch")
+    else:
+        role = parse_iam_role_arn(info["role_arn"], expected_account(c))
+        if role["role_name"] != c["expected_role_name"]:
+            raise Stop("AssumeRole profile role mismatch")
+    return {"profile_exists": True, "authentication_type": info["authentication_type"],
+            "authentication_candidate": True, "live_authentication": "STS_REQUIRED"}
+
+def resolved_operator_role_arn(c, aws_dir=None):
+    """Resolve the IAM role ARN from local non-secret profile metadata, never from STS."""
+    validate_profile_binding(c, aws_dir)
+    info = classify_profile(c["aws_profile"], aws_dir)
+    if info["authentication_type"] == "assume-role":
+        parse_iam_role_arn(info["role_arn"], expected_account(c))
+        return info["role_arn"]
+    path = "aws-reserved/sso.amazonaws.com/"
+    if info["sso_region"] != "us-east-1":
+        path += info["sso_region"] + "/"
+    value = f'arn:{c["expected_partition"]}:iam::{expected_account(c)}:role/{path}{c["expected_role_name"]}'
+    parse_iam_role_arn(value, expected_account(c))
+    return value
+
+def profile_inventory(aws_dir=None):
+    config, credentials = aws_profile_metadata(aws_dir)
+    names = {"default" if s == "default" else s[8:] for s in config if s == "default" or s.startswith("profile ")}
+    names |= set(credentials)
+    counts = {k: 0 for k in ("sso", "assume-role", "credential-process", "static", "undetermined")}
+    for name in names:
+        counts[classify_profile(name, aws_dir)["authentication_type"]] += 1
+    return {"profile_count": len(names), "authentication_types": counts,
+            "aws_calls": 0, "secrets_output": False}
+
 def validate_config(c):
-    if not re.fullmatch(r"[0-9]{12}", c.get("account_id", "")) or c["account_id"] in BLOCKED_ACCOUNTS:
+    account = c.get("expected_account_id", "")
+    if not re.fullmatch(r"[0-9]{12}", account) or account in BLOCKED_ACCOUNTS:
         raise Stop("Real confirmed account required; dummy account rejected")
-    if c.get("region") != REGION or not re.fullmatch(r"c1-[0-9a-f]{16}", c.get("experiment_id", "")):
+    if (c.get("expected_partition") != PARTITION or c.get("expected_principal_type") != PRINCIPAL_TYPE or
+            c.get("expected_authentication_type") not in AUTHENTICATION_TYPES):
+        raise Stop("Expected operator policy is missing or unsupported")
+    if not re.fullmatch(r"[A-Za-z0-9_+=,.@-]{1,64}", c.get("expected_role_name", "")):
+        raise Stop("Expected role name is malformed")
+    if c.get("expected_authentication_type") == "sso":
+        permission_set = c.get("expected_sso_permission_set_name", "")
+        if not re.fullmatch(r"[A-Za-z0-9_+=,.@-]{1,32}", permission_set):
+            raise Stop("Expected SSO permission-set name is malformed")
+        actual_role_pattern = "AWSReservedSSO_" + re.escape(permission_set) + r"_[0-9a-f]{16}"
+        if not re.fullmatch(actual_role_pattern, c["expected_role_name"]):
+            raise Stop("Expected SSO role name does not match its permission set")
+    elif c.get("expected_sso_permission_set_name") is not None:
+        raise Stop("SSO permission-set condition must be null outside SSO")
+    if c.get("session_name_pattern") != SESSION_NAME_PATTERN:
+        raise Stop("Session-name policy must use the fixed safe pattern")
+    if c.get("region") != REGION or c.get("retry_max_attempts") != 1 or not re.fullmatch(r"c1-[0-9a-f]{16}", c.get("experiment_id", "")):
         raise Stop("Region/experiment mismatch")
-    base = c["experiment_id"] + "-" + c["account_id"]
+    workspace_checks = ("domestic_managed_pc_confirmed", "private_evidence_volume_encrypted",
+                        "private_evidence_sync_excluded", "private_evidence_acl_restricted")
+    if not all(c.get(k) is True for k in workspace_checks):
+        raise Stop("Domestic private workspace binding is incomplete")
+    if not re.fullmatch(r"[A-Za-z0-9_+=,.@-]{1,128}", c.get("aws_profile", "")):
+        raise Stop("AWS profile name is missing or malformed")
+    base = c["experiment_id"] + "-" + account
     if c.get("backend_bucket") != base + "-state" or c.get("fixture_bucket") != base + "-fixture":
         raise Stop("Bucket names outside exact scope")
     if c.get("state_key") != "state/" + c["experiment_id"] + "/terraform.tfstate":
         raise Stop("State path mismatch")
-    if not re.fullmatch(r"arn:aws:iam::" + c["account_id"] + r":role/[A-Za-z0-9_+=,.@/-]+", c.get("operator_arn", "")):
-        raise Stop("Existing same-account operator role required")
-    expected = {r: f'arn:aws:iam::{c["account_id"]}:role/{base}-{r}' for r in ("plan", "apply", "cleanup")}
+    expected = {r: f'arn:aws:iam::{account}:role/{base}-{r}' for r in ("plan", "apply", "cleanup")}
     if c.get("roles") != expected:
         raise Stop("Role scope mismatch")
     private_path(c.get("evidence_dir", ""))
@@ -99,6 +301,7 @@ def validate_config(c):
 
 def guard(c, approval, action, live, at=None):
     validate_config(c)
+    validate_profile_binding(c)
     if not live or action not in ACTIONS:
         raise Stop("Live action requires explicit --live; no AWS call was made")
     if approval.get("config_sha256") != hashlib.sha256(json.dumps(c, sort_keys=True).encode()).hexdigest():
@@ -113,7 +316,7 @@ def guard(c, approval, action, live, at=None):
         raise Stop("This action is not approved")
     if c.get("unpriced_incremental_costs") != []:
         raise Stop("Unbounded U blocks live operation")
-    if c.get("budget_jpy") != 500 or not c.get("domestic_encrypted_workspace_confirmed"):
+    if c.get("budget_jpy") != 500 or not c.get("domestic_managed_pc_confirmed"):
         raise Stop("Budget/workspace binding missing")
     start, end = timestamp(approval["start"]), timestamp(approval["end"])
     if timestamp(c.get("expires_at")) != end:
@@ -232,19 +435,14 @@ class Aws:
             raise Stop("Response larger than per-call reservation; stop and reconcile usage")
         return json.loads(p.stdout or "{}")
 
-    def identity(self, expected_role):
+    def identity(self, policy):
         result = self.call("sts", "get-caller-identity", cleanup=True)
-        expected_name = expected_role.split(":role/")[-1].split("/")[-1]
-        if result.get("Account") != self.c["account_id"] or not re.fullmatch(
-            rf'arn:aws:sts::{self.c["account_id"]}:assumed-role/{re.escape(expected_name)}/[^/]+',
-            result.get("Arn", "")
-        ):
-            raise Stop("Caller account/role mismatch")
+        return validate_caller_identity(result, policy)
 
 def bucket_args(c, bucket):
     if bucket not in {c["backend_bucket"], c["fixture_bucket"]}:
         raise Stop("Bucket outside manifest")
-    return ["--bucket", bucket, "--expected-bucket-owner", c["account_id"]]
+    return ["--bucket", bucket, "--expected-bucket-owner", expected_account(c)]
 
 def bucket_owned(api, bucket):
     c = api.c
@@ -258,7 +456,7 @@ def bucket_owned(api, bucket):
 def key_owned(api):
     c = api.c
     arn = c.get("kms_arn", "")
-    if not re.fullmatch(r"arn:aws:kms:" + REGION + ":" + c["account_id"] + r":key/[0-9a-f-]{36}", arn):
+    if not re.fullmatch(r"arn:aws:kms:" + REGION + ":" + expected_account(c) + r":key/[0-9a-f-]{36}", arn):
         raise Stop("Actual bootstrap key binding required")
     info = api.call("kms", "describe-key", ["--key-id", arn], cleanup=True)["KeyMetadata"]
     if info.get("Arn") != arn or info.get("MultiRegion") or info.get("KeySpec") != "SYMMETRIC_DEFAULT":
@@ -327,14 +525,16 @@ def run_action(c, a, action):
     kind = "apply" if action in {"iam-probe", "lock-probe", "fixture-init", "fixture-plan", "fixture-apply"} else "cleanup"
     if action in {"preflight", "bind", "cleanup-roles", "residual", "bootstrap-init", "bootstrap-plan", "bootstrap-apply"}:
         kind = "operator"
-    api = Aws(c, profiles[kind])
-    api.identity(c["operator_arn"] if kind == "operator" else c["roles"][kind])
+    profile = c["aws_profile"] if kind == "operator" else profiles[kind]
+    api = Aws(c, profile)
+    role_name = None if kind == "operator" else parse_iam_role_arn(c["roles"][kind], expected_account(c))["role_name"]
+    api.identity(caller_policy(c, role_name))
     evidence = private_path(c["evidence_dir"])
     receipt_path = evidence / "creation.private.json"
     receipt = json.loads(receipt_path.read_text()) if receipt_path.exists() else {}
     if action in {"iam-probe", "lock-probe", "fixture-plan", "fixture-apply"} and receipt:
-        observer = Aws(c, profiles["operator"])
-        observer.identity(c["operator_arn"])
+        observer = Aws(c, c["aws_profile"])
+        observer.identity(caller_policy(c))
         for bucket in receipt.get("created_buckets", []):
             if not absent_bucket(observer, bucket):
                 rows = versions(observer, bucket)
@@ -463,19 +663,25 @@ def run_action(c, a, action):
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("action", choices=sorted(ACTIONS | {"check-config", "check-plan"}))
-    p.add_argument("--config", required=True)
+    p.add_argument("action", choices=sorted(ACTIONS | {"check-config", "check-plan", "inspect-profiles"}))
+    p.add_argument("--config")
     p.add_argument("--approval")
     p.add_argument("--live", action="store_true")
     p.add_argument("--plan-json")
     p.add_argument("--stack", choices=["bootstrap", "fixture"])
     p.add_argument("--mode", choices=["create", "destroy"], default="create")
     args = p.parse_args()
+    if args.action == "inspect-profiles":
+        print(json.dumps(profile_inventory()))
+        return
+    if not args.config:
+        raise Stop("Private configuration is required")
     c = json.loads(private_path(args.config).read_text(encoding="utf-8"))
     validate_config(c)
     if args.action == "check-config":
+        profile = validate_profile_binding(c)
         print(json.dumps({"valid": True, "config_sha256": hashlib.sha256(json.dumps(c,sort_keys=True).encode()).hexdigest(),
-                          "code_sha256": code_digest()}))
+                          "code_sha256": code_digest(), **profile}))
     elif args.action == "check-plan":
         print(json.dumps(check_plan(json.loads(private_path(args.plan_json).read_text()), args.stack, args.mode)))
     else:
