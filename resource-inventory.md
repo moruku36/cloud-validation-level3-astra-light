@@ -1,5 +1,9 @@
 # 残存リソース・費用
 
+## C-1 IAM Identity Center有効化前審査（2026-09-13、最新）
+
+AWS/Console/API 0回、設定・資源変更なし。Organizations、Identity Center instance/store/portal、user/group、Permission Set、assignment、予約IAM Role、SSO profile/cache、CloudTrail配信は全て**実在未確認**。最小構成案は既存C-1計画資源へ数えず、追加の永続設定・資源候補として別承認する。Identity Center/Organizations/AWS owned keyの追加料金は公式上0、既存trail宛先・AD/IdP・通信等の費用Uと請求最新状態は未確認。
+
 ## C-1 Operator認証guard修正（2026-09-13、最新）
 
 AWS API 0回。Operator Role、policy、profile、credential、Plan、State、クラウド資源の作成・変更・削除なし。local profileは値非表示のmetadataだけで2件とも静的認証分類と確認したが、実資源・Role実在・請求・残存の最新状態は未確認。計画中のS3 2/KMS 1/IAM role 3を実在資源として扱わない。

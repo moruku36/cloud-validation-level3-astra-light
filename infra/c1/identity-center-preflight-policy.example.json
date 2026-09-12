@@ -1,0 +1,30 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CallerIdentityOnly",
+      "Effect": "Allow",
+      "Action": "sts:GetCallerIdentity",
+      "Resource": "*"
+    },
+    {
+      "Sid": "ExactBucketNameCollisionChecks",
+      "Effect": "Allow",
+      "Action": "s3:GetBucketLocation",
+      "Resource": [
+        "arn:aws:s3:::<PRIVATE_FIXED_STATE_BUCKET_NAME>",
+        "arn:aws:s3:::<PRIVATE_FIXED_FIXTURE_BUCKET_NAME>"
+      ]
+    },
+    {
+      "Sid": "ExactRoleNameCollisionChecks",
+      "Effect": "Allow",
+      "Action": "iam:GetRole",
+      "Resource": [
+        "arn:aws:iam::<PRIVATE_EXPECTED_ACCOUNT_ID>:role/<PRIVATE_FIXED_PLAN_ROLE_NAME>",
+        "arn:aws:iam::<PRIVATE_EXPECTED_ACCOUNT_ID>:role/<PRIVATE_FIXED_APPLY_ROLE_NAME>",
+        "arn:aws:iam::<PRIVATE_EXPECTED_ACCOUNT_ID>:role/<PRIVATE_FIXED_CLEANUP_ROLE_NAME>"
+      ]
+    }
+  ]
+}
