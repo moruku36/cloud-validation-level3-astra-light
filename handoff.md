@@ -1,5 +1,7 @@
 ## 最新：C-1限定条件CP2・実行ゲート確定（2026-09-12）
 
+GitHub反映：[PR #19](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/19)、成果物変更SHA `baac57710246641f31213cd9a9f5a9722577c70d`。比較先 `codex/c1-local-preparation` / `f5b8982010a2420e0084cf700db6e0d2c695a640`、直接#18/間接#17→#16→#15未マージ依存。11変更ファイルを固定SHAでGitHub取得しlocal blob全件一致。[Issue #9追記](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5645596864)、OPEN継続。最終記録commitはPR本文/[commits](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/19/commits)に完全SHAを保存し、push後のhead/base/記録blobを照合する。G1を開始せず文書工程で停止。
+
 [承認反映](experiments/C/C-0/approval-2026-09-12.md)／[12段階ゲート・G1候補](infra/c1/execution-gates-2026-09-12.md)／[実行記録](evaluation/C-1-approval-gates-run.md)。条件枠・500円・6h・限定例外は承認済み。AWS read/Plan/apply/試験/cleanup/後日readは未承認。C-1実証未完了、不合格66/66/66、LC1未採点、最終選定/C全体移行保留を維持。
 
 - 起点：PR #18 head `f5b8982010a2420e0084cf700db6e0d2c695a640`、OPEN/merged=false、base `c0/minimal-experiment-approval` / `38c406c9d260db749f6578375480ff8189b09530`。#17/#16/#15もOPEN・未マージをGitHub APIで再確認。

@@ -17,7 +17,9 @@
 - AWS公式のSTS GetCallerIdentity、S3 GetBucketLocation、IAM GetRole、IAM simulatorの仕様だけを公開Webで確認。AWSアカウントへ接続していない。
 - README/C-0初版/P1 runbookへ時点別の正本リンクを追加し、歴史を上書きしない。resource-inventoryでは計画資源と実在資源を分離。
 - 相対リンク、差分空白、固定実装との差分なし、公開対象に認証情報/実account/State/Planがないことを確認する。
-- PR/変更SHA/Issue #9/remote blob照合は反映後に追記する。
+- GitHub：[PR #19](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/19)、成果物SHA `baac57710246641f31213cd9a9f5a9722577c70d`、比較先codex/c1-local-preparation / f5b8982010a2420e0084cf700db6e0d2c695a640、直接#18/間接#17→#16→#15未マージ依存。11変更ファイルを固定SHAでGitHub取得しlocal blob全件一致。
+- [Issue #9コメント5645596864](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5645596864)へ承認境界/G1候補を保存し、IssueはOPEN継続。固定実装差分なし、相対リンク/空白/秘密patternを検査。
+- この記録commitの完全SHAはPR本文/commitsへ保存する。push後にhead/base/未マージと追記2ファイルのblobを確認して停止する。
 
 C-1実行条件の一部承認とC-1実証完了は別。AWS認証/API、remote backend、Plan、apply、試験、cleanup、ScheduleKeyDeletion、後日read、資源/請求確認を実行していない。既存資源・請求最新状態は未確認。サブエージェント/mergeなし。
 
