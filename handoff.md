@@ -1,3 +1,18 @@
+## 最新：C-1限定条件CP2・実行ゲート確定（2026-09-12）
+
+[承認反映](experiments/C/C-0/approval-2026-09-12.md)／[12段階ゲート・G1候補](infra/c1/execution-gates-2026-09-12.md)／[実行記録](evaluation/C-1-approval-gates-run.md)。条件枠・500円・6h・限定例外は承認済み。AWS read/Plan/apply/試験/cleanup/後日readは未承認。C-1実証未完了、不合格66/66/66、LC1未採点、最終選定/C全体移行保留を維持。
+
+- 起点：PR #18 head `f5b8982010a2420e0084cf700db6e0d2c695a640`、OPEN/merged=false、base `c0/minimal-experiment-approval` / `38c406c9d260db749f6578375480ff8189b09530`。#17/#16/#15もOPEN・未マージをGitHub APIで再確認。
+- branch `codex/c1-approval-gates`、比較先 `codex/c1-local-preparation` / 起点SHA。直接依存#18、間接#17→#16→#15。変更SHA/PR/remote照合は反映記録へ追記する。
+- 承認済み：既存検証account（共有ならprefix/tag/account guard）、東京、国内本人PC、ユーザー本人の主/監視/後日担当、副担当なし例外、S3 2/key 1/role 3、合成data≤2GB/送出≤1GB、税込500円、最大6h/5h cleanup、KMS 7日残存、metadata/canary/条件付きlock/不合格下部分実証の限定例外。
+- 条件付き：private実account/operator binding、論理隔離、Terraform API量/U/500円根拠、実行当日の絶対時刻と本人在席。開始指示まで6hを起算しない。
+- 失効：固定コード/資源変更、東京外、業務data/PII、メール/負荷/故障拡大、500円/6h/同日cleanup不能、KMS以外日跨ぎ、隔離不能、Planの既存資源/範囲外差分、権限/API/U不明、hash/主体/経路不一致。
+- 次の1工程：G1 read-only preflightの個別承認。候補はSTS GetCallerIdentity×1、正確な2名称へのS3 GetBucketLocation×2、正確な3名称へのIAM GetRole×3。実ID/rawは国内private、公開は置換hashと判定のみ。アカウント全一覧/請求/監査設定/Plan/remote backendなし。
+- 今回は文書/GitHubだけ。AWS認証/API/クラウド接続・資源/請求照会・Plan/apply/destroy・試験・cleanup・メール・Actions・サブエージェント・mergeなし。資源/請求最新状態未確認。実モデル識別/トークン/料金/実作業時間は取得できず不明。
+- 再開：PR chain、固定コードblob、承認失効条件を再確認し、実account等を公開せずG1の6 calls/絶対時間/Uを人間に提示して個別承認を得る。G1 PASSをG2 Plan許可へ読み替えない。
+
+以下は過去工程の記録。
+
 ## 最新：C-1準備P1（2026-09-11）
 
 GitHub反映：[PR #18](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/18)、成果物変更SHA `e0db25c39992420fab5ff1fbde6c1f580c9c61ea`。比較先 `c0/minimal-experiment-approval` / `38c406c9d260db749f6578375480ff8189b09530`、直接#17/間接#16→#15未マージ依存。24変更ファイルを固定SHAでGitHubから取得しlocal blob全件一致。[Issue #9追記](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5633016778)、未解決継続。最終記録commitの完全SHAはPR本文/[commits](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/18/commits)に保存し、push後のhead/base/記録blobを照合する。C-1準備だけで停止。
