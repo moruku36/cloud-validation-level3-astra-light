@@ -1,5 +1,7 @@
 # C-1準備 P1：実行順と承認境界
 
+2026-09-13追記：[Console read-only確認](../../evaluation/C-1-console-readonly-check-run.md)は`INCOMPLETE`。Organizationsあり・member・all featuresを確認したが、20分枠超過のためIdentity Center詳細とCloudTrailを未確認のまま停止した。設定変更なし。続行には新しい閲覧承認が必要で、有効化・profile/login・preflightは未承認。
+
 2026-09-13追記：認証方式はIAM Identity Centerを第一候補とし、[有効化前審査](identity-center-precheck.md)、[Permission Set候補](identity-center-permission-sets.md)、[12ゲート](identity-center-activation-gates.md)を作成した。次はConsole read-only状態確認の個別承認であり、有効化・profile/login・AWS APIは未承認。
 
 2026-09-13追記：[Operator認証ガード修正版](operator-authentication.md)と[ローカル検証記録](../../evaluation/C-1-operator-auth-guard-run.md)を追加した。STS前の完全caller ARN要求を廃止し、account・principal種別・完全role名・認証方式を事前拘束してSTS後に構造照合する。36/36テストPASS、AWS API 0回。新固定版、AWS API、Role/profile変更、Plan/applyは未承認である。

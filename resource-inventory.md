@@ -1,5 +1,9 @@
 # 残存リソース・費用
 
+## C-1 Console read-only現在状態確認（2026-09-13、最新）
+
+Console分類でOrganizationsの実在、対象accountがmember、組織機能がall featuresであることを2026-09-13 09:33:59 JST以降のread-only閲覧で確認した。名称・IDは保存していない。Identity Center instance/store/portal、user/group、Permission Set、assignment、予約IAM Role、CloudTrail、配信先、請求、その他資源は未確認。20分枠超過により`INCOMPLETE`で停止した。Console生成read trafficあり（正確な内部API回数は未確認）、設定・資源変更なし。計画資源やaccount全体の残存を確認した記録ではない。
+
 ## C-1 IAM Identity Center有効化前審査（2026-09-13、最新）
 
 AWS/Console/API 0回、設定・資源変更なし。Organizations、Identity Center instance/store/portal、user/group、Permission Set、assignment、予約IAM Role、SSO profile/cache、CloudTrail配信は全て**実在未確認**。最小構成案は既存C-1計画資源へ数えず、追加の永続設定・資源候補として別承認する。Identity Center/Organizations/AWS owned keyの追加料金は公式上0、既存trail宛先・AD/IdP・通信等の費用Uと請求最新状態は未確認。
