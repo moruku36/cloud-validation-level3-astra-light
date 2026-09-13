@@ -1,6 +1,6 @@
 ## 最新：C-1 Console read-only現在状態確認 INCOMPLETE（2026-09-13）
 
-[確認記録](evaluation/C-1-console-readonly-check-run.md)。起点PR #23 head `bfa2280c32b827cec19b2528e08ffa2bc46cd5de`、比較先 `codex/c1-identity-center-precheck`。直接依存#23、間接#22→#21→#20→#19→#18→#17→#16→#15（全てOPEN・未マージ）。作業branch `codex/c1-console-readonly-check`。PR・変更SHAは本branchのPR/commitsで確認する。
+[確認記録](evaluation/C-1-console-readonly-check-run.md)。起点PR #23 head `bfa2280c32b827cec19b2528e08ffa2bc46cd5de`、比較先 `codex/c1-identity-center-precheck`。直接依存#23、間接#22→#21→#20→#19→#18→#17→#16→#15（全てOPEN・未マージ）。作業branch `codex/c1-console-readonly-check`。[PR #24](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/24)、成果物変更SHA `e0ffc9d4659d8094692937a66ed302bd7c6d9546`。最終記録commitはPR head/commitsで確認する。
 
 - 判定：`INCOMPLETE`。Organizationsあり、member account、all featuresを確認。Identity Centerは東京home表示まででinstance種別・primary Region・identity source・user/group/Permission Set/assignment・portal・MFAを未確認。CloudTrail/配信先、管理権限も未確認。
 - 時刻：既存セッションの元の認証開始は不明。閲覧記録09:33:59 JST（00:33:59 UTC）、停止13:57:01 JST（04:57:01 UTC）、中断込み4時間23分02秒。20分枠超過で追加閲覧せず停止。
