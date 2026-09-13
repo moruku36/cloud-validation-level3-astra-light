@@ -1,5 +1,7 @@
 # クラウドアーキテクチャ検証 LEVEL3（Phase A〜Phase B-3 総合結果）
 
+**最新：[Organizations／Identity Center Console read-only確認](evaluation/C-1-console-readonly-check-run.md) はINCOMPLETE** — Organizationsあり、member account、all featuresを確認。Identity Center詳細とCloudTrailは20分枠超過により未確認のまま停止した。Console設定変更、CLI/SDK/Terraform/preflightは未実施。続行には新しい20分枠の閲覧承認が必要。
+
 **最新：[IAM Identity Center有効化前審査](evaluation/C-1-identity-center-precheck-run.md)** — 東京organization instance＋AWS owned key＋Preflight専用custom Permission Setを第一候補とした。AWS現状態は未確認。次はConsole read-only分類の個別承認で、有効化・profile/login・APIは未承認。66/66/66点不合格、LC1未採点、C全体移行保留を維持する。
 
 **最新：[C-1 Operator認証ガード修正](evaluation/C-1-operator-auth-guard-run.md)** — STS前の完全caller ARN要求を構造化policyへ変更し、36/36ローカルテストPASS。local profile 2件はいずれも不許可の静的認証分類で、Role実在・新設要否は未確認。AWS API 0回、新固定版とAWS操作は未承認。設計不合格66/66/66、LC1未採点、C全体移行保留を維持する。
