@@ -1,0 +1,5 @@
+aws_region   = "ap-northeast-1"
+env          = "c1-low"
+vpc_cidr     = "10.10.0.0/16"
+azs          = ["ap-northeast-1a", "ap-northeast-1c"]
+is_high_tier = false

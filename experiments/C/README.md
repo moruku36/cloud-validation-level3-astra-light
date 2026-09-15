@@ -62,8 +62,24 @@ Phase C は以下の順序で独立した検証ステップとして進行しま
 
 ---
 
-## 5. 関連ドキュメント
+## 5. Phase C 実行ツールと IaC 構成（トークン・認証最適化）
 
+自律AIエージェント（Astra等）のトークン切れ・認証中断を防ぎ、スムーズな検証を維持するためのインフラ：
+
+- **事前認証点検**: `python scripts/preflight_check.py`（Git/AWS認証状態を事前確認）
+- **整合性自動点検**: `python scripts/verify_repo.py`（リンク・台帳整合性をスクリプト検証）
+- **軽量インデックス**: `docs/context-summary.md`（再開時の入力コンテキストを100行に凝縮）
+- **Terraform 基本モジュール**: `infra/terraform/`
+  - `modules/vpc/`: 2AZ VPC, Public/Private DB Subnets
+  - `modules/alb/`: Application Load Balancer
+  - `modules/ecs/`: ECS Fargate ARM64, CloudWatch Logs
+  - `modules/rds/`: PostgreSQL Multi-AZ (H) / Single-AZ (L)
+
+---
+
+## 6. 関連ドキュメント
+
+- [コンテキスト要約 (軽量インデックス)](../../docs/context-summary.md)
 - [Phase C 検証計画書（詳細）](../B/B-3/c-validation-plan.md)
 - [C費用モデル定義 (JSON)](../B/B-3/c-cost-model.json)
 - [B-2 実証対応計画 (T01〜T16)](../B/B-2/validation-plan.md)

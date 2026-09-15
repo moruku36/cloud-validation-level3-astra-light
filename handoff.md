@@ -1,17 +1,20 @@
-# 最新：Phase C 開始・検証全体整理（2026-09-11）
+# 最新：Phase C 最適化ツール・IaC骨子整備・認証効率化完了（2026-09-15）
 
-ユーザー指示により本リポジトリの検証は **Phase C（IaC実装・実機検証・カオス障害試験・変更シナリオ対応）** に移行しました。
-Phase A（単一設計）、Phase B（3社比較選定・評価）の成果物を踏まえ、全体ドキュメントを Phase A → B → C の順序で整合させました。
+ユーザー承認に基づき、Astra実行環境におけるトークン枯渇・認証中断・進捗停滞を解消するためのブラッシュアップを実施しました。
 
-- **現在のステータス**: Phase C 開始（C-0 前提確定・承認ゲート確認）
-- **作業ブランチ**: phase-c/documentation-alignment
-- **設計評価ステータス**: Phase B自己評価66点（設計不合格）、AWS優先参考設計。Phase Cでの実機検証データ取得を通じて評価妥当性を再判定。
-- **Phase C 検証フロー**:
+- **現在のステータス**: Phase C 実機検証準備（最適化ツール・IaC骨子・軽量インデックス配備完了、C-0承認待ち）
+- **作業ブランチ**: `phase-c/optimization-and-tooling`
+- **導入した最適化インフラ**:
+  - `scripts/preflight_check.py`: GitHub/AWS認証ヘルスチェック・非対話設定の自動点検スクリプト
+  - `scripts/verify_repo.py`: 相対リンク・資源台帳・コミット整合性を自動確認するスクリプト（トークン消費削減）
+  - `docs/context-summary.md`: 再開時に読む超軽量インデックス（100行以内、過去フェーズ全体読込を抑止）
+  - `infra/terraform/`: 基本モジュール（VPC, ALB, ECS Fargate, RDS PostgreSQL Multi-AZ）の骨子を先行配備
+- **Phase C 検証フロー（マイクロタスク化）**:
   - **C-0**: 承認ゲート・前提確定（実験予算 12,495円+U、保持期限、操作許可範囲）
   - **C-1〜C-6**: 隔離環境構築(L)、機能/認証(L)、負荷/片AZ(H)、無人復旧/制御DB障害(H)、論理破損復元(H)、国内DR(H)
   - **C-7〜C-10**: 1000RPS(シナリオ1)、月額2倍分析(シナリオ3)、Public IP禁止(シナリオ4)、ロールバック/Cleanup(L)
-- **追跡Issue**: [Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9)（OPEN継続、Cの各タスクと連動）
-- **リソース・費用**: 現時点でクラウドアカウント操作なし、残存0件・利用費0円を維持。
+- **追跡Issue**: [Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9)
+- **リソース・費用**: クラウドアカウント操作なし、残存0件・利用費0円を維持。
 
 ---
 
