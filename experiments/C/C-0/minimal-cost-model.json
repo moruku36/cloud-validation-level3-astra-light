@@ -1,0 +1,119 @@
+{
+  "revision": "CP1",
+  "status": "proposal_unapproved",
+  "checked_date": "2026-09-11",
+  "scope": "C-1 State/lock/IAM/cleanup subset only",
+  "currency": "JPY",
+  "fx_reference": 150,
+  "fx_approval_ceiling": 160,
+  "tax_assumption": 0.1,
+  "free_tier_applied": false,
+  "max_active_hours": 6,
+  "conservative_month_hours_for_short_estimate": 672,
+  "limits": {
+    "s3_buckets": 2,
+    "kms_symmetric_keys": 1,
+    "iam_roles": 3,
+    "total_all_versions_GB": 2,
+    "max_payload_MiB": 1,
+    "multipart_creation": false,
+    "tier1_requests_including_retries": 1000,
+    "tier2_requests_including_retries": 2000,
+    "kms_requests_including_s3_calls": 10000,
+    "all_outbound_GB": 1
+  },
+  "prices": [
+    {
+      "meter": "S3 Standard GB-month",
+      "usd": 0.025,
+      "sku": "CCBFTMENTDWZHXHX"
+    },
+    {
+      "meter": "S3 Tier1 request",
+      "usd": 0.0000047,
+      "sku": "XAKHUSC46NWC9PPM"
+    },
+    {
+      "meter": "S3 Tier2 request",
+      "usd": 3.7e-7,
+      "sku": "9C7873KU3ZQBD6BJ"
+    },
+    {
+      "meter": "DataTransfer Out GB",
+      "usd": 0.114,
+      "sku": "9ESU2G5WSY6FMZR3"
+    },
+    {
+      "meter": "KMS symmetric key-month",
+      "usd": 1
+    },
+    {
+      "meter": "KMS symmetric request",
+      "usd": 0.000003
+    }
+  ],
+  "sources": [
+    {
+      "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonS3/current/ap-northeast-1/index.json",
+      "publicationDate": "2026-08-31T09:22:25Z",
+      "version": "20260831092225"
+    },
+    {
+      "url": "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSDataTransfer/current/ap-northeast-1/index.json",
+      "publicationDate": "2026-08-31T12:14:48Z",
+      "version": "20260831121448"
+    },
+    {
+      "url": "https://aws.amazon.com/kms/pricing/"
+    },
+    {
+      "url": "https://aws.amazon.com/s3/pricing/"
+    },
+    {
+      "url": "https://docs.aws.amazon.com/kms/latest/developerguide/deleting-keys.html"
+    }
+  ],
+  "formula": {
+    "requests_and_transfer_usd": "1000*0.0000047 + 2000*0.00000037 + 10000*0.000003 + 1*0.114",
+    "short_6h_usd": "(1+2*0.025)*6/672 + requests_and_transfer_usd",
+    "conservative_known_usd": "1 + 2*0.025 + requests_and_transfer_usd",
+    "jpy": "USD * FX * 1.10; round up at total"
+  },
+  "calculation": {
+    "requests_and_transfer_usd": 0.14944,
+    "short_6h_at_fx160_tax10_jpy": 28,
+    "whole_month_known_at_fx160_tax10_jpy": 212,
+    "plan_envelope_jpy": 300,
+    "cleanup_incident_reserve_jpy": 200,
+    "total_proposed_approval_jpy": 500
+  },
+  "U": [
+    {
+      "id": "U-usage",
+      "treatment": "算定可能。S3全世代/再試行/lock/cleanup/送出/KMSを上記数量に含めた。API試行・SDK retry上限と20% cleanup余力を実装で検証し、数えられない操作は開始不可。利用量制限は課金の厳密な自動上限制御ではない。"
+    },
+    {
+      "id": "U-account",
+      "treatment": "未確定・課金開始阻害。既存account/orgの強制CloudTrail/Config/GuardDuty/ログ転送/契約の増分費用があれば単価と上限数量を追加。今回account/請求未確認。ゼロ回答又は有限算定・再承認まで開始不可。"
+    },
+    {
+      "id": "U-runner",
+      "treatment": "未確定・課金開始阻害。国内端末/通信/保存/ソフトの追加料金なしを回答で確認。有料runner新設は対象外。人件費は未確定で500円のクラウド予算に含めない、担当の時間確保は別承認。"
+    },
+    {
+      "id": "U-tax-fx",
+      "treatment": "税10%/為替160以下は未確定の適用条件。課金前確認し条件外なら再計算・再承認。"
+    },
+    {
+      "id": "U-residual",
+      "treatment": "予定どおりPendingDeletionなら鍵月額なし。200円は追加1key月176円+2GB月8.8円=184.8円相当と丸め余裕15.2円を参考に置く事故予備。保持延長の許可でも無制限事故費の上限保証でもない。予約失敗/取消/想定外資源は別途判断。"
+    }
+  ],
+  "notes": [
+    "通常6h概算は最大リクエスト/送出を消費した約28円。実行日時が未定なので28日月の672hで保守計算。",
+    "約212円は鍵/storageを全月計上した数量内の保守参考。300との差88円は為替上限内の端数等の余裕、未知サービス料金を吸収済みとはしない。",
+    "S3 Standardのみ、DELETE無料。最低保持料金のあるクラス/複製/加速/有料追加ログは作成禁止。",
+    "KMS予約中は月額なし、取消は禁止。料金反映遅延・障害・第三者操作・為替で500円を超える可能性は排除できない。",
+    "全C旧概算12495+U/18742+U、本番月額10万円とは別。後続工程予算は未確定・未承認。"
+  ]
+}
