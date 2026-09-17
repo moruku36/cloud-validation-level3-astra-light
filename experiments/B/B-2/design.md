@@ -1,5 +1,7 @@
 # AWS優先参考設計（未承認）
 
+**LC1限定補完（C-0後）**：[G2 管理画像/IAM・保守・国内経路](limited-completion/iam-operations-data.md)、[G3 依存/容量](limited-completion/dependencies-capacity.md)、[G4 State/隔離](limited-completion/experiment-lifecycle.md)を該当範囲で優先する。通常appの画像Get権限は維持し、画像writeは専用batch取込、Stateは国内S3 native lock、容量は計算仮説とする。実装・採用未承認、旧本文は履歴を残す。B-3の66/66/66点は変更しない。
+
 適用条件・代替は[selection](selection.md)。図は[architecture.mmd](architecture.mmd)。実装/SKU容量の適合は未確認。単一WebアプリとPostgreSQLを採用候補にし、OS/Kubernetes運用を増やさない。VMはOS保守、Kubernetesはcluster保守が増えるため初期案から外す。NoSQLは本人強整合とtransaction設計を別途検証する必要があり、SQLの容量/費用が成立しない時の再設計候補とする（REQ-01/02/14/17/18）。
 
 ## 配置・容量・データ経路

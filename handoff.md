@@ -1,4 +1,26 @@
-## 最新：C-0整理完了・承認待ち（2026-09-10）
+## 最新：B-2限定設計補完LC1（2026-09-10）
+
+[必要4群の補完](experiments/B/B-2/limited-completion/README.md)は条件付き文書補完完了。4群はC-0 decisionから特定し、G1原期限/台帳/救済、G2画像IAM/保守/国内経路、G3依存回復/容量、G4費用U/State/cleanupを補完。旧初回/完了/B-3/C-0の記録を保持。LC1は未採点、B正式66/66/66点不合格、AWS優先参考・最終選定/人間採点/採用承認/C移行保留、構築開始不可。
+
+- 起点SHA：PR #15 head `609c90467482529329ac80efc4716dab2e6aa1e5`。APIでOPEN/merged=false、base main `6bd48f162d027da0056112cac45f08f52d54e903`を再確認。C-0 decisionのremote blobとlocal同一確認後、このheadから分岐。
+- 作業branch：`b2/limited-design-completion`。比較先：`c0/transition-readiness`。直接依存：未マージPR #15。#12〜#14は統合済み。変更SHA/PR/remote照合は本節の反映記録と[evaluation/B-2-limited-completion-run.md](evaluation/B-2-limited-completion-run.md)に記録する。
+- 承認範囲：ユーザーの今回指示による4群のみの設計・文書更新/未回答の条件別案/GitHub PR。具体操作・実装・試験・予算/保持/送信/故障・再評価・mergeは未承認。C-0旧票の未承認欄を業務回答済みにしない。
+- 未回答：メール受信側保存範囲、最低PITR（7日未承認）、正常更新損失許容、auth/probe主副役割・工数。[最小質問/推奨](experiments/B/B-2/limited-completion/README.md)。条件案は採用済みでない。
+- 残課題：採用する限定工程の実account/ARN/国内runner・版固定/価格適用/数量bindingは実行前D、C-0 E1〜E12はH、T01〜T16実証はE。本番には内部metadata/全copy消去/回復不能依存/暦月SLO/必要容量込み予算/継続運用/正式評価を残す。
+- 費用：LC1追加593円という数量仮定でAWS83,841円＋U、20%参考100,609円＋1.2U。旧83,248円＋UはB-3比較値を保持。C12,495円＋U/18,742円＋Uは旧未承認参考、LC月額を単純加算しない。U/実験予算は未確定。
+- 次の1工程：**C-0承認票の具体化・限定実験可否判断（文書のみ）**を推奨。Q回答とC-1の対象/国内経路/予算/期限/例外を具体化し人間判断へ。今回その工程も実行しない。実測成功を文書補完完了の条件にして循環させない。
+- クラウド資源・請求は今回確認せず最新状態未確認。クラウド操作/構築/試験/課金資源作成/メール/サブエージェント/mergeなし。モデル識別・トークン・料金・実作業時間は取得不能で不明。
+- 再開：PR #15と今回PRのhead/base/依存、変更SHA、人間回答・承認版を再確認。許可された次の1工程だけ実施する。設計補完完了・PRマージをC開始承認へ読み替えない。
+
+### LC1 GitHub反映記録
+
+[PR #16](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/16)、head `b2/limited-design-completion`、比較先`c0/transition-readiness` / `609c90467482529329ac80efc4716dab2e6aa1e5`、直接依存は未マージPR #15。成果物変更SHA `13a1d83e34b59143149449ab9712e95ec468b77c` の17変更ファイルを固定SHAでGitHubから取得しlocal blobと全件一致確認。Issue #9へ[コメント5618696882](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5618696882)を追加、未解決のチェック/状態は変えていない。
+
+この反映記録を含む最終変更SHAは[PR #16 commits](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/16/commits)とPR本文に完全SHAを保存する。追記push後にhead/base/未マージ・追記2ファイルのblob・Issue OPENを再確認する。文書補完だけで停止、次工程の承認/実行はなし。
+
+以下は過去工程の記録。
+
+## C-0整理完了・承認待ち（2026-09-10）
 
 [C-0資料](experiments/C/C-0/README.md)の対応表・A/B比較・承認票・質問を作成。**整理完了とC開始許可は別。承認票は全項目未承認、C構築開始不可・通常C移行保留。** B-3正式自己評価66/66/66、不合格、AWS優先参考・最終選定保留、人間採点/採用承認未取得を維持。
 
