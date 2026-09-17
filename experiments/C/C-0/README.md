@@ -1,6 +1,6 @@
 # C-0：移行条件・限定実験・承認事項の整理
 
-最新2026-09-12：[CP2承認反映](approval-2026-09-12.md)で限定条件/予算枠/例外を承認済みに更新。ただしAWS read、Plan、apply、試験、cleanupは未承認。次は[read-only preflight G1の個別承認](../../../infra/c1/execution-gates-2026-09-12.md)で、今回は実行しない。
+最新2026-09-12：[read-only preflight G1](../../../evaluation/C-1-read-only-preflight-run.md)はAPI前のprivate入力binding不足でINCOMPLETE、AWS API 0回。30分/6時間枠は未開始。再実施には設定準備後の新しい最大6回の個別承認が必要。[CP2承認反映](approval-2026-09-12.md)の範囲と失効条件を維持する。
 
 後続2026-09-11：[C-1準備P1](../../../infra/c1/README.md)で限定コード・ローカル検証を作成。C-1実証は未実施、CP1の承認欄は未承認のまま。以下は文書工程時点の記録を保持する。
 
