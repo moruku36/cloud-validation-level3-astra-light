@@ -1,5 +1,9 @@
 # 残存リソース・費用
 
+## C-1 Operator認証guard修正（2026-09-13、最新）
+
+AWS API 0回。Operator Role、policy、profile、credential、Plan、State、クラウド資源の作成・変更・削除なし。local profileは値非表示のmetadataだけで2件とも静的認証分類と確認したが、実資源・Role実在・請求・残存の最新状態は未確認。計画中のS3 2/KMS 1/IAM role 3を実在資源として扱わない。
+
 ## C-1 private binding（2026-09-12、最新）
 
 判定NOT_READY、AWS API 0回。暗号化volumeを確認できなかったためprivateディレクトリ・設定・証跡を作成していない。固定名S3 2個、IAM role 3個は入力不足で未算出・実在未確認。KMS、請求、その他資源も未確認。Plan、State、実資源、課金は作成しておらず、アカウント全体の残存ゼロ又は請求ゼロを意味しない。

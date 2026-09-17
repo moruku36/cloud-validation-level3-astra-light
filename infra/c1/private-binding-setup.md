@@ -1,5 +1,7 @@
 # C-1 preflight private binding 手順
 
+> **履歴**：以下はPR #21までの完全operator ARN方式であり、現在は使用しない。循環条件を修正した現行schemaと認証方式は[Operator認証ガード](operator-authentication.md)を正本とする。新固定版は未承認であり、private bindingも本工程では再実施していない。
+
 固定実装：PR #18以降の `infra/c1`。この手順はAWSへ接続せず、実値をrepo外へ設定して `check-config` まで行う。preflight、`--live`、Terraformは実行しない。
 
 ## 固定入力と命名

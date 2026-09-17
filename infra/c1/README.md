@@ -1,5 +1,7 @@
 # C-1準備 P1：実行順と承認境界
 
+2026-09-13追記：[Operator認証ガード修正版](operator-authentication.md)と[ローカル検証記録](../../evaluation/C-1-operator-auth-guard-run.md)を追加した。STS前の完全caller ARN要求を廃止し、account・principal種別・完全role名・認証方式を事前拘束してSTS後に構造照合する。36/36テストPASS、AWS API 0回。新固定版、AWS API、Role/profile変更、Plan/applyは未承認である。
+
 2026-09-12追記：[private binding記録](../../evaluation/C-1-private-binding-run.md)はNOT_READY、AWS API 0回。安全な実値入力と暗号化volume確認が残る。[設定手順](private-binding-setup.md)完了後もG1には新しい個別承認が必要。[CP2](../../experiments/C/C-0/approval-2026-09-12.md)と[12段階ゲート](execution-gates-2026-09-12.md)を正本とする。
 
 **今回実施済みなのはコード作成・ローカル検証だけ。以下のAWS操作は将来の手順であり未承認。** 正本はPR #17 / `38c406c9d260db749f6578375480ff8189b09530` の [CP1](../../experiments/C/C-0/minimal-experiment.md)。66/66/66点不合格、LC1未採点、最終選定・C移行保留を保持する。
