@@ -7,6 +7,8 @@
 > - **直近の進捗**: [Console read-only事前確認](evaluation/C-1-console-readonly-check-run.md)は20分枠超過のため `INCOMPLETE` で安全停止。設定変更・API実行・実環境リソース変更は一切行われていません。
 > - **次工程**: 新たな閲覧枠の人間承認、または [Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9) に記載された人間判断事項（H）の確定待ち。
 
+> **English Summary**: Autonomous cloud architecture validation repository. Currently at **Phase C-1 (safely halted)**. Local Terraform code and Python multi-layered safety guards are completed with **36/36 tests passing**. **0 cloud resources created ($0 cost)**. All unapproved AWS live operations are strictly blocked by offline guards.
+
 ### 🚦 エンジニア向け作業境界（Do / Don't）
 
 | 区分 | 許可される作業（Do） | 禁止・未承認の作業（Don't） |
@@ -212,18 +214,7 @@ flowchart TD
 専任1名の運用負荷を抑えつつ、同期整合性（SQL）と夜間の自動復旧を両立するため、**AWS Fargate (ARM) + Amazon RDS PostgreSQL (Multi-AZ)** をベースとしています。
 認証はCognitoの将来コスト急増リスクと国内保存制約を回避するため、**アプリ内製認証（PostgreSQLセッション連携）** を採用しています（[ADR-B2-001](docs/decisions/ADR-B2-001.md)）。
 
-### システム構成図（初期設計案 A-2 スナップショット）
-
-<p align="center">
-  <a href="https://raw.githubusercontent.com/moruku36/cloud-validation-level3-astra-light/main/experiments/A/A-2/architecture.jpg" target="_blank" title="クリックして高解像度・原寸大で拡大表示">
-    <img src="experiments/A/A-2/architecture.jpg" alt="実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成 初期A-2案)" width="100%" style="max-width: 1050px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
-  </a>
-  <br>
-  <sub>🔍 <b>画像をタップ/クリックすると別タブで原寸大・高解像度表示されます（※画像は初期A-2時点のもの。現行設計ではCognitoが内製認証へ変更されています）</b></sub>
-</p>
-
-#### 現行論理構成図 (B-2/B-3 正本 Mermaid)
-
+### 6.1 現行論理構成図 (B-2/B-3 正本)
 
 ```mermaid
 flowchart TB
@@ -245,13 +236,13 @@ flowchart TB
     direction TB
     subgraph ComputeTier ["アプリケーション層 (常時2タスク並行)"]
       direction LR
-      AppA["<font size=4><b>ECS Fargate (AZ-A)</b></font><br/>1vCPU / 2GB"]
-      AppB["<font size=4><b>ECS Fargate (AZ-B)</b></font><br/>1vCPU / 2GB"]
+      AppA["<font size=4><b>ECS Fargate (AZ-A)</b></font><br/>1vCPU / 2GB<br/><b>[Web + アプリ内製認証モジュール]</b>"]
+      AppB["<font size=4><b>ECS Fargate (AZ-B)</b></font><br/>1vCPU / 2GB<br/><b>[Web + アプリ内製認証モジュール]</b>"]
     end
 
     subgraph DatabaseTier ["データストア層 (同期Multi-AZ)"]
       direction LR
-      DB_Pri[("<font size=4><b>RDS PostgreSQL Primary</b></font><br/>AZ-A (gp3 50GB)")]
+      DB_Pri[("<font size=4><b>RDS PostgreSQL Primary</b></font><br/>AZ-A (gp3 50GB)<br/>業務データ + Session管理")]
       DB_Stb[("<font size=4><b>RDS PostgreSQL Standby</b></font><br/>AZ-B (同期待機)")]
       DB_Pri <-->|同期レプリケーション| DB_Stb
     end
@@ -260,8 +251,7 @@ flowchart TB
   subgraph ServicesTier ["マネージド共通基盤 & DR保管"]
     direction LR
     S3["<font size=4><b>S3 バケット (東京)</b></font><br/>画像・内部バックアップ"]
-    Auth["<font size=4><b>アプリ内製認証</b></font><br/>(Cognito代替でコスト削減)"]
-    SES["<font size=4><b>SES 東京</b></font><br/>メール送信"]
+    SES["<font size=4><b>SES 東京</b></font><br/>メール送信 (Outbox連携)"]
     CW["<font size=4><b>CloudWatch + Probe</b></font><br/>監視・軽量外形監視"]
     DR_S3[("<font size=4><b>S3 大阪 (DR)</b></font><br/>日次DBダンプ / 画像複製")]
   end
@@ -269,12 +259,10 @@ flowchart TB
   U ==>|HTTPS| WAF
   ALB -->|Private通信| AppA
   ALB -->|Private通信| AppB
-  AppA -->|TLS| DB_Pri
-  AppB -->|TLS| DB_Pri
+  AppA -->|TLS / SQL・Session| DB_Pri
+  AppB -->|TLS / SQL・Session| DB_Pri
   AppA --> S3
   AppB --> S3
-  AppA --> Auth
-  AppB --> Auth
   AppA --> SES
   AppB --> SES
   AppA --> CW
@@ -282,6 +270,23 @@ flowchart TB
   S3 -.->|非同期複製| DR_S3
   DB_Pri -.->|日次スナップショット| DR_S3
 ```
+
+### 6.2 初期設計案（A-2）の構成図スナップショット
+
+<details>
+<summary><b>📷 初期設計案（Phase A / A-2）のアーキテクチャ画像を表示（クリックで展開）</b></summary>
+<br>
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/moruku36/cloud-validation-level3-astra-light/main/experiments/A/A-2/architecture.jpg" target="_blank" title="クリックして高解像度表示">
+    <img src="experiments/A/A-2/architecture.jpg" alt="実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成 初期A-2案)" width="100%" style="max-width: 900px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+  </a>
+  <br>
+  <sub>※ 本画像は Phase A (A-2) 当初に作成されたスナップショットです。現行設計（B-2/B-3）では、Cognitoが「アプリ内製認証モジュール（PostgreSQLサーバーサイドセッション）」へ改定されています。</sub>
+</p>
+
+</details>
+
 
 ### 主要コンポーネントと選定理由
 - **DNS / ネットワーク**: Route 53 (DNSルーティング) + ALB (HTTPS終端・2AZ負荷分散)

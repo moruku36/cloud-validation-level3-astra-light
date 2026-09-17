@@ -48,15 +48,21 @@
 
 ## 4. 過去の実行記録・引継ぎログ（アーカイブ）
 
+> [!IMPORTANT]
+> **【履歴ログ閲覧時の注意（PR状態・ブランチの正本について）】**
+> - **現在のPR・ブランチ状態の正本は「第1節 クイックサマリー（PR #15〜#24 全件 main へマージ完了）」です。**
+> - 以下の各小見出しに含まれる「全て未マージ」「OPEN/merged=false」「未マージ依存」などの記述は、**各工程実施当時のスナップショット記録（履歴）** であり、現在のリポジトリ状態を示すものではありません。誤解しないようご注意ください。
+
 以下は各フェーズ完了時の詳細な証跡・引継ぎ履歴です（時系列順・過去の記録）。
 
 ---
 
 ### C-1 Console read-only現在状態確認 INCOMPLETE（2026-09-13）
 
-[確認記録](evaluation/C-1-console-readonly-check-run.md)。作業branch `codex/c1-console-readonly-check`（[PR #24](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/24) は `main` へマージ済み）。
+[確認記録](evaluation/C-1-console-readonly-check-run.md)。作業branch `codex/c1-console-readonly-check`（PR #24 は `main` へマージ済み）。
 - 判定：`INCOMPLETE`。Organizationsあり、member account、all featuresを確認。Identity Center詳細とCloudTrailは20分枠超過により未確認のまま停止。
 - Console設定変更、CLI/SDK/Terraform/preflight、資源操作なし。利用費0円。
+
 
 
 ## 最新：C-1 Operator認証guard修正（2026-09-13）
