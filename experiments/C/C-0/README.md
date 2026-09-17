@@ -1,5 +1,7 @@
 # C-0：移行条件・限定実験・承認事項の整理
 
+最新2026-09-12：[CP2承認反映](approval-2026-09-12.md)で限定条件/予算枠/例外を承認済みに更新。ただしAWS read、Plan、apply、試験、cleanupは未承認。次は[read-only preflight G1の個別承認](../../../infra/c1/execution-gates-2026-09-12.md)で、今回は実行しない。
+
 後続2026-09-11：[C-1準備P1](../../../infra/c1/README.md)で限定コード・ローカル検証を作成。C-1実証は未実施、CP1の承認欄は未承認のまま。以下は文書工程時点の記録を保持する。
 
 最新2026-09-11：[CP1：最小C-1承認票・準備判定B](minimal-experiment.md)／[数量・単価・U・500円案](minimal-cost-model.json)／[実行記録](../../../evaluation/C-0-minimal-approval-run.md)。PR #16のLC1を継承し文書具体化完了。未回答bindingと例外承認待ち、実装/Planは次工程。実験未承認、C構築開始不可。以下のC-0/LC1時点の記録は履歴として保持する。
