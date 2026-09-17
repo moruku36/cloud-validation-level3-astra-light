@@ -1,95 +1,104 @@
-# クラウドアーキテクチャ検証 LEVEL3（Phase A〜Phase B-3 総合結果）
+# クラウドアーキテクチャ検証 LEVEL3（Phase A〜Phase C-1 総合結果）
 
-**最新：[Organizations／Identity Center Console read-only確認](evaluation/C-1-console-readonly-check-run.md) はINCOMPLETE** — Organizationsあり、member account、all featuresを確認。Identity Center詳細とCloudTrailは20分枠超過により未確認のまま停止した。Console設定変更、CLI/SDK/Terraform/preflightは未実施。続行には新しい20分枠の閲覧承認が必要。
-
-**最新：[IAM Identity Center有効化前審査](evaluation/C-1-identity-center-precheck-run.md)** — 東京organization instance＋AWS owned key＋Preflight専用custom Permission Setを第一候補とした。AWS現状態は未確認。次はConsole read-only分類の個別承認で、有効化・profile/login・APIは未承認。66/66/66点不合格、LC1未採点、C全体移行保留を維持する。
-
-**最新：[C-1 Operator認証ガード修正](evaluation/C-1-operator-auth-guard-run.md)** — STS前の完全caller ARN要求を構造化policyへ変更し、36/36ローカルテストPASS。local profile 2件はいずれも不許可の静的認証分類で、Role実在・新設要否は未確認。AWS API 0回、新固定版とAWS操作は未承認。設計不合格66/66/66、LC1未採点、C全体移行保留を維持する。
-
-**最新：[C-1 private binding](evaluation/C-1-private-binding-run.md) はNOT_READY（AWS API 0回）** — 安全な実値入力が未完了で、BitLocker状態も権限不足により未確認のためprivate領域を作成せず停止。[履歴に値を残さない設定手順](infra/c1/private-binding-setup.md)を追加しました。30分/6時間枠は未開始、設計不合格66/66/66、LC1未採点、C全体移行保留です。
+> [!IMPORTANT]
+> **現在地・最新ステータス（Phase C-1 安全停止中）**
+> - **IaC・ガード実装**: [`infra/c1/`](infra/c1/README.md) にてTerraformおよびPythonガード実装完了。**ユニットテスト 36/36 件 PASS**。
+> - **クラウド接続**: **AWS実リソース未作成・課金0円**。未承認の live 操作はガードにより全て遮断。
+> - **直近の進捗**: [Console read-only事前確認](evaluation/C-1-console-readonly-check-run.md)は20分枠超過のため `INCOMPLETE` で安全停止。設定変更・API実行・実環境リソース変更は一切行われていません。
+> - **次工程**: 新たな閲覧枠の人間承認、または [Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9) に記載された人間判断事項（H）の確定待ち。
 
 <p align="center">
-  <b>曖昧なビジネス要件・制約から自律型AIが実践的クラウド構成を設計・評価するLEVEL3検証</b>
+  <b>曖昧なビジネス要件・制約から自律型AIが実践的クラウド構成を設計・評価・実装するLEVEL3検証</b>
 </p>
 
 <p align="center">
-  <a href="experiments/B/README.md"><b>🚀 開発者向けB結果サマリー</b></a> │
+  <a href="#エンジニア向けクイックスタート-ローカルテスト"><b>⚡ クイックスタート</b></a> │
+  <a href="infra/c1/README.md"><b>🛠️ C-1 IaC・ガード実装</b></a> │
+  <a href="experiments/B/README.md"><b>🚀 B結果サマリー</b></a> │
   <a href="experiments/B/final-report.md"><b>📊 B詳細レポート</b></a> │
-  <a href="experiments/B/B-3/README.md"><b>📝 B-3成果物（採点・C計画）</b></a> │
-  <a href="experiments/B/B-2/README.md"><b>📋 B-2条件別設計</b></a> │
   <a href="handoff.md"><b>📌 最新引継ぎ（handoff）</b></a>
 </p>
 
 ---
 
-## 1. エグゼクティブサマリー（B-3完了時点）
+## 1. エグゼクティブサマリー（C-1準備・停止時点）
 
 | 評価項目 | 現在のステータス | 判定・開発者にとっての意味 |
 |---|---|---|
-| **検証進捗** | **B-3（評価・引継ぎ）完了** | B-1（3社比較）→ B-2（条件別設計）→ B-3（正式採点・レポート）を完了 |
-| **設計自己評価スコア** | **66点 / 100点** | 合格基準80点に未達のため **「設計不合格」**（初回66点・修正後66点） |
-| **クラウド選定** | **AWSを優先参考設計として選定** | ただし最終選定・人間の採用承認は **「保留」**（B-2限定差戻し待ち） |
-| **月額基本費用概算** | **AWS: 83,248円 ＋ U** | 月額上限10万円に対し基本枠内（余地約1.68万円）。未精算Uと追加要件で変動 |
-| **次工程の扱い** | **B-2限定差戻し（D）** | **Phase C（実機・カオス試験）へは自動移行せず保留**。人間判断（H）の確定が必要 |
+| **検証進捗** | **Phase C-1（ローカル準備完了・実機停止中）** | A（単一設計）→ B（3社比較・選定・評価）→ C-0（計画）→ C-1（IaC・ガード実装） |
+| **設計自己評価スコア** | **66点 / 100点** | 合格基準80点に未達のため **「設計不合格・保留」**（B-3時点で66点確定） |
+| **クラウド選定** | **AWSを優先参考設計として選定** | ただし最終選定・人間の採用承認は **「保留」**（B-2限定差戻し事項あり） |
+| **実機リソース・利用費** | **0件 / 0円（完全未作成）** | 厳格な安全ガード（`c1.py`）により未承認のAPIコールやリソース作成を完全抑止 |
+| **実装コード品質** | **ユニットテスト 36/36 通過** | オフラインガード・設定検証・ロール照合テストすべて合格 |
+| **次工程の扱い** | **人間承認待ち（Console確認 / H判断）** | **実環境適用（apply）へは自動移行せず停止**。安全手順に則った承認が必要 |
 
-> [!IMPORTANT]
-> **「文書工程の完了」と「設計合格・採用承認」は別です。**
-> B-3までの検証により、3社の比較根拠・AWS優先参考設計・配点別課題・C検証計画が揃いましたが、必須要件（国内データ保存・完全削除・無人復旧・運用体制）の成立根拠が不足しているため、合格基準（80点）未達の **66点（不合格）** を維持しています。
+> [!NOTE]
+> **「文書・コード準備の完了」と「実機実行の承認」は厳格に分離されています。**
+> Phase C-1においてローカルIaCおよび二重ガードスクリプトが完成していますが、必須要件（国内データ保存・完全削除・無人復旧・運用体制）の人間判断および実環境での事前確認が未完了のため、実機操作は一切行わず安全停止しています。
 
 ---
 
 ## 2. プロジェクト概要と全体実験フロー
 
-- **目的**: 曖昧なビジネス要件に対し、AIが適切な要件定義、アーキテクチャ選定、コスト見積、耐障害・運用設計を行えるかの検証
+- **目的**: 曖昧なビジネス要件に対し、AIが適切な要件定義、アーキテクチャ選定、コスト見積、耐障害・運用設計、および安全なIaC実装を行えるかの検証
 - **指定モデル**: GPT-6 Astra Light（実行モデル識別情報は未確認）
-- **クラウド実リソース**: 未作成（Phase A / B はペーパー設計・評価のみ。利用費0円）
+- **クラウド実リソース**: 未作成（Phase A / B / C-0 / C-1 全てにおいてペーパー設計・ローカル検証のみ。利用費0円）
 
 ### リポジトリ構造と実験フロー
 
 ```mermaid
 flowchart TD
-    Req["要件定義・共通方針 (docs/)"] --> ExpA["実験A: AWS単一設計・リカバリ (experiments/A/)"]
-    Req --> ExpB["実験B: 3社比較・選定設計・評価 (experiments/B/)"]
+    Req["要件定義・共通方針 (docs/)"] --> ExpA["Phase A: AWS単一設計・リカバリ (experiments/A/)"]
+    Req --> ExpB["Phase B: 3社比較・選定設計・評価 (experiments/B/)"]
     ExpA --> Eval["評価・採点・引継ぎ (evaluation/ & handoff.md)"]
     ExpB --> Eval
-    Eval -.->|人間判断/差戻し解消後| ExpC["実験C: IaC実装・カオス試験 (Phase C / 保留)"]
+    Eval --> ExpC0["Phase C-0: 移行整理・最小実験計画 (experiments/C/C-0/)"]
+    ExpC0 --> ExpC1["Phase C-1: 限定IaC・安全ガード実装 (infra/c1/)"]
+    ExpC1 -.->|Console確認・人間承認後| LiveC["実機デプロイ・カオス検証 (未開始・未承認)"]
 ```
 
 ```mermaid
 flowchart TB
-  subgraph PhaseA ["Phase A: AWS単一設計（完了・評価保留）"]
+  subgraph PhaseA ["Phase A: AWS単一設計（完了）"]
     direction LR
     A1["<b>A-1 要件定義</b><br/>24要件定義"] --> A2["<b>A-2 AWS設計</b><br/>ECS+RDS Multi-AZ"] --> A3["<b>A-3 設計評価</b><br/>61→65点 (予算超過)"]
   end
 
-  subgraph PhaseB ["Phase B: 3社比較・選定・評価（完了・設計不合格）"]
+  subgraph PhaseB ["Phase B: 3社比較・選定・評価（完了・66点不合格）"]
     direction LR
-    B1["<b>B-1 3社比較</b><br/>AWS/GCP/Azure比較"] --> B2["<b>B-2 選定・設計</b><br/>AWS優先参考/条件統一"] --> B3["<b>B-3 評価・引継ぎ</b><br/>66点不合格・C計画作成"]
+    B1["<b>B-1 3社比較</b><br/>AWS/GCP/Azure比較"] --> B2["<b>B-2 選定・設計</b><br/>AWS優先参考/条件統一"] --> B3["<b>B-3 評価・引継ぎ</b><br/>66点不合格・C計画策定"]
   end
 
-  subgraph NextActions ["次のアクション（Phase C前）"]
+  subgraph PhaseC0 ["Phase C-0: 最小実験計画・移行準備（完了）"]
     direction LR
-    H["<b>H 人間判断</b><br/>メール保存/PITR/内製体制"]
-    D["<b>D B-2限定差戻し</b><br/>再削除/管理者IAM/無人復旧"]
+    C0_1["<b>移行条件整理</b><br/>4群のB-2補完"] --> C0_2["<b>最小承認票策定</b><br/>500円・6時間制限枠"]
   end
 
-  subgraph PhaseC ["Phase C: C-0整理完了・構築移行保留"]
+  subgraph PhaseC1 ["Phase C-1: 限定IaC・ガード・検証（現在地）"]
     direction LR
-    C0["<b>C-0 整理完了・未承認</b>"] -.->|別途承認・明示依頼| C1["<b>C1〜C10 未開始</b>"]
+    C1_1["<b>限定IaC/ガード実装</b><br/>bootstrap/fixture/c1.py"] --> C1_2["<b>オフライン検証</b><br/>36/36 テスト合格"] --> C1_3["<b>Console確認</b><br/>INCOMPLETE (停止)"]
   end
 
-  PhaseA -->|課題引継ぎ| PhaseB
-  PhaseB -->|限定差戻し| NextActions
-  NextActions -.->|承認・条件確定後| PhaseC
+  subgraph FutureSteps ["将来フェーズ（要人間承認）"]
+    direction LR
+    H["<b>H 人間判断確定</b><br/>メール保存/PITR/内製体制"] --> LiveDeploy["<b>実機デプロイ・試験</b><br/>未承認・未実行"]
+  end
+
+  PhaseA --> PhaseB
+  PhaseB --> PhaseC0
+  PhaseC0 --> PhaseC1
+  PhaseC1 -.->|枠承認・人間承認| FutureSteps
 
   classDef done fill:#14532d,stroke:#22c55e,stroke-width:2px,color:#ffffff;
+  classDef current fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px,color:#ffffff;
   classDef failed fill:#7f1d1d,stroke:#ef4444,stroke-width:2px,color:#ffffff;
   classDef pending fill:#713f12,stroke:#eab308,stroke-width:2px,color:#ffffff;
   classDef future fill:#1e293b,stroke:#64748b,stroke-width:1.5px,stroke-dasharray: 4 4,color:#ffffff;
-  class A1,A2,B1,B2 done;
+  class A1,A2,B1,B2,C0_1,C0_2,C1_1,C1_2 done;
   class A3,B3 failed;
-  class H,D pending;
-  class C0,C1 future;
+  class C1_3 current;
+  class H pending;
+  class LiveDeploy future;
 ```
 
 ### 全工程のステータス一覧
@@ -97,11 +106,10 @@ flowchart TB
 | 工程 | 状態 | 自己評価 | 主な結果と次の扱い | 関連成果物 |
 |---|---|:---:|---|---|
 | **Phase A** | 完了 | 65 / 100 | AWS単一設計。外形監視費用の計上漏れ発覚により月額10万円超過で不合格。 | [A詳細レポート](experiments/A/final-report.md) |
-| **B-1** | 完了 | - | 3社（AWS/GCP/Azure）を同一負荷条件で比較。暫定順位: AWS > GCP > Azure。 | [B-1サマリー](experiments/B/B-1/README.md) |
-| **B-2** | 完了 | 66 / 100 | 7日PITR共通条件案でAWSを優先参考設計化。最終選定・採用承認は保留。 | [B-2設計](experiments/B/B-2/README.md) |
-| **B-3** | 完了 | **66 / 100** | 24要件追跡・配点別レビュー・限定修正・C計画作成。**設計不合格・C移行保留**。 | [B詳細レポート](experiments/B/final-report.md) |
-| **次工程** | 待機 | - | **人間判断待ち（H）とB-2限定差戻し（D）** を実施。Cへの自動移行なし。 | [handoff.md](handoff.md) / [#9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9) |
-| **Phase C** | 保留 | - | IaC・実機デプロイ・カオス試験。短期計画12,495円＋Uは未承認。 | [C検証計画](experiments/B/B-3/c-validation-plan.md) |
+| **Phase B (B-1〜B-3)** | 完了 | **66 / 100** | 3社比較・AWS優先参考設計・24要件追跡。**設計不合格・C移行保留**。 | [B詳細レポート](experiments/B/final-report.md) |
+| **Phase C-0** | 完了 | 準備判定B | 4群のB-2設計補完、500円/6h限定実験承認票（CP1/CP2）策定。文書完了。 | [C-0 整理文書](experiments/C/C-0/README.md) |
+| **Phase C-1** | **進行中（停止）** | - | 限定IaC・多重防御ガード実装（36テストPASS）。Console確認時間枠超過で安全停止。 | [C-1 README](infra/c1/README.md) / [実行記録](evaluation/C-1-console-readonly-check-run.md) |
+| **未解決事項** | 継続追跡 | - | **人間判断待ち（H）とB-2限定差戻し（D）** をIssue #9で継続管理。 | [handoff.md](handoff.md) / [Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9) |
 
 ---
 
@@ -254,13 +262,65 @@ flowchart TB
 
 ---
 
-## 7. ドキュメントマップ
+## 7. エンジニア向けクイックスタート (ローカルテスト・検証)
+
+リポジトリ内のコードはすべて**クラウド非接続（オフライン）**で安全に検証可能です。
+
+### 7.1 Python 安全ガード・ユニットテスト実行
+
+多重防御ガード（時間・費用・ロール照合・STS構造検査・暗号化確認）のテストスイートを実行します：
+
+```bash
+# 標準 unittest による実行（36件のテスト）
+python -m unittest discover -s infra/c1/tests -v
+```
+
+### 7.2 Terraform 構成バリデーション
+
+Terraformコード（Terraform 1.13.5 / AWS Provider 6.14.1 対応）の文法・構文チェック：
+
+```bash
+# フォーマットチェック
+terraform fmt -check -recursive infra/c1
+
+# bootstrap stack の構文検証（リモート接続なし）
+terraform -chdir=infra/c1/bootstrap init -backend=false -input=false
+terraform -chdir=infra/c1/bootstrap validate
+
+# fixture stack の構文検証（リモート接続なし）
+terraform -chdir=infra/c1/fixture init -backend=false -input=false
+terraform -chdir=infra/c1/fixture validate
+```
+
+### 7.3 スクリプト体系 (`infra/c1/scripts/`)
+
+| スクリプト | 役割 | オフライン動作 |
+|---|---|:---:|
+| [`c1.py`](infra/c1/scripts/c1.py) | 入力値・承認票・実行時間・予算・ロール二重ガード CLI | ○ (`check-config`) |
+| [`tf_steps.py`](infra/c1/scripts/tf_steps.py) | Terraformバイナリ・コードhash照合と段階的apply制御 | ○ |
+| [`probes.py`](infra/c1/scripts/probes.py) | 合成CanaryによるIAM拒否確認・S3ロック競合対照 | ○ (mock可) |
+| [`materialize.py`](infra/c1/scripts/materialize.py) | 非公開設定JSONからtfvars/backendをオフライン安全生成 | ○ |
+
+---
+
+## 8. ドキュメントマップ
 
 ### 企画・要件・共通ルール (`docs/`)
 - [要件定義・全体方針](docs/requirements.md) : ビジネス背景、24要件、制約条件の整理
 - [実行ポリシー](docs/execution-policy.md) : AIエージェントの作業手順・禁止事項・評価方針
 - [正式業務回答](docs/sources/business-answers-2026-09-08.md) : ヒアリングに対する顧客側の正式回答
 - [ADR意思決定記録](docs/decisions/ADR-A2-001.md) : 初期アーキテクチャ選定理由
+
+### Phase C: 限定IaC・検証・安全ガード (`experiments/C/` & `infra/c1/`)
+- [**★ C-1 実装コードと安全手順書 (infra/c1/README.md)**](infra/c1/README.md) : **Terraform・二重ガードスクリプト・実行runbook**
+- **C-1 実装・認証・安全ゲート**:
+  - [12段階実行ゲート](infra/c1/execution-gates-2026-09-12.md) / [計画差分と残条件](infra/c1/changes-and-gates.md)
+  - [Operator認証ガード設計](infra/c1/operator-authentication.md) / [IAM Identity Center事前審査](infra/c1/identity-center-precheck.md)
+  - [Permission Sets設計](infra/c1/identity-center-permission-sets.md) / [有効化ゲート](infra/c1/identity-center-activation-gates.md)
+  - [Private Binding安全設定手順](infra/c1/private-binding-setup.md)
+- **C-0: 最小実験計画フェーズ**:
+  - [C-0 整理文書](experiments/C/C-0/README.md) / [最小実験計画 (CP1)](experiments/C/C-0/minimal-experiment.md) / [費用モデル](experiments/C/C-0/minimal-cost-model.json)
+  - [2026-09-12 承認反映 (CP2)](experiments/C/C-0/approval-2026-09-12.md) / [ブロッカー整理](experiments/C/C-0/blockers.md) / [移行判定基準](experiments/C/C-0/decision.md)
 
 ### Phase B: 3クラウド比較・選定設計・総合評価 (`experiments/B/`)
 - [**★ LEVEL3-B 開発者向け結果サマリー**](experiments/B/README.md) : **B工程全体（B-1〜B-3）の要約と開発者向け解説**
@@ -269,6 +329,7 @@ flowchart TB
   - [B-1 サマリー](experiments/B/B-1/README.md) / [3社比較詳細](experiments/B/B-1/comparison.md) / [費用内訳](experiments/B/B-1/cost.md) / [比較基準](experiments/B/B-1/comparison-criteria.md) / [公式出典](experiments/B/B-1/sources.md)
 - **B-2: 条件別設計フェーズ**
   - [B-2 サマリー](experiments/B/B-2/README.md) / [設計書](experiments/B/B-2/design.md) / [費用モデル](experiments/B/B-2/cost.md) / [選定理由・逆転条件](experiments/B/B-2/selection.md) / [復旧・可観測性](experiments/B/B-2/recovery-observability.md) / [実証対応計画](experiments/B/B-2/validation-plan.md)
+  - [B-2 限定補完サマリー](experiments/B/B-2/limited-completion/README.md) (依存容量 / ライフサイクル / IAM / リテンション)
 - **B-3: 評価・引継ぎフェーズ**
   - [B-3 成果物トップ](experiments/B/B-3/README.md) / [配点別採点表 (66点)](experiments/B/B-3/scores.md) / [レビュー指摘 (F01〜F11)](experiments/B/B-3/review.md) / [限定修正](experiments/B/B-3/revised-design.md) / [24要件追跡](experiments/B/B-3/traceability.md) / [Phase C検証計画](experiments/B/B-3/c-validation-plan.md)
 
@@ -280,11 +341,13 @@ flowchart TB
 - **A-3**: [自己評価スコア (61→65点)](experiments/A/A-3/scores.md) / [改善仕様](experiments/A/A-3/revised-design.md) / [予算監査](experiments/A/A-3/budget.md) / [要件追跡](experiments/A/A-3/traceability.md)
 
 ### 評価プロセス・運用記録 (`evaluation/`)
-- [B-3 実行記録](evaluation/B-3-run.md) / [B-2 実行記録](evaluation/B-2-run.md) / [B-1 実行記録](evaluation/B-1-run.md)
-- [A-3 実行記録](evaluation/A-3-run.md) / [A-2 実行記録](evaluation/A-2-run.md) / [A-1 実行記録](evaluation/A-1-run.md)
+- **Phase C**: [Console read-only確認](evaluation/C-1-console-readonly-check-run.md) / [Identity Center審査](evaluation/C-1-identity-center-precheck-run.md) / [Operator認証ガード](evaluation/C-1-operator-auth-guard-run.md) / [Private Binding](evaluation/C-1-private-binding-run.md) / [Read-only Preflight](evaluation/C-1-read-only-preflight-run.md) / [承認ゲート確定](evaluation/C-1-approval-gates-run.md) / [C-1準備記録](evaluation/C-1-preparation-run.md) / [C-0最小承認](evaluation/C-0-minimal-approval-run.md) / [C-0整理](evaluation/C-0-run.md)
+- **Phase B**: [B-2限定補完](evaluation/B-2-limited-completion-run.md) / [B-3 実行記録](evaluation/B-3-run.md) / [B-2 実行記録](evaluation/B-2-run.md) / [B-1 実行記録](evaluation/B-1-run.md)
+- **Phase A**: [A-3 実行記録](evaluation/A-3-run.md) / [A-2 実行記録](evaluation/A-2-run.md) / [A-1 実行記録](evaluation/A-1-run.md)
 - [人間の介入記録台帳](evaluation/human-intervention.md) : AIの自律性と介入記録
 - [評価ルーブリック](evaluation/rubric.md) : 採点基準定義
 
 ### 引継ぎ・資産管理
 - [**最新引継ぎ書 (handoff.md)**](handoff.md) : 現在の状態、保留事項、次工程の起点
 - [資源台帳 (resource-inventory.md)](resource-inventory.md) : クラウド残存リソース0件・利用費0円の記録
+
