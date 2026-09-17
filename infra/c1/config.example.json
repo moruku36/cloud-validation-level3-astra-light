@@ -1,0 +1,37 @@
+{
+  "account_id": "UNANSWERED",
+  "region": "ap-northeast-1",
+  "experiment_id": "UNANSWERED",
+  "operator_arn": "UNANSWERED",
+  "backend_bucket": "UNANSWERED",
+  "fixture_bucket": "UNANSWERED",
+  "state_key": "UNANSWERED",
+  "kms_arn": "UNANSWERED",
+  "roles": {
+    "plan": "UNANSWERED",
+    "apply": "UNANSWERED",
+    "cleanup": "UNANSWERED"
+  },
+  "profiles": {
+    "operator": "UNANSWERED",
+    "plan": "UNANSWERED",
+    "apply": "UNANSWERED",
+    "cleanup": "UNANSWERED"
+  },
+  "evidence_dir": "UNANSWERED",
+  "bootstrap_workdir": "UNANSWERED",
+  "bootstrap_tfvars": "UNANSWERED",
+  "backend_config": "UNANSWERED",
+  "fixture_workdir": "UNANSWERED",
+  "fixture_tfvars": "UNANSWERED",
+  "terraform_executable": "UNANSWERED",
+  "domestic_encrypted_workspace_confirmed": false,
+  "budget_jpy": null,
+  "estimated_total_jpy": null,
+  "unpriced_incremental_costs": [
+    "U-account",
+    "U-runner",
+    "U-tax-fx"
+  ],
+  "expires_at": "UNANSWERED"
+}

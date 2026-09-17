@@ -7,3 +7,12 @@
 !.env.example
 *.pem
 *.key
+__pycache__/
+*.pyc
+*.tfvars
+*.tfvars.json
+*.private.*
+*.auto.tfvars*
+backend.hcl.json
+crash.log
+crash.*.log

@@ -1,3 +1,20 @@
+## 最新：C-1準備P1（2026-09-11）
+
+GitHub反映：[PR #18](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/18)、成果物変更SHA `e0db25c39992420fab5ff1fbde6c1f580c9c61ea`。比較先 `c0/minimal-experiment-approval` / `38c406c9d260db749f6578375480ff8189b09530`、直接#17/間接#16→#15未マージ依存。24変更ファイルを固定SHAでGitHubから取得しlocal blob全件一致。[Issue #9追記](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5633016778)、未解決継続。最終記録commitの完全SHAはPR本文/[commits](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/18/commits)に保存し、push後のhead/base/記録blobを照合する。C-1準備だけで停止。
+
+[コード/runbook](infra/c1/README.md)／[計画差分・残条件](infra/c1/changes-and-gates.md)／[ローカル検証記録](evaluation/C-1-preparation-run.md)。**準備成果物完了、C-1実証未実施。実験・500円予算・各例外は未承認。** 不合格66/66/66、LC1未採点、最終選定・C移行保留。
+
+- 起点：PR #17 `38c406c9d260db749f6578375480ff8189b09530`、OPEN/merged=false、base b2/limited-design-completion / f843183def131b1c42f2b192bdb72392f5150bad。#16/#15もOPEN/未マージを再確認。
+- branch `codex/c1-local-preparation`、比較先 `c0/minimal-experiment-approval` / 起点SHA。直接依存#17、間接#16→#15。変更SHA/PR/照合結果は反映記録へ追記。
+- 承認範囲：限定コード・手順・クラウド非接続ローカル検証/GitHub PRのみ。サブエージェント/mergeなし。クラウド接続/実Plan/apply/destroy/試験/メールなし。資源・請求最新状態未確認。
+- 実装：local bootstrap（State bucket/key/3role）とS3 Stateのfixture bucketを分離。対象/承認hash/予算/時間guard、canary否定、条件付きlock、全世代cleanup/残存key receipt。fmt・2stack validate・Python構文・mock27件PASS。
+- 差分：実State削除の代わりにcanary、条件付きlock holder方式、各bucket60世代/60MiB以内へ縮小。Terraform内部API回数は厳密計数せず承認済み予約方式。上限根拠がないならPlan前に停止。実権限・削除動作は未実証。
+- 必要回答：実account/operator/国内端末、主副/当日枠/後日責任、U/税為替、metadata/不合格/段階予算/鍵の例外、canary/lock方式、API予約根拠。メール/PITR/正常更新損失/本番保守回答は保留継続。
+- 次の1工程：上記外部入力の回答・承認案への反映（文書のみ）。その後に実環境read/Planの別承認、bootstrap Plan承認→apply→実key binding→fixture Planの別承認→applyの順。本PR完成/mergeを実行承認にしない。
+- 再開：PR head/base/依存・実装版/承認版を再確認。実モデル識別・トークン・料金・実作業時間は未取得のため不明。今回に続く工程は自動開始しない。
+
+以下は過去工程の記録。
+
 ## 最新：CP1承認票具体化（2026-09-11）
 
 GitHub反映：[PR #17](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/17)、成果物変更SHA `f9b384475f465a441ce0c9622d501128f365f538`。比較先 `b2/limited-design-completion` / `f843183def131b1c42f2b192bdb72392f5150bad`、直接#16/間接#15未マージ依存。変更9ファイルを固定SHAでGitHubから取得しlocal blob全件一致確認。[Issue #9更新](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5623415358)、未解決継続。この反映記録を含む最終SHAはPR本文と[commits](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/17/commits)に保存し、追記push後のhead/base/追記blobを照合する。文書のみで停止する。
