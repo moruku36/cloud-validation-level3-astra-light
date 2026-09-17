@@ -1,5 +1,7 @@
 # クラウドアーキテクチャ検証 LEVEL3（Phase A〜Phase B-3 総合結果）
 
+**最新：[C-0 移行条件・限定実験・承認票](experiments/C/C-0/README.md)** — 整理完了、承認票は未承認、C構築開始不可。次は人間回答・明示指示後のB-2限定設計補完を推奨。以下のB結果・採点は維持します。
+
 <p align="center">
   <b>曖昧なビジネス要件・制約から自律型AIが実践的クラウド構成を設計・評価するLEVEL3検証</b>
 </p>
@@ -65,9 +67,9 @@ flowchart TB
     D["<b>D B-2限定差戻し</b><br/>再削除/管理者IAM/無人復旧"]
   end
 
-  subgraph PhaseC ["Phase C: 検証・障害試験（保留・未開始）"]
+  subgraph PhaseC ["Phase C: C-0整理完了・構築移行保留"]
     direction LR
-    C0["<b>C-0 承認・準備</b>"] --> C1["<b>C1〜C10 実装・カオス試験</b>"]
+    C0["<b>C-0 整理完了・未承認</b>"] -.->|別途承認・明示依頼| C1["<b>C1〜C10 未開始</b>"]
   end
 
   PhaseA -->|課題引継ぎ| PhaseB
