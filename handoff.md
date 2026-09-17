@@ -1,24 +1,63 @@
-## 最新：C-1 Console read-only現在状態確認 INCOMPLETE（2026-09-13）
+# プロジェクト引継ぎ書（Handoff & Quick Status）
 
-[確認記録](evaluation/C-1-console-readonly-check-run.md)。起点PR #23 head `bfa2280c32b827cec19b2528e08ffa2bc46cd5de`、比較先 `codex/c1-identity-center-precheck`。直接依存#23、間接#22→#21→#20→#19→#18→#17→#16→#15（全てOPEN・未マージ）。作業branch `codex/c1-console-readonly-check`。[PR #24](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/24)、成果物変更SHA `e0ffc9d4659d8094692937a66ed302bd7c6d9546`。最終記録commitはPR head/commitsで確認する。
+更新日：2026-09-17
 
-- 判定：`INCOMPLETE`。Organizationsあり、member account、all featuresを確認。Identity Centerは東京home表示まででinstance種別・primary Region・identity source・user/group/Permission Set/assignment・portal・MFAを未確認。CloudTrail/配信先、管理権限も未確認。
-- 時刻：既存セッションの元の認証開始は不明。閲覧記録09:33:59 JST（00:33:59 UTC）、停止13:57:01 JST（04:57:01 UTC）、中断込み4時間23分02秒。20分枠超過で追加閲覧せず停止。
-- Console生成read trafficあり、正確な内部API回数は未確認。Console設定変更、CLI/SDK/Terraform/preflight、資源操作なし。preflight最大6 APIは未消費。
-- 次の1工程：新たな20分枠を個別承認後、Identity Center詳細とCloudTrailに限るConsole read-only確認を続行。有効化、作成、profile/login、preflightは未承認。
-- 66/66/66点不合格、LC1未採点、C全体移行保留。モデル識別・トークン・料金・実作業時間は不明。
+---
 
-## 最新：C-1 IAM Identity Center有効化前審査（2026-09-13）
+## 1. 現在地クイックサマリー
 
-[審査](infra/c1/identity-center-precheck.md)／[Permission Set](infra/c1/identity-center-permission-sets.md)／[確認・有効化ゲート](infra/c1/identity-center-activation-gates.md)／[実行記録](evaluation/C-1-identity-center-precheck-run.md)。起点PR #22 head `2edc99a652f12780e802008ea009946a9a29e1e1`、比較先 `codex/c1-operator-auth-guard` / 同SHA。直接依存#22、間接#21→#20→#19→#18→#17→#16→#15（全てOPEN・未マージ）。作業branch `codex/c1-identity-center-precheck`。[PR #23](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/23)、成果物変更SHA `5afdc9cd46faba0bb9225c8dbd2e4e0497f0e2ce`、[Issue #9追記](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9#issuecomment-5649394265)。最終記録commitはPR head/commitsで確認する。
+| 項目 | 現在の状態 | エンジニア向け説明 |
+|---|---|---|
+| **現在フェーズ** | **Phase C-1（安全停止中）** | IaC・二重安全ガード実装済み。AWS接続はConsole確認の途中で停止中。 |
+| **クラウド実リソース** | **0件 / 課金0円** | 実機リソース・Stateは未作成。未承認のLive操作はガードにより遮断。 |
+| **実装・テスト品質** | **36/36 テスト通過** | `python -m unittest discover -s infra/c1/tests -v` で全件合格。 |
+| **直近の確定事項** | **PR #15〜#24 全件マージ完了** | C-0計画・C-1コード・ガード修正・Console確認記録まで全て `main` に統合済み。 |
+| **未解決事項の追跡** | **[Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9) で継続** | 人間判断（H）や設計差戻し（D）の7論点をOPENで継続追跡。 |
 
-- 方針：東京organization instance、single-region、AWS owned key、Identity Center directory、private user＋group、Preflight専用custom Permission Set、MFA、1h、CLI v2 token providerを未承認候補とした。
-- standaloneならOrganizations all-features新設、memberならmanagement account側作業が必要。account instanceはPermission Set/AWS account access非対応。既存instanceが東京外なら直接Region変更不可。
-- C-1既存S3 2/KMS 1/role 3とは別に、organization/instance/store/portal/user/group/set/assignment/予約Role/profile/cache/logが増える。全て計画で実在未確認。
-- 次の1工程は本人によるOrganizations/Identity Center Consoleのread-only状態分類。画面閲覧も未承認で、Enable/Create/Edit/Delete/Assign等は禁止する。
-- AWS接続/API/Console操作0、設定・profile・identity・Role・資源変更なし。66/66/66点不合格、LC1未採点、C移行保留。モデル識別・トークン・料金・実作業時間は不明。
+---
 
-以下は過去工程の記録。
+## 2. 作業境界（Do / Don't）
+
+新規参画エンジニアおよびAIエージェントは以下のルールを厳守してください：
+
+### ✅ やってよいこと（許可作業）
+- **ローカルテスト実行**: `python -m unittest discover -s infra/c1/tests -v`
+- **Terraformローカルバリデーション**: `terraform fmt`、`terraform validate`（`-backend=false`）
+- **ドキュメント・設定テンプレートの改善**: README、設計書、ADR、テストコードの修正・リファクタリング
+- **PR・Issue の管理**: GitHub上でのIssue更新、ブランチ作成、Pull Request作成
+
+### ❌ やってはいけないこと（禁止・未承認作業）
+- **AWS API / CLI の実行**: STS、S3、IAM等の実AWSへのAPI発行は明示承認がない限り禁止。
+- **AWSマネジメントコンソールの設定変更**: リソース作成・変更・削除・Permission Set有効化は禁止。
+- **`terraform apply`**: 実環境への適用は厳禁。
+- **秘密情報・実アカウント情報のコミット**: 実アカウントID、実ARN、秘密鍵をリポジトリに含めない。
+
+---
+
+## 3. 次の1手（Next Immediate Action）
+
+プロジェクトを前進させるための次工程候補（いずれも**人間の明示承認**が必要）：
+
+1. **Console read-only事前確認の再開（優先度：高）**:
+   - 前回20分枠超過により `INCOMPLETE` で停止した確認（Identity Center詳細およびCloudTrail設定の閲覧）。
+   - 新たな20分閲覧枠を人間承認した上で、画面閲覧のみ（変更なし）で実施。
+2. **Issue #9 の人間判断事項（H）の確定**:
+   - メール受信側の国内保存範囲、最低PITR期間（7日案の承認可否）、内製運用の担当工数。
+
+---
+
+## 4. 過去の実行記録・引継ぎログ（アーカイブ）
+
+以下は各フェーズ完了時の詳細な証跡・引継ぎ履歴です（時系列順・過去の記録）。
+
+---
+
+### C-1 Console read-only現在状態確認 INCOMPLETE（2026-09-13）
+
+[確認記録](evaluation/C-1-console-readonly-check-run.md)。作業branch `codex/c1-console-readonly-check`（[PR #24](https://github.com/moruku36/cloud-validation-level3-astra-light/pull/24) は `main` へマージ済み）。
+- 判定：`INCOMPLETE`。Organizationsあり、member account、all featuresを確認。Identity Center詳細とCloudTrailは20分枠超過により未確認のまま停止。
+- Console設定変更、CLI/SDK/Terraform/preflight、資源操作なし。利用費0円。
+
 
 ## 最新：C-1 Operator認証guard修正（2026-09-13）
 

@@ -7,12 +7,24 @@
 > - **直近の進捗**: [Console read-only事前確認](evaluation/C-1-console-readonly-check-run.md)は20分枠超過のため `INCOMPLETE` で安全停止。設定変更・API実行・実環境リソース変更は一切行われていません。
 > - **次工程**: 新たな閲覧枠の人間承認、または [Issue #9](https://github.com/moruku36/cloud-validation-level3-astra-light/issues/9) に記載された人間判断事項（H）の確定待ち。
 
-<p align="center">
-  <b>曖昧なビジネス要件・制約から自律型AIが実践的クラウド構成を設計・評価・実装するLEVEL3検証</b>
-</p>
+### 🚦 エンジニア向け作業境界（Do / Don't）
+
+| 区分 | 許可される作業（Do） | 禁止・未承認の作業（Don't） |
+|---|---|---|
+| **ローカル環境** | ✅ `python -m unittest discover -s infra/c1/tests -v`<br/>✅ `terraform validate`（`-backend=false`）<br/>✅ ドキュメント・コードの改修・リファクタリング | ❌ 秘密情報・実アカウントID・ARNのコミット |
+| **クラウド環境** | （なし：実機操作はすべて未承認） | ❌ AWS API / CLI 呼び出し（STS・S3等含む）<br/>❌ マネジメントコンソールでの設定変更・作成<br/>❌ `terraform apply`（本番・テスト環境とも） |
+
+### 📖 推奨読解フロー（初見のエンジニアはここから順に読む）
+
+1. [**要件定義の正本** (`docs/requirements.md`)](docs/requirements.md) : ビジネス制約と **24要件一覧表（REQ-01〜24）**
+2. [**現行アーキテクチャ設計書** (`experiments/B/B-2/design.md`)](experiments/B/B-2/design.md) : AWS優先参考設計・内製認証・容量・データ経路
+3. [**主要意思決定 ADR** (`docs/decisions/ADR-B2-001.md`)](docs/decisions/ADR-B2-001.md) : なぜCognitoをやめて内製認証にしたのか
+4. [**C-1 実装コードと安全手順書** (`infra/c1/README.md`)](infra/c1/README.md) : Terraform・二重ガードスクリプト・ローカル検証
+5. [**最新引継ぎ書** (`handoff.md`)](handoff.md) : 現在の停止状態・次に行うべき1作業
+※ 略語・記号（H/D/E、U、LC1、CP1等）の意味は [**用語集（docs/glossary.md）**](docs/glossary.md) を参照。
 
 <p align="center">
-  <a href="#エンジニア向けクイックスタート-ローカルテスト"><b>⚡ クイックスタート</b></a> │
+  <a href="#7-エンジニア向けクイックスタート-ローカルテスト検証"><b>⚡ クイックスタート</b></a> │
   <a href="infra/c1/README.md"><b>🛠️ C-1 IaC・ガード実装</b></a> │
   <a href="experiments/B/README.md"><b>🚀 B結果サマリー</b></a> │
   <a href="experiments/B/final-report.md"><b>📊 B詳細レポート</b></a> │
@@ -28,6 +40,7 @@
 | **検証進捗** | **Phase C-1（ローカル準備完了・実機停止中）** | A（単一設計）→ B（3社比較・選定・評価）→ C-0（計画）→ C-1（IaC・ガード実装） |
 | **設計自己評価スコア** | **66点 / 100点** | 合格基準80点に未達のため **「設計不合格・保留」**（B-3時点で66点確定） |
 | **クラウド選定** | **AWSを優先参考設計として選定** | ただし最終選定・人間の採用承認は **「保留」**（B-2限定差戻し事項あり） |
+| **現行採用見積もり** | **AWS: 83,248円 ＋ U / 月** | 予算上限10万円に対し基本枠内（余地約1.68万円）。未精算Uで変動（[詳細](#3-現行コスト見積もりと3クラウド比較)） |
 | **実機リソース・利用費** | **0件 / 0円（完全未作成）** | 厳格な安全ガード（`c1.py`）により未承認のAPIコールやリソース作成を完全抑止 |
 | **実装コード品質** | **ユニットテスト 36/36 通過** | オフラインガード・設定検証・ロール照合テストすべて合格 |
 | **次工程の扱い** | **人間承認待ち（Console確認 / H判断）** | **実環境適用（apply）へは自動移行せず停止**。安全手順に則った承認が必要 |
@@ -35,6 +48,7 @@
 > [!NOTE]
 > **「文書・コード準備の完了」と「実機実行の承認」は厳格に分離されています。**
 > Phase C-1においてローカルIaCおよび二重ガードスクリプトが完成していますが、必須要件（国内データ保存・完全削除・無人復旧・運用体制）の人間判断および実環境での事前確認が未完了のため、実機操作は一切行わず安全停止しています。
+
 
 ---
 
@@ -113,18 +127,33 @@ flowchart TB
 
 ---
 
-## 3. 3クラウド比較とコスト推移（B-1 → B-2/B-3）
+## 3. 現行コスト見積もりと3クラウド比較
 
-3社共通条件（初期1万人、月間100万PV、通常10/peak 100 RPS、外向き200GB、国内保存、為替150円/USD、税10%）での月額費用推移：
+### 3.1 採用中の現行見積もり (AWS優先参考設計: B-2/B-3)
 
-| クラウド | B-1 税込基本月額 | B-2/B-3 税込基本月額 | 予算（10万円）判定 | 主な変動理由・採用状況 |
-|---|---:|---:|:---:|---|
-| **AWS** (優先参考) | **76,034 円** | **83,248 円 ＋ U** | **枠内**（余地 16,752円） | 非本番入口常設化、監視、DR資材追加。最安値だが未精算Uあり |
-| **Google Cloud** | 135,580 円 | 101,933 円 ＋ U | 超過（1,933円オーバー） | Cloud SQL Enterprise化・東京LB補正により約3.3万円圧縮も予算超 |
-| **Azure** | 216,493 円 | 218,588 円 ＋ U | 大幅超過（11.8万円オーバー） | コンテナ/DBのマネージド単価が高く、現行要件では予算大幅超過 |
+月額予算 **税込 100,000 円 / 月** に対する、現在の正式な採用見積もりです：
+
+| 構成区分 | 月額概算（税込） | 内訳・主要リソース |
+|---|---:|---|
+| **基本月額費用** | **83,248 円** | ECS Fargate 2タスク（常時2AZ）+ RDS PostgreSQL Multi-AZ + ALB/WAF + S3 + SES + 非本番常設分 |
+| **未精算変動枠（＋ U）** | 変動（要精算） | ログ流量、メトリクス数、データ転送超過分（200GB超）、バックアップ保持量、追加監査等 |
+| **予算枠残余（バッファ）** | **16,752 円** | 未精算費用「＋ U」の吸収余力。要件追加により消費される可能性あり |
 
 > [!NOTE]
-> **「＋ U」について**: 未精算費用（ログ流量、メトリクス数、データ転送の超過分、バックアップ保持量、追加セキュリティ設定等）を指します。AWSの残余16,752円はUの精算や要件強化によって容易に消費される可能性があります。
+> **「＋ U」の詳細内訳**:
+> - CloudWatch Logs / メトリクス流量（ログ量に応じた従量課金）
+> - Route 53 クエリログ・追加ヘルスチェック
+> - 外部転送量（基本設計の200GB/月を超過した分）
+> - S3 バックアップの世代管理・ライフサイクル移行費用
+> ※ 各クラウド共通条件（初期1万人、月間100万PV、通常10/peak 100 RPS、外向き200GB、国内保存、為替150円/USD、税10%）
+
+### 3.2 3クラウド比較と見積もりの変遷（履歴）
+
+| クラウド | A-2初期案 (AWSのみ) | B-1 3社概算 | B-2/B-3 正式見積 | 予算判定 | 備考・採否理由 |
+|---|---:|---:|---:|:---:|---|
+| **AWS** (優先参考) | 82,682 円 | 76,034 円 | **83,248 円 ＋ U** | **枠内** | 最安値。非本番常設化・Probe監視・DR資材追加で適正化 |
+| **Google Cloud** | — | 135,580 円 | 101,933 円 ＋ U | 超過 (+1,933円) | Cloud SQL Enterprise化・東京LB補正で約3.3万円削減もわずかに足が出た |
+| **Azure** | — | 216,493 円 | 218,588 円 ＋ U | 大幅超過 (+11.8万円) | コンテナ・DBのマネージド基本単価が高く現行予算では非現実的 |
 
 ---
 
@@ -143,7 +172,7 @@ flowchart TB
    - 平日専任1名・夜間即応なし体制において、全依存障害からの完全自動復旧（RTO 30分・RPO 5分・300秒安定）の根拠が不足。
    - 単一AZ障害時に片側AZだけでピーク負荷（100 RPS）を処理しきれるかの性能根拠が未確認。
 4. **内製化による運用負荷（F07 / REQ-13, 14, 18）**:
-   - コスト削減のために認証やCanary監視を自前実装（ECS/Lambda）とした結果、専任1名での運用・保守負荷が過大となる懸念。
+   - コスト削減と国内保存のため認証を内製化（[ADR-B2-001](docs/decisions/ADR-B2-001.md)）した結果、専任1名での運用・保守負荷が過大となる懸念。
 
 ---
 
@@ -181,18 +210,20 @@ flowchart TD
 ## 6. アーキテクチャ概要 (AWS優先参考設計)
 
 専任1名の運用負荷を抑えつつ、同期整合性（SQL）と夜間の自動復旧を両立するため、**AWS Fargate (ARM) + Amazon RDS PostgreSQL (Multi-AZ)** をベースとしています。
+認証はCognitoの将来コスト急増リスクと国内保存制約を回避するため、**アプリ内製認証（PostgreSQLセッション連携）** を採用しています（[ADR-B2-001](docs/decisions/ADR-B2-001.md)）。
 
-### システム構成図
+### システム構成図（初期設計案 A-2 スナップショット）
 
 <p align="center">
   <a href="https://raw.githubusercontent.com/moruku36/cloud-validation-level3-astra-light/main/experiments/A/A-2/architecture.jpg" target="_blank" title="クリックして高解像度・原寸大で拡大表示">
-    <img src="experiments/A/A-2/architecture.jpg" alt="実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成)" width="100%" style="max-width: 1050px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+    <img src="experiments/A/A-2/architecture.jpg" alt="実験構成図: moruku36/cloud-validation-level3-astra-light (AWS構成 初期A-2案)" width="100%" style="max-width: 1050px; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
   </a>
   <br>
-  <sub>🔍 <b>画像をタップ/クリックすると別タブで原寸大・高解像度表示されます</b></sub>
+  <sub>🔍 <b>画像をタップ/クリックすると別タブで原寸大・高解像度表示されます（※画像は初期A-2時点のもの。現行設計ではCognitoが内製認証へ変更されています）</b></sub>
 </p>
 
-#### 論理構成図 (Mermaid)
+#### 現行論理構成図 (B-2/B-3 正本 Mermaid)
+
 
 ```mermaid
 flowchart TB
@@ -305,49 +336,53 @@ terraform -chdir=infra/c1/fixture validate
 
 ## 8. ドキュメントマップ
 
-### 企画・要件・共通ルール (`docs/`)
-- [要件定義・全体方針](docs/requirements.md) : ビジネス背景、24要件、制約条件の整理
-- [実行ポリシー](docs/execution-policy.md) : AIエージェントの作業手順・禁止事項・評価方針
+エンジニアが目的のドキュメントを迅速に探せるよう、「設計・仕様正本」と「実験オペレーションログ」を明確に分離しています。
+
+### 8.1 企画・要件・共通ルール・用語集 (`docs/`)
+- [**要件定義の正本 (24要件一覧含む)**](docs/requirements.md) : ビジネス制約、24要件（REQ-01〜24）、受入条件の正本
+- [**用語集・略語集 (Glossary)**](docs/glossary.md) : H/D/E、U、LC1、CP1/CP2、G0〜G11等の用語・略語一覧
+- [**ADR-B2-001: アプリ内製認証の正式採用**](docs/decisions/ADR-B2-001.md) : **【現行正本】** Cognito代替・国内保存・コスト抑制の決定理由
+- [ADR-A2-001: 初期アーキテクチャ選定 (Superseded)](docs/decisions/ADR-A2-001.md) : A-2初期案（Fargate+RDS Multi-AZ等）
+- [実行ポリシー](docs/execution-policy.md) : 作業手順・禁止事項・評価方針
 - [正式業務回答](docs/sources/business-answers-2026-09-08.md) : ヒアリングに対する顧客側の正式回答
-- [ADR意思決定記録](docs/decisions/ADR-A2-001.md) : 初期アーキテクチャ選定理由
+- [LICENSE (MIT License)](LICENSE) : リポジトリのライセンス
 
-### Phase C: 限定IaC・検証・安全ガード (`experiments/C/` & `infra/c1/`)
+### 8.2 設計・アーキテクチャ成果物 (`experiments/` & `infra/c1/`)
+
+#### 【Phase C】限定IaC・安全ガード実装
 - [**★ C-1 実装コードと安全手順書 (infra/c1/README.md)**](infra/c1/README.md) : **Terraform・二重ガードスクリプト・実行runbook**
-- **C-1 実装・認証・安全ゲート**:
-  - [12段階実行ゲート](infra/c1/execution-gates-2026-09-12.md) / [計画差分と残条件](infra/c1/changes-and-gates.md)
-  - [Operator認証ガード設計](infra/c1/operator-authentication.md) / [IAM Identity Center事前審査](infra/c1/identity-center-precheck.md)
-  - [Permission Sets設計](infra/c1/identity-center-permission-sets.md) / [有効化ゲート](infra/c1/identity-center-activation-gates.md)
-  - [Private Binding安全設定手順](infra/c1/private-binding-setup.md)
-- **C-0: 最小実験計画フェーズ**:
-  - [C-0 整理文書](experiments/C/C-0/README.md) / [最小実験計画 (CP1)](experiments/C/C-0/minimal-experiment.md) / [費用モデル](experiments/C/C-0/minimal-cost-model.json)
-  - [2026-09-12 承認反映 (CP2)](experiments/C/C-0/approval-2026-09-12.md) / [ブロッカー整理](experiments/C/C-0/blockers.md) / [移行判定基準](experiments/C/C-0/decision.md)
+- [12段階実行ゲート](infra/c1/execution-gates-2026-09-12.md) / [計画差分と残条件](infra/c1/changes-and-gates.md)
+- [Operator認証ガード設計](infra/c1/operator-authentication.md) / [IAM Identity Center事前審査](infra/c1/identity-center-precheck.md)
+- [Permission Sets設計](infra/c1/identity-center-permission-sets.md) / [有効化ゲート](infra/c1/identity-center-activation-gates.md)
+- [Private Binding安全設定手順](infra/c1/private-binding-setup.md)
+- [C-0 最小実験計画 (CP1)](experiments/C/C-0/minimal-experiment.md) / [CP2 承認反映](experiments/C/C-0/approval-2026-09-12.md) / [費用モデル](experiments/C/C-0/minimal-cost-model.json)
 
-### Phase B: 3クラウド比較・選定設計・総合評価 (`experiments/B/`)
-- [**★ LEVEL3-B 開発者向け結果サマリー**](experiments/B/README.md) : **B工程全体（B-1〜B-3）の要約と開発者向け解説**
+#### 【Phase B】3クラウド比較・選定設計・総合評価
 - [**★ LEVEL3-B 詳細レポート**](experiments/B/final-report.md) : **比較・設計・評価の正式統合レポート**
-- **B-1: 3クラウド比較フェーズ**
-  - [B-1 サマリー](experiments/B/B-1/README.md) / [3社比較詳細](experiments/B/B-1/comparison.md) / [費用内訳](experiments/B/B-1/cost.md) / [比較基準](experiments/B/B-1/comparison-criteria.md) / [公式出典](experiments/B/B-1/sources.md)
-- **B-2: 条件別設計フェーズ**
-  - [B-2 サマリー](experiments/B/B-2/README.md) / [設計書](experiments/B/B-2/design.md) / [費用モデル](experiments/B/B-2/cost.md) / [選定理由・逆転条件](experiments/B/B-2/selection.md) / [復旧・可観測性](experiments/B/B-2/recovery-observability.md) / [実証対応計画](experiments/B/B-2/validation-plan.md)
-  - [B-2 限定補完サマリー](experiments/B/B-2/limited-completion/README.md) (依存容量 / ライフサイクル / IAM / リテンション)
-- **B-3: 評価・引継ぎフェーズ**
-  - [B-3 成果物トップ](experiments/B/B-3/README.md) / [配点別採点表 (66点)](experiments/B/B-3/scores.md) / [レビュー指摘 (F01〜F11)](experiments/B/B-3/review.md) / [限定修正](experiments/B/B-3/revised-design.md) / [24要件追跡](experiments/B/B-3/traceability.md) / [Phase C検証計画](experiments/B/B-3/c-validation-plan.md)
+- [**★ LEVEL3-B 開発者向け結果サマリー**](experiments/B/README.md) : B工程全体（B-1〜B-3）の要約解説
+- **B-2 (現行優先参考設計)**: [B-2 設計書](experiments/B/B-2/design.md) / [費用モデル](experiments/B/B-2/cost.md) / [選定理由](experiments/B/B-2/selection.md) / [限定補完サマリー](experiments/B/B-2/limited-completion/README.md)
+- **B-3 (総合レビュー・採点)**: [配点別採点表 (66点)](experiments/B/B-3/scores.md) / [レビュー指摘 (F01〜F11)](experiments/B/B-3/review.md) / [24要件追跡](experiments/B/B-3/traceability.md) / [C検証計画](experiments/B/B-3/c-validation-plan.md)
+- **B-1 (3社比較)**: [3社比較詳細](experiments/B/B-1/comparison.md) / [費用内訳](experiments/B/B-1/cost.md)
 
-### Phase A: AWS単一クラウド検証 (`experiments/A/`)
-- [LEVEL3-A 総合検証結果レポート](experiments/A/final-report.md) : A-1〜A-3の全結果・採点・課題
-- [A実行完了報告](experiments/A/completion-report.md) : A完了時の引継ぎ記録
-- **A-1**: [24要件一覧](experiments/A/A-1/requirements.md) / [質疑応答台帳](experiments/A/A-1/questions.md) / [リスク・仮定](experiments/A/A-1/assumptions-risks.md)
-- **A-2**: [AWS基本設計](experiments/A/A-2/design.md) / [構成図](experiments/A/A-2/diagram.md) / [復旧・運用](experiments/A/A-2/recovery-operations.md) / [初期費用](experiments/A/A-2/cost.md)
-- **A-3**: [自己評価スコア (61→65点)](experiments/A/A-3/scores.md) / [改善仕様](experiments/A/A-3/revised-design.md) / [予算監査](experiments/A/A-3/budget.md) / [要件追跡](experiments/A/A-3/traceability.md)
+#### 【Phase A】初期AWS単一設計スナップショット
+- [LEVEL3-A 総合検証結果レポート](experiments/A/final-report.md) : A-1〜A-3の全結果・採点
+- [A-2 AWS基本設計（初期案）](experiments/A/A-2/design.md) / [初期費用](experiments/A/A-2/cost.md) / [A-1 要件スナップショット](experiments/A/A-1/requirements.md)
 
-### 評価プロセス・運用記録 (`evaluation/`)
-- **Phase C**: [Console read-only確認](evaluation/C-1-console-readonly-check-run.md) / [Identity Center審査](evaluation/C-1-identity-center-precheck-run.md) / [Operator認証ガード](evaluation/C-1-operator-auth-guard-run.md) / [Private Binding](evaluation/C-1-private-binding-run.md) / [Read-only Preflight](evaluation/C-1-read-only-preflight-run.md) / [承認ゲート確定](evaluation/C-1-approval-gates-run.md) / [C-1準備記録](evaluation/C-1-preparation-run.md) / [C-0最小承認](evaluation/C-0-minimal-approval-run.md) / [C-0整理](evaluation/C-0-run.md)
-- **Phase B**: [B-2限定補完](evaluation/B-2-limited-completion-run.md) / [B-3 実行記録](evaluation/B-3-run.md) / [B-2 実行記録](evaluation/B-2-run.md) / [B-1 実行記録](evaluation/B-1-run.md)
-- **Phase A**: [A-3 実行記録](evaluation/A-3-run.md) / [A-2 実行記録](evaluation/A-2-run.md) / [A-1 実行記録](evaluation/A-1-run.md)
-- [人間の介入記録台帳](evaluation/human-intervention.md) : AIの自律性と介入記録
-- [評価ルーブリック](evaluation/rubric.md) : 採点基準定義
+### 8.3 実験オペレーションログ・実行記録 (`evaluation/` & 引継ぎ)
 
-### 引継ぎ・資産管理
-- [**最新引継ぎ書 (handoff.md)**](handoff.md) : 現在の状態、保留事項、次工程の起点
-- [資源台帳 (resource-inventory.md)](resource-inventory.md) : クラウド残存リソース0件・利用費0円の記録
+- [**最新引継ぎ書 (handoff.md)**](handoff.md) : **現在の停止状態・作業境界（Do/Don't）・次に行うべき1手**
+- [**資源・費用台帳 (resource-inventory.md)**](resource-inventory.md) : クラウド残存リソース0件・利用費0円の監査記録
+- **Phase C 実行ログ**:
+  - [Console read-only確認 (INCOMPLETE)](evaluation/C-1-console-readonly-check-run.md)
+  - [IAM Identity Center審査](evaluation/C-1-identity-center-precheck-run.md)
+  - [Operator認証ガード検証 (36/36 PASS)](evaluation/C-1-operator-auth-guard-run.md)
+  - [Private Binding記録 (NOT_READY)](evaluation/C-1-private-binding-run.md)
+  - [Read-only Preflight記録 (INCOMPLETE)](evaluation/C-1-read-only-preflight-run.md)
+  - [C-1 準備検証記録](evaluation/C-1-preparation-run.md) / [C-0 最小承認記録](evaluation/C-0-minimal-approval-run.md)
+- **Phase A/B 実行ログ・監査**:
+  - [B-3 実行記録](evaluation/B-3-run.md) / [B-2 実行記録](evaluation/B-2-run.md) / [B-1 実行記録](evaluation/B-1-run.md)
+  - [A-3 実行記録](evaluation/A-3-run.md) / [A-2 実行記録](evaluation/A-2-run.md) / [A-1 実行記録](evaluation/A-1-run.md)
+  - [人間の介入記録台帳](evaluation/human-intervention.md) : AIの自律性と人間介入の記録
+  - [評価ルーブリック](evaluation/rubric.md) : 採点基準定義
+
 

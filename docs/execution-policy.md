@@ -14,7 +14,7 @@
 
 ## GitHub
 - 初回に保存先と公開範囲を確認し、指定後は再確認しない。公開範囲を独断で変更しない。
-- README.md、docs/requirements.md、docs/decisions/、experiments/A/・B/・C/、infra/、.github/workflows/、handoff.md、resource-inventory.md、evaluation/を使用。
+- README.md、docs/requirements.md、docs/decisions/、experiments/A/・B/・C/、infra/、handoff.md、resource-inventory.md、evaluation/を使用（.github/workflows/ は将来のCI実装フェーズで導入予定、現行フェーズでは未作成）。
 - 全成果物、初回案、修正案、失敗、取得可能な会話・操作記録を保存する。
 - 秘密情報・個人情報・機密値を含むStateやPlanは保存せず、除外理由と代替証跡を記録する。
 - 工程ごとにコミット・GitHubへ反映する。設計・実装変更はPRに記録し、明示指示なしにマージしない。
